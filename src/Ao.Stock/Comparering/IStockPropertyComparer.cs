@@ -1,7 +1,10 @@
-﻿namespace Ao.Stock.Comparering
+﻿using System.Collections.Generic;
+
+namespace Ao.Stock.Comparering
 {
-    public interface IStockPropertyComparer : IStockComparer<IStockProperty>
+    public interface IStockPropertyComparer
     {
+        IReadOnlyList<IStockComparisonAction> Compare(IStockType leftType,IStockProperty left,IStockType rightType ,IStockProperty right);
 
     }
 }

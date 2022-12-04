@@ -1,8 +1,8 @@
 ﻿namespace Ao.Stock.Comparering
 {
-    public class RenameTypeComparisonAction : StockTypeComparisonAction
+    public class StockRenameTypeComparisonAction : StockTypeComparisonAction
     {
-        public RenameTypeComparisonAction(IStockType left, IStockType right, string? leftName, string? rightName)
+        public StockRenameTypeComparisonAction(IStockType left, IStockType right, string? leftName, string? rightName)
             : base(left, right)
         {
             LeftName = leftName;

@@ -50,7 +50,7 @@ namespace Ao.Stock.Comparering
                         var rigthProp = right.Properties.FirstOrDefault(x => IsPropertyEquals(x, item));
                         if (rigthProp != null)
                         {
-                            actions.AddRange(PropertyComparer.Compare(item, rigthProp));
+                            actions.AddRange(PropertyComparer.Compare(left,item, right, rigthProp));
                         }
                     }
                 }
@@ -65,7 +65,7 @@ namespace Ao.Stock.Comparering
             var lst = new List<IStockComparisonAction>(0);
             if (left.Name != right.Name)
             {
-                lst.Add(new RenameTypeComparisonAction(left, right, left.Name, right.Name));
+                lst.Add(new StockRenameTypeComparisonAction(left, right, left.Name, right.Name));
             }
             if (left.Type != right.Type)
             {

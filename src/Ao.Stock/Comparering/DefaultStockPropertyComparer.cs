@@ -11,16 +11,16 @@ namespace Ao.Stock.Comparering
             return StockAttackComparerHelper.CompareAttack(lefts, rights);
         }
 
-        public IReadOnlyList<IStockComparisonAction> Compare(IStockProperty left, IStockProperty right)
+        public IReadOnlyList<IStockComparisonAction> Compare(IStockType leftType, IStockProperty left, IStockType rightType, IStockProperty right)
         {
             var lst = new List<IStockComparisonAction>(0);
             if (left.Name != right.Name)
             {
-                lst.Add(new RenamePropertyComparisonAction(left, right, left.Name, right.Name));
+                lst.Add(new RenamePropertyComparisonAction(leftType,rightType,left, right, left.Name, right.Name));
             }
             if (left.Type != right.Type)
             {
-                lst.Add(new StockPropertyTypeChangedComparisonAction(left, right, left.Type, right.Type));
+                lst.Add(new StockPropertyTypeChangedComparisonAction(leftType, rightType, left, right, left.Type, right.Type));
             }
             var attackAct = CompareAttacks(left.Attacks, right.Attacks);
             if (attackAct != null)

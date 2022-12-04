@@ -2,8 +2,13 @@
 {
     public class RenamePropertyComparisonAction : StockPropertyComparisonAction
     {
-        public RenamePropertyComparisonAction(IStockProperty left, IStockProperty right, string? leftName, string? rightName)
-            : base(left, right)
+        public RenamePropertyComparisonAction(IStockType leftStockType,
+            IStockType rightStockType, 
+            IStockProperty left, 
+            IStockProperty right, 
+            string? leftName, 
+            string? rightName)
+            : base(leftStockType, rightStockType,left, right)
         {
             LeftName = leftName;
             RightName = rightName;
