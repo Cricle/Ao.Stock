@@ -22,7 +22,7 @@ namespace Ao.Stock.SQL
                 var isIndex = item.IsIndex();
                 var prop = new StockProperty
                 {
-                    Name = item.GetFieldName(),
+                    Name = item.Name,
                     Type = item.ClrType,
                 };
                 var atts = new List<IStockAttack>(0);
@@ -35,6 +35,7 @@ namespace Ao.Stock.SQL
                     atts.Add(new StockAttributeAttack(new SqlIndexAttribute()));
                 }
                 prop.Attacks = atts;
+                props.Add(prop);
             }
             return t;
         }

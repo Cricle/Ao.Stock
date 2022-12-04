@@ -46,27 +46,20 @@ namespace Ao.Stock.Sample.MySql
         {
             var mysql= $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
             var conn=new MySqlConnection(mysql);
-            //var h = new MysqlScaffoldHelper(conn);
-            //var m = h.Scaffold();
-            var mt = StockHelper.FromType(typeof(Student), new ReflectionOptions {TypeNameGetter=_=>"Student" });
+            var h = new MysqlScaffoldHelper(conn);
+            var m = h.Scaffold();
+            var mt = m.FindEntityType("Student").AsStockType();
             var mt1 = StockHelper.FromType(typeof(Student1), new ReflectionOptions { TypeNameGetter = _ => "Student" });
             var res = DefaultStockTypeComparer.Default.Compare(mt, mt1);
-            var h = new MyMigrationHelper(res) { GlobalString = mysql };
-            h.Migrate();
-
+            var hw = new MyMigrationHelper(res) { GlobalString = mysql };
+            hw.Migrate();
         }
-    }
-    class Student
-    {
-        [Key]
-        public int Id { get; set; }
     }
     class Student1
     {
         [Key]
         public int Id { get; set; }
 
-        [SqlIndex]
         public string Name { get; set; }
     }
 }
