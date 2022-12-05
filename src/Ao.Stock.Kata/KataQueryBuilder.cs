@@ -1,11 +1,19 @@
 ﻿using Ao.Stock.Querying;
 using SqlKata;
+using SqlKata.Compilers;
 using System;
 
 namespace Ao.Stock.Kata
 {
     public class KataQueryBuilder
     {
+        public KataQueryBuilder(Compiler compiler)
+        {
+            Compiler = compiler;
+        }
+
+        public Compiler Compiler { get; }
+
         public void Merge(Query query, IQueryMetadata metadata)
         {
             if (metadata is SelectMetadata select)
@@ -50,6 +58,10 @@ namespace Ao.Stock.Kata
         }
         public object MergeValue(IValueMetadata valueMetadata)
         {
+            if (valueMetadata.Quto)
+            {
+                return Compiler.Wrap((string)valueMetadata.Value);
+            }
             return valueMetadata.Value;
         }
         public void MergeAlias(Query query, AliasMetadata metadata)
@@ -62,7 +74,7 @@ namespace Ao.Stock.Kata
         {
             if (metadata.Target is IValueMetadata value)
             {
-                query.Select((string)value.Value);
+                query.SelectRaw((string)MergeValue(value));
                 return;
             }
             throw new NotSupportedException();
@@ -71,7 +83,7 @@ namespace Ao.Stock.Kata
         {
             if (metadata.Target is IValueMetadata value)
             {
-                query.GroupBy((string)value.Value);
+                query.GroupByRaw((string)MergeValue(value));
                 return;
             }
             throw new NotSupportedException();
@@ -82,11 +94,11 @@ namespace Ao.Stock.Kata
             {
                 if (metadata.SortMode == SortMode.Asc)
                 {
-                    query.OrderBy((string)value.Value);
+                    query.OrderByRaw((string)MergeValue(value));
                 }
                 else if (metadata.SortMode == SortMode.Desc)
                 {
-                    query.OrderByDesc((string)value.Value);
+                    query.OrderByRaw((string)MergeValue(value) + " desc");
                 }
                 return;
             }
