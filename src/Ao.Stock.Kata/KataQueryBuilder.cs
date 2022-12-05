@@ -52,6 +52,10 @@ namespace Ao.Stock.Kata
             {
                 MergeWhereKata(query, kataWhere);
             }
+            else if (metadata is MethodMetadata method)
+            {
+                query.WhereRaw(MergeMethod(method));
+            }
             else if (metadata is MultipleQueryMetadata muliple)
             {
                 for (int i = 0; i < muliple.Count; i++)
@@ -85,6 +89,18 @@ namespace Ao.Stock.Kata
         public void MergeWhereKata(Query query, KataWhereMetadata metadata)
         {
             query.Where(_=>metadata.Query);
+        }
+        public string MergeMethod(MethodMetadata metadata)
+        {
+            if (metadata.IsMethodIgnoreCase("Contains")||
+                metadata.IsMethodIgnoreCase("Like"))
+            {
+               return " like " + (string)MergeValue((IValueMetadata)metadata.Args[0]);
+            }
+            else
+            {
+                throw new NotSupportedException(metadata.Method);
+            }
         }
         public void MergeSelect(Query query, SelectMetadata metadata)
         {
@@ -122,7 +138,8 @@ namespace Ao.Stock.Kata
         }
         public void MergeFilter(Query query, FilterMetadata metadata)
         {
-            query.WhereRaw(metadata.Combine("and"));
+            var str = metadata.Combine("and");
+            query.WhereRaw(str);
         }
         public void MergeLimit(Query query, LimitMetadata metadata)
         {

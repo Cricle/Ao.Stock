@@ -25,6 +25,10 @@ namespace Ao.Stock.Querying
 
         public IList<IQueryMetadata>? Args { get; }
 
+        public bool IsMethodIgnoreCase(string method)
+        {
+            return string.Equals(method, Method, StringComparison.OrdinalIgnoreCase);
+        }
         public override int GetHashCode()
         {
             var hc = new HashCode();
