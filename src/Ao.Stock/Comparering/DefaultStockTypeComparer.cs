@@ -60,10 +60,28 @@ namespace Ao.Stock.Comparering
                 }
             }
         }
-        public IReadOnlyList<IStockComparisonAction> Compare(IStockType left, IStockType right)
+        public IReadOnlyList<IStockComparisonAction> Compare(IStockType? left, IStockType? right)
         {
+            if (left==null&&right==null)
+            {
+                return Array.Empty<IStockComparisonAction>();
+            }
+            if (left == null && right != null)
+            {
+                return new IStockComparisonAction[]
+                {
+                    new StockCreateTypeComparisonAction(left, right),
+                };
+            }
+            if (left != null && right == null)
+            {
+                return new IStockComparisonAction[]
+                {
+                    new StockDropTypeComparisonAction(left, right),
+                };
+            }
             var lst = new List<IStockComparisonAction>(0);
-            if (left.Name != right.Name)
+            if (left!.Name != right!.Name)
             {
                 lst.Add(new StockRenameTypeComparisonAction(left, right, left.Name, right.Name));
             }

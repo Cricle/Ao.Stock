@@ -20,6 +20,9 @@ namespace Ao.Stock.SQL
         public override void Down()
         {
         }
+        protected virtual void Attacks(StockAttackChangeComparisonAction action)
+        {
+        }
         protected virtual void Columns(StockTypePropertiesComparisonAction action)
         {
             if (action.RightProperies != null)
@@ -146,7 +149,7 @@ namespace Ao.Stock.SQL
                     }
                 }
             }
-            return columnTypeSyntax.AsString();
+            return columnTypeSyntax.AsString(len);
         }
         protected virtual TNext AsCustom<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
             where TNext : IFluentSyntax
@@ -239,6 +242,9 @@ namespace Ao.Stock.SQL
                         break;
                     case StockTypePropertiesComparisonAction action:
                         Columns(action);
+                        break;
+                    case StockAttackChangeComparisonAction action:
+                        Attacks(action);
                         break;
                     default:
                         break;

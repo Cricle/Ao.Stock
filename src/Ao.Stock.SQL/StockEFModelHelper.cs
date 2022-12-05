@@ -7,8 +7,12 @@ namespace Ao.Stock.SQL
 {
     public static class StockEFModelHelper
     {
-        public static IStockType AsStockType(this IEntityType type)
+        public static IStockType? AsStockType(this IEntityType type)
         {
+            if (type==null)
+            {
+                return null;
+            }
             var tableName = type.GetTableName();
             var t = new StockType
             {
@@ -20,9 +24,10 @@ namespace Ao.Stock.SQL
             {
                 var isPrimayKey = item.IsPrimaryKey();
                 var isIndex = item.IsIndex();
+                var store = StoreObjectIdentifier.Create(type, StoreObjectType.Table) ?? default;
                 var prop = new StockProperty
                 {
-                    Name = item.GetFieldName(),
+                    Name = item.GetColumnName(store),
                     Type = item.ClrType,
                 };
                 var atts = new List<IStockAttack>(0);
@@ -35,6 +40,7 @@ namespace Ao.Stock.SQL
                     atts.Add(new StockAttributeAttack(new SqlIndexAttribute()));
                 }
                 prop.Attacks = atts;
+                props.Add(prop);
             }
             return t;
         }

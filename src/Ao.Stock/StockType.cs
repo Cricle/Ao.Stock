@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Ao.Stock
 {
@@ -22,6 +23,8 @@ namespace Ao.Stock
 
         public IReadOnlyList<IStockProperty>? Properties { get; set; }
 
+        public string DebuggerView => ToString();
+
         public override int GetHashCode()
         {
             return StockTypeEqualityComparer.Default.GetHashCode(this);
@@ -31,9 +34,32 @@ namespace Ao.Stock
         {
             return StockTypeEqualityComparer.Default.Equals(this, other);
         }
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as StockType);
+        }
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"({GetType().Name})Name: {Name ?? "(null)"}, Type:{(Type?.Name??"(null)")}");
+            if (Attacks != null && Attacks.Count != 0)
+            {
+                sb.AppendLine($"\t[Attacks({Attacks.Count})]");
+                for (int i = 0; i < Attacks.Count; i++)
+                {
+                    sb.AppendLine($"\t\t{Attacks[i]}");
+                }
+            }
+            if (Properties != null && Properties.Count != 0)
+            {
+                sb.AppendLine($"\t[Properties({Properties.Count})]");
+                for (int i = 0; i < Properties.Count; i++)
+                {
+                    sb.AppendLine($"\t\t{Properties[i].ToString()?.Replace("\n","\t")}");
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
