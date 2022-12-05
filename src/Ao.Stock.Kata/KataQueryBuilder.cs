@@ -44,6 +44,14 @@ namespace Ao.Stock.Kata
             {
                 MergeSkip(query, skip);
             }
+            else if (metadata is KataSelectMetadata kataSelect)
+            {
+                MergeSelectKata(query, kataSelect);
+            }
+            else if (metadata is KataWhereMetadata kataWhere)
+            {
+                MergeWhereKata(query, kataWhere);
+            }
             else if (metadata is MultipleQueryMetadata muliple)
             {
                 for (int i = 0; i < muliple.Count; i++)
@@ -69,6 +77,14 @@ namespace Ao.Stock.Kata
             var subQuery = new Query();
             Merge(subQuery, metadata.Target);
             query.Select(subQuery, metadata.Alias);
+        }
+        public void MergeSelectKata(Query query, KataSelectMetadata metadata)
+        {
+            query.Select(metadata.Query, metadata.Alias);
+        }
+        public void MergeWhereKata(Query query, KataWhereMetadata metadata)
+        {
+            query.Where(_=>metadata.Query);
         }
         public void MergeSelect(Query query, SelectMetadata metadata)
         {

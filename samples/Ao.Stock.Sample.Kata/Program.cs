@@ -14,9 +14,10 @@ namespace Ao.Stock.Sample.Kata
             var compiler = new MySqlCompiler();
             var q = new MultipleQueryMetadata();
             q.Add(new SortMetadata(SortMode.Desc, new ValueMetadata<string>("a1", true)));
-            q.Add(new SelectMetadata(new ValueMetadata<string>("a2", true)));
+            q.Add(new KataSelectMetadata(new Query().AsSum("a3"),"sum_a3"));
             q.Add(new GroupMetadata(new ValueMetadata<string>("a3", true)));
             q.Add(new LimitMetadata(11));
+            q.Add(new KataWhereMetadata(new Query().Where("a3", "=", "a6")));
             q.Add(new FilterMetadata
             {
                 new BinaryMetadata<string,string>("a3", ExpressionType.Equal,"123")
