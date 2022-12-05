@@ -1,50 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class MultipleQueryMetadata : List<IQueryMetadata>, IEquatable<MultipleQueryMetadata>, IQueryMetadata
+    public class FilterMetadata : MultipleQueryMetadata,IEquatable<FilterMetadata>
     {
-        public MultipleQueryMetadata()
+        public FilterMetadata()
         {
         }
 
-        public MultipleQueryMetadata(IEnumerable<IQueryMetadata> collection) : base(collection)
+        public FilterMetadata(IEnumerable<IQueryMetadata> collection) : base(collection)
         {
         }
 
-        public MultipleQueryMetadata(int capacity) : base(capacity)
+        public FilterMetadata(int capacity) : base(capacity)
         {
         }
-
-        public bool Equals(MultipleQueryMetadata? other)
-        {
-            if (other == null || other.Count != Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Count; i++)
-            {
-                if (!this[i].Equals(other[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public override int GetHashCode()
         {
-            var hc = new HashCode();
-            for (int i = 0; i < Count; i++)
-            {
-                hc.Add(this[i].GetHashCode());
-            }
-            return hc.ToHashCode();
+            return base.GetHashCode();
+        }
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as FilterMetadata);
         }
 
-        public override string ToString()
+        public string Combine(string @operator)
         {
             if (Count == 0)
             {
@@ -53,22 +34,25 @@ namespace Ao.Stock.Querying
             var s = "(";
             for (int i = 0; i < Count; i++)
             {
-                s += "(";
+                s += " (";
                 s += this[i].ToString();
-                s += ")";
+                s += ") ";
+                if (i!=Count-1)
+                {
+                    s += @operator;
+                }
             }
             s += ")";
             return s;
         }
-
-        public override bool Equals(object? obj)
+        public override string ToString()
         {
-            return Equals(obj as MultipleQueryMetadata);
+            return Combine("&&");
         }
 
-        public void ToString(StringBuilder builder)
+        public bool Equals(FilterMetadata? other)
         {
-            builder.Append(ToString());
+            return base.Equals(other);
         }
     }
 }

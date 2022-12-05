@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class ValueMetadata<T> : QueryMetadata, IEquatable<ValueMetadata<T>>, IQueryMetadata
+    public class ValueMetadata<T> : QueryMetadata, IEquatable<ValueMetadata<T>>, IQueryMetadata, IValueMetadata<T>,IValueMetadata
     {
         public ValueMetadata(T value, bool quto)
         {
@@ -19,6 +19,8 @@ namespace Ao.Stock.Querying
         public T Value { get; }
 
         public bool Quto { get; }
+
+        object? IValueMetadata.Value => Value;
 
         public override int GetHashCode()
         {
