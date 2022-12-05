@@ -17,7 +17,7 @@ namespace Ao.Stock
             {
                 return false;
             }
-            if (x.Type != y.Type||x.Name!=y.Name)
+            if (x.Type != y.Type || x.Name != y.Name)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace Ao.Stock
             }
             var hc = new HashCode();
             hc.Add(obj.Type);
-            if (obj.Properties!=null)
+            if (obj.Properties != null)
             {
                 for (int i = 0; i < obj.Properties.Count; i++)
                 {

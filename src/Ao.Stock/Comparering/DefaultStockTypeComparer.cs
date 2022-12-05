@@ -50,7 +50,7 @@ namespace Ao.Stock.Comparering
                         var rigthProp = right.Properties.FirstOrDefault(x => IsPropertyEquals(x, item));
                         if (rigthProp != null)
                         {
-                            actions.AddRange(PropertyComparer.Compare(left,item, right, rigthProp));
+                            actions.AddRange(PropertyComparer.Compare(left, item, right, rigthProp));
                         }
                     }
                 }
@@ -62,7 +62,7 @@ namespace Ao.Stock.Comparering
         }
         public IReadOnlyList<IStockComparisonAction> Compare(IStockType? left, IStockType? right)
         {
-            if (left==null&&right==null)
+            if (left == null && right == null)
             {
                 return Array.Empty<IStockComparisonAction>();
             }

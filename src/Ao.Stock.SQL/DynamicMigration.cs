@@ -1,10 +1,9 @@
 ﻿using Ao.Stock.Comparering;
+using Ao.Stock.SQL.Announcation;
 using FluentMigrator;
 using FluentMigrator.Builders;
 using FluentMigrator.Infrastructure;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using Ao.Stock.SQL.Announcation;
 
 namespace Ao.Stock.SQL
 {
@@ -58,11 +57,11 @@ namespace Ao.Stock.SQL
         protected virtual void CreateType(StockCreateTypeComparisonAction action)
         {
             var syntax = Create.Table(action.Right.Name);
-            if (action.Right.Properties!=null)
+            if (action.Right.Properties != null)
             {
                 foreach (var item in action.Right.Properties)
                 {
-                    var col=syntax.WithColumn(item.Name);
+                    var col = syntax.WithColumn(item.Name);
                     var next = Property(col, item);
                     if (item.Type != null && IsNullable(item.Type))
                     {
@@ -88,7 +87,7 @@ namespace Ao.Stock.SQL
             var syntx = Alter.Column(action.LeftType.Name)
                 .OnTable(action.LeftType.Name);
             var next = Property(syntx, action.Right);
-            if (action.RightPropertyType!=null&& IsNullable(action.RightPropertyType))
+            if (action.RightPropertyType != null && IsNullable(action.RightPropertyType))
             {
                 next.Nullable();
             }
@@ -156,12 +155,12 @@ namespace Ao.Stock.SQL
         {
             throw new NotSupportedException();
         }
-        protected TNext Property<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax,IStockProperty property)
+        protected TNext Property<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
             where TNext : IFluentSyntax
         {
             TNext? next = default;
             var type = property.Type;
-            if (type==null)
+            if (type == null)
             {
                 throw new NotSupportedException("Null type for property");
             }
@@ -169,19 +168,19 @@ namespace Ao.Stock.SQL
             {
                 next = columnTypeSyntax.AsBoolean();
             }
-            else if (type==typeof(byte)|| type == typeof(sbyte))
+            else if (type == typeof(byte) || type == typeof(sbyte))
             {
                 next = columnTypeSyntax.AsByte();
             }
-            else if (type == typeof(short)|| type == typeof(ushort))
+            else if (type == typeof(short) || type == typeof(ushort))
             {
                 next = columnTypeSyntax.AsInt16();
             }
-            else if (type == typeof(int)|| type == typeof(int))
+            else if (type == typeof(int) || type == typeof(int))
             {
                 next = columnTypeSyntax.AsInt32();
             }
-            else if (type == typeof(long)|| type == typeof(long))
+            else if (type == typeof(long) || type == typeof(long))
             {
                 next = columnTypeSyntax.AsInt64();
             }
@@ -211,9 +210,9 @@ namespace Ao.Stock.SQL
             }
             else if (type == typeof(string))
             {
-                next = AsString(columnTypeSyntax,property);
+                next = AsString(columnTypeSyntax, property);
             }
-            if (next==null)
+            if (next == null)
             {
                 next = AsCustom(columnTypeSyntax, property);
             }

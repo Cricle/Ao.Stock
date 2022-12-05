@@ -9,7 +9,7 @@ namespace Ao.Stock.SQL
     {
         public static IStockType? AsStockType(this IEntityType type)
         {
-            if (type==null)
+            if (type == null)
             {
                 return null;
             }

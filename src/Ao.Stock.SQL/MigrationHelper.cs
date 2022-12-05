@@ -23,7 +23,7 @@ namespace Ao.Stock.SQL
         }
         public void Migrate()
         {
-            using (var provider=CreateProvider())
+            using (var provider = CreateProvider())
             {
                 Migrate(provider);
             }
@@ -35,7 +35,7 @@ namespace Ao.Stock.SQL
         }
         public ServiceProvider CreateProvider()
         {
-            var services= new ServiceCollection()
+            var services = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb =>
                 {

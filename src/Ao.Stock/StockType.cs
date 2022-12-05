@@ -41,7 +41,7 @@ namespace Ao.Stock
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"({GetType().Name})Name: {Name ?? "(null)"}, Type:{(Type?.Name??"(null)")}");
+            sb.AppendLine($"({GetType().Name})Name: {Name ?? "(null)"}, Type:{(Type?.Name ?? "(null)")}");
             if (Attacks != null && Attacks.Count != 0)
             {
                 sb.AppendLine($"\t[Attacks({Attacks.Count})]");
@@ -55,7 +55,7 @@ namespace Ao.Stock
                 sb.AppendLine($"\t[Properties({Properties.Count})]");
                 for (int i = 0; i < Properties.Count; i++)
                 {
-                    sb.AppendLine($"\t\t{Properties[i].ToString()?.Replace("\n","\t")}");
+                    sb.AppendLine($"\t\t{Properties[i].ToString()?.Replace("\n", "\t")}");
                 }
             }
 

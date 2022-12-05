@@ -4,8 +4,8 @@ namespace Ao.Stock.Comparering
 {
     public class StockTypePropertiesComparisonAction : StockTypeComparisonAction
     {
-        public StockTypePropertiesComparisonAction(IStockType left, 
-            IStockType right, 
+        public StockTypePropertiesComparisonAction(IStockType left,
+            IStockType right,
             IReadOnlyList<IStockProperty>? leftProps,
             IReadOnlyList<IStockProperty>? rightProps)
             : base(left, right)
