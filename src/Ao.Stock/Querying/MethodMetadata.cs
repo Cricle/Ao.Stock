@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class MethodMetadata : QueryMetadata,IEquatable<MethodMetadata>, IQueryMetadata, IExpressionTypeProvider
+    public class MethodMetadata : QueryMetadata,IEquatable<MethodMetadata>, IMethodMetadata
     {
         public MethodMetadata(string method, IList<IQueryMetadata>? args)
         {
@@ -15,7 +15,7 @@ namespace Ao.Stock.Querying
         }
 
         public MethodMetadata(string method)
-            :this(method, null)
+            :this(method, (IList<IQueryMetadata>?)null)
         {
         }
 

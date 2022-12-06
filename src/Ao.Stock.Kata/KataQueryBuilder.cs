@@ -2,17 +2,23 @@
 using SqlKata;
 using SqlKata.Compilers;
 using System;
+using System.Collections.Generic;
 
 namespace Ao.Stock.Kata
 {
     public class KataQueryBuilder
     {
-        public KataQueryBuilder(Compiler compiler)
+        public static readonly KataQueryBuilder Mysql = new KataQueryBuilder(new MySqlCompiler(), new DefaultMethodTranslator<Compiler>(ConstMethodTranslator.Functions,DefaultMethodWrapper<Compiler>.MySql));
+
+        public KataQueryBuilder(Compiler compiler, MethodTranslator<Compiler> translator)
         {
             Compiler = compiler;
+            Translator = translator;
         }
 
         public Compiler Compiler { get; }
+
+        public MethodTranslator<Compiler> Translator { get; }
 
         public void Merge(Query query, IQueryMetadata metadata)
         {
@@ -44,23 +50,15 @@ namespace Ao.Stock.Kata
             {
                 MergeSkip(query, skip);
             }
-            else if (metadata is KataSelectMetadata kataSelect)
-            {
-                MergeSelectKata(query, kataSelect);
-            }
-            else if (metadata is KataWhereMetadata kataWhere)
-            {
-                MergeWhereKata(query, kataWhere);
-            }
             else if (metadata is MethodMetadata method)
             {
                 query.WhereRaw(MergeMethod(method));
             }
-            else if (metadata is MultipleQueryMetadata muliple)
+            else if (metadata is IEnumerable<IQueryMetadata> muliple)
             {
-                for (int i = 0; i < muliple.Count; i++)
+                foreach (var item in muliple)
                 {
-                    Merge(query, muliple[i]);
+                    Merge(query, item);
                 }
             }
             else
@@ -82,43 +80,39 @@ namespace Ao.Stock.Kata
             Merge(subQuery, metadata.Target);
             query.Select(subQuery, metadata.Alias);
         }
-        public void MergeSelectKata(Query query, KataSelectMetadata metadata)
-        {
-            query.Select(metadata.Query, metadata.Alias);
-        }
-        public void MergeWhereKata(Query query, KataWhereMetadata metadata)
-        {
-            query.Where(_=>metadata.Query);
-        }
         public string MergeMethod(MethodMetadata metadata)
         {
-            if (metadata.IsMethodIgnoreCase("Contains")||
-                metadata.IsMethodIgnoreCase("Like"))
-            {
-               return " like " + (string)MergeValue((IValueMetadata)metadata.Args[0]);
-            }
-            else
-            {
-                throw new NotSupportedException(metadata.Method);
-            }
+            return Translator.Translate(metadata, Compiler);
         }
         public void MergeSelect(Query query, SelectMetadata metadata)
         {
             if (metadata.Target is IValueMetadata value)
             {
                 query.SelectRaw((string)MergeValue(value));
-                return;
             }
-            throw new NotSupportedException();
+            else if (metadata.Target is MethodMetadata method)
+            {
+                query.SelectRaw(MergeMethod(method));
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
         public void MergeGroup(Query query, GroupMetadata metadata)
         {
             if (metadata.Target is IValueMetadata value)
             {
                 query.GroupByRaw((string)MergeValue(value));
-                return;
             }
-            throw new NotSupportedException();
+            else if (metadata.Target is MethodMetadata method)
+            {
+                query.GroupByRaw(MergeMethod(method));
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
         public void MergeSort(Query query, SortMetadata metadata)
         {
@@ -132,9 +126,22 @@ namespace Ao.Stock.Kata
                 {
                     query.OrderByRaw((string)MergeValue(value) + " desc");
                 }
-                return;
             }
-            throw new NotSupportedException();
+            if (metadata.Target is MethodMetadata method)
+            {
+                if (metadata.SortMode == SortMode.Asc)
+                {
+                    query.OrderByRaw(MergeMethod(method));
+                }
+                else if (metadata.SortMode == SortMode.Desc)
+                {
+                    query.OrderByRaw(MergeMethod(method) + " desc");
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
         public void MergeFilter(Query query, FilterMetadata metadata)
         {
