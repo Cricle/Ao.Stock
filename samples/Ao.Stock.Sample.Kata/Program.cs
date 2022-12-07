@@ -2,6 +2,7 @@
 using Ao.Stock.Querying;
 using SqlKata;
 using SqlKata.Compilers;
+using System.Linq.Expressions;
 
 namespace Ao.Stock.Sample.Kata
 {
@@ -9,13 +10,18 @@ namespace Ao.Stock.Sample.Kata
     {
         static void Main(string[] args)
         {
-            var compiler = new MySqlCompiler();
             var q = new MultipleQueryMetadata();
-            q.SelectMethod(KnowsMethods.Count,"count_first_name","first_name")
-                .GroupColumn("last_name");
-            var query = new Query().From("staff");
-            KataQueryBuilder.Mysql.Merge(query, q);
-            var sql = compiler.Compile(query);
+            q.Add(
+                new MethodMetadata(KnowsMethods.In,
+                    new ValueMetadata("staff_id", true),
+                    new ValueMetadata(1),
+                    new ValueMetadata(2),
+                    new ValueMetadata(3)));
+            q.Add(new FilterMetadata
+            {
+                new BinaryMetadata("last_update", ExpressionType.GreaterThanOrEqual, "2022-12-7 12:38:00")
+            });
+            var sql = KataQueryBuilder.Mysql.MergeAndCompile(new Query().From("staff"), q);
             var sqlStr = sql.ToString();
             Console.WriteLine(sqlStr);
         }

@@ -3,6 +3,16 @@ using System.Text;
 
 namespace Ao.Stock.Querying
 {
+    public class ValueMetadata : ValueMetadata<object>
+    {
+        public ValueMetadata(object value) : base(value)
+        {
+        }
+
+        public ValueMetadata(object value, bool quto) : base(value, quto)
+        {
+        }
+    }
     public class ValueMetadata<T> : QueryMetadata, IEquatable<ValueMetadata<T>>, IQueryMetadata, IValueMetadata<T>,IValueMetadata
     {
         public ValueMetadata(T value, bool quto)

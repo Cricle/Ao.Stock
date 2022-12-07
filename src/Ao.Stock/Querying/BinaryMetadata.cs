@@ -7,22 +7,26 @@ using System.Text;
 namespace Ao.Stock.Querying
 {
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-    public class BinaryMetadata<TLeft, TRight> : IEquatable<BinaryMetadata<TLeft, TRight>>, IQueryMetadata, IExpressionTypeProvider
+    public class BinaryMetadata : IEquatable<BinaryMetadata>, IQueryMetadata, IBinaryMetadata
     {
-        public BinaryMetadata(TLeft left, ExpressionType expressionType, TRight right)
+        public BinaryMetadata(object left, ExpressionType expressionType, object right)
+        {
+            Left = new ValueMetadata(left);
+            ExpressionType = expressionType;
+            Right = new ValueMetadata(right);
+        }
+        public BinaryMetadata(IQueryMetadata left, ExpressionType expressionType, IQueryMetadata right)
         {
             Left = left;
             ExpressionType = expressionType;
             Right = right;
         }
 
-        public TLeft Left { get; }
+        public IQueryMetadata Left { get; }
 
         public ExpressionType ExpressionType { get; }
 
-        public TRight Right { get; }
-
-        public int ArgumentCount => 2;
+        public IQueryMetadata Right { get; }
 
         protected virtual string Middle(string op)
         {
@@ -48,7 +52,7 @@ namespace Ao.Stock.Querying
         }
         public override bool Equals(object? obj)
         {
-            return Equals(obj as BinaryMetadata<TLeft, TRight>);
+            return Equals(obj as BinaryMetadata);
         }
         public override string ToString()
         {
@@ -135,7 +139,7 @@ namespace Ao.Stock.Querying
             }
         }
 
-        public bool Equals(BinaryMetadata<TLeft, TRight>? other)
+        public bool Equals(BinaryMetadata? other)
         {
             if (other == null)
             {
@@ -143,7 +147,7 @@ namespace Ao.Stock.Querying
             }
             return CheckLeftEquals(other.Left) && CheckRightEquals(other.Right) && other.ExpressionType == ExpressionType;
         }
-        protected virtual bool CheckLeftEquals(in TLeft otherLeft)
+        protected virtual bool CheckLeftEquals(in IQueryMetadata otherLeft)
         {
             if (otherLeft == null && Left == null)
             {
@@ -155,7 +159,7 @@ namespace Ao.Stock.Querying
             }
             return otherLeft.Equals(Left);
         }
-        protected virtual bool CheckRightEquals(in TRight otherRight)
+        protected virtual bool CheckRightEquals(in IQueryMetadata otherRight)
         {
             if (otherRight == null && Right == null)
             {

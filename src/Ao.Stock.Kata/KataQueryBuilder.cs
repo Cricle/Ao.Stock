@@ -3,12 +3,13 @@ using SqlKata;
 using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Ao.Stock.Kata
 {
     public class KataQueryBuilder
     {
-        public static readonly KataQueryBuilder Mysql = new KataQueryBuilder(new MySqlCompiler(), new DefaultMethodTranslator<Compiler>(ConstMethodTranslator.Functions,DefaultMethodWrapper<Compiler>.MySql));
+        public static readonly KataQueryBuilder Mysql = new KataQueryBuilder(new MySqlCompiler(), new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
 
         public KataQueryBuilder(Compiler compiler, MethodTranslator<Compiler> translator)
         {
@@ -19,6 +20,12 @@ namespace Ao.Stock.Kata
         public Compiler Compiler { get; }
 
         public MethodTranslator<Compiler> Translator { get; }
+
+        public SqlResult MergeAndCompile(Query query, IQueryMetadata metadata)
+        {
+            Merge(query, metadata);
+            return Compiler.Compile(query);
+        }
 
         public void Merge(Query query, IQueryMetadata metadata)
         {
@@ -54,6 +61,20 @@ namespace Ao.Stock.Kata
             {
                 query.WhereRaw(MergeMethod(method));
             }
+            else if (metadata is FilterMetadata filters)
+            {
+                foreach (var item in filters)
+                {
+                    if (item is IUnaryMetadata unary)
+                    {
+                        query.Where(MergeUnary(unary));
+                    }
+                    else if (item is IBinaryMetadata binary)
+                    {
+                        query.Where(MergeBinary(binary));
+                    }
+                }
+            }
             else if (metadata is IEnumerable<IQueryMetadata> muliple)
             {
                 foreach (var item in muliple)
@@ -88,7 +109,7 @@ namespace Ao.Stock.Kata
         {
             if (metadata.Target is IValueMetadata value)
             {
-                query.SelectRaw((string)MergeValue(value));
+                query.SelectRaw(MergeValue(value)?.ToString());
             }
             else if (metadata.Target is MethodMetadata method)
             {
@@ -114,6 +135,41 @@ namespace Ao.Stock.Kata
                 throw new NotSupportedException();
             }
         }
+        public string MergeQuery(IQueryMetadata query)
+        {
+            string leftStr;
+            if (query is IValueMetadata valueMetadata)
+            {
+                leftStr = MergeValue(valueMetadata)?.ToString();
+            }
+            else if (query is MethodMetadata methodMetadata)
+            {
+                leftStr = MergeMethod(methodMetadata)?.ToString();
+            }
+            else
+            {
+                leftStr = query?.ToString();
+            }
+            if (leftStr==null)
+            {
+                leftStr = "null";
+            }
+            return leftStr;
+        }
+        public string MergeUnary(IUnaryMetadata unaryMetadata)
+        {
+            return new UnaryMetadata(MergeQuery(unaryMetadata.Left), unaryMetadata.ExpressionType).ToString();   
+        }
+        public string MergeBinary(IBinaryMetadata binaryMetadata)
+        {
+            var left = binaryMetadata.Left;
+            var right = binaryMetadata.Right;
+            if (binaryMetadata.ExpressionType== ExpressionType.Equal)
+            {
+                return left + " = " + right;
+            }
+            return new BinaryMetadata(left,binaryMetadata.ExpressionType,right).ToString();
+        }
         public void MergeSort(Query query, SortMetadata metadata)
         {
             if (metadata.Target is IValueMetadata value)
@@ -124,7 +180,7 @@ namespace Ao.Stock.Kata
                 }
                 else if (metadata.SortMode == SortMode.Desc)
                 {
-                    query.OrderByRaw((string)MergeValue(value) + " desc");
+                    query.OrderByRaw((string)MergeValue(value) + " DESC");
                 }
             }
             if (metadata.Target is MethodMetadata method)
@@ -135,7 +191,7 @@ namespace Ao.Stock.Kata
                 }
                 else if (metadata.SortMode == SortMode.Desc)
                 {
-                    query.OrderByRaw(MergeMethod(method) + " desc");
+                    query.OrderByRaw(MergeMethod(method) + " DESC");
                 }
             }
             else
@@ -145,7 +201,7 @@ namespace Ao.Stock.Kata
         }
         public void MergeFilter(Query query, FilterMetadata metadata)
         {
-            var str = metadata.Combine("and");
+            var str = metadata.Combine("AND");
             query.WhereRaw(str);
         }
         public void MergeLimit(Query query, LimitMetadata metadata)

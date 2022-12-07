@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Ao.Stock.Querying
 {
@@ -148,6 +149,10 @@ namespace Ao.Stock.Querying
             if (formatter.Contains(KnowsMethods.AllPlaceholder))
             {
                 formatter = formatter.Replace(KnowsMethods.AllPlaceholder, string.Join(",", args.Skip(1)));
+            }
+            if (formatter.Contains(KnowsMethods.RangeSkip1))
+            {
+                formatter = formatter.Replace(KnowsMethods.RangeSkip1, string.Join(",", args.Skip(2)));
             }
             return string.Format(formatter, args);
         }

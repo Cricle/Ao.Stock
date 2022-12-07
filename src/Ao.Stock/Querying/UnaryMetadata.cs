@@ -3,21 +3,26 @@ using System.Linq.Expressions;
 
 namespace Ao.Stock.Querying
 {
-    public class UnaryMetadata<T> : QueryMetadata, IEquatable<UnaryMetadata<T>>, IQueryMetadata, IExpressionTypeProvider
+    public class UnaryMetadata : QueryMetadata, IEquatable<UnaryMetadata>, IQueryMetadata, IUnaryMetadata
     {
-        public UnaryMetadata(T left, ExpressionType expressionType)
+        public UnaryMetadata(object left, ExpressionType expressionType)
+        {
+            Left = new ValueMetadata(left);
+            ExpressionType = expressionType;
+        }
+        public UnaryMetadata(IQueryMetadata left, ExpressionType expressionType)
         {
             Left = left;
             ExpressionType = expressionType;
         }
 
-        public T Left { get; }
+        public IQueryMetadata Left { get; }
 
         public ExpressionType ExpressionType { get; }
 
         public override bool Equals(object? obj)
         {
-            return Equals(obj as UnaryMetadata<T>);
+            return Equals(obj as UnaryMetadata);
         }
 
         public override int GetHashCode()
@@ -60,6 +65,8 @@ namespace Ao.Stock.Querying
                     return PostCombine("--");
                 case ExpressionType.OnesComplement:
                     return PreCombine("~");
+                case ExpressionType.Not:
+                    return PreCombine("!");
                 case ExpressionType.IsTrue:
                     return PostCombine("is true");
                 case ExpressionType.IsFalse:
@@ -69,7 +76,7 @@ namespace Ao.Stock.Querying
             }
         }
 
-        public bool Equals(UnaryMetadata<T>? other)
+        public bool Equals(UnaryMetadata? other)
         {
             if (other == null)
             {
@@ -78,7 +85,7 @@ namespace Ao.Stock.Querying
             return CheckLeftEquals(other.Left) && other.ExpressionType == ExpressionType;
         }
 
-        protected virtual bool CheckLeftEquals(in T otherLeft)
+        protected virtual bool CheckLeftEquals(in IQueryMetadata otherLeft)
         {
             if (otherLeft == null && Left == null)
             {

@@ -8,14 +8,27 @@ namespace Ao.Stock.Querying
 {
     public class MethodMetadata : QueryMetadata,IEquatable<MethodMetadata>, IMethodMetadata
     {
-        public MethodMetadata(string method, IList<IQueryMetadata>? args)
+        public static MethodMetadata Values(string method, bool quto, params object[]? args)
+        {
+            return new MethodMetadata(method, args?.Select(x => new ValueMetadata(x, quto)).ToArray());
+        }
+        public static MethodMetadata Values(string method, params object[]? args)
+        {
+            return Values(method, false, args);
+        }
+        public static MethodMetadata Quto(string method, params object[]? args)
+        {
+            return Values(method, true, args);
+        }
+
+        public MethodMetadata(string method,params IQueryMetadata[]? args)
         {
             Method = method ?? throw new ArgumentNullException(nameof(method));
             Args = args;
         }
 
         public MethodMetadata(string method)
-            :this(method, (IList<IQueryMetadata>?)null)
+            :this(method, null)
         {
         }
 
