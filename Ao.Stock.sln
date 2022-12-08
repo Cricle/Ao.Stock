@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL", "src\Ao.Stoc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.MySql", "samples\Ao.Stock.Sample.MySql\Ao.Stock.Sample.MySql.csproj", "{C3D68BBF-C60C-40AF-B8E6-92E5D84D3DD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Kata", "src\Ao.Stock.Kata\Ao.Stock.Kata.csproj", "{B36E1B24-AA3E-409C-AF7B-F7BC1D7D7ABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Kata", "src\Ao.Stock.Kata\Ao.Stock.Kata.csproj", "{B36E1B24-AA3E-409C-AF7B-F7BC1D7D7ABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Sample.Kata", "samples\Ao.Stock.Sample.Kata\Ao.Stock.Sample.Kata.csproj", "{0E91E518-4775-411A-869D-B5E12D4F0104}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Kata", "samples\Ao.Stock.Sample.Kata\Ao.Stock.Sample.Kata.csproj", "{0E91E518-4775-411A-869D-B5E12D4F0104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Dynamics", "src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj", "{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{0E91E518-4775-411A-869D-B5E12D4F0104}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E91E518-4775-411A-869D-B5E12D4F0104}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E91E518-4775-411A-869D-B5E12D4F0104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

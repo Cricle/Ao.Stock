@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
@@ -14,6 +15,10 @@ namespace Ao.Stock.Querying
 
         public string Alias { get; }
 
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            yield return Target;
+        }
         public bool Equals(AliasMetadata? other)
         {
             if (other==null)

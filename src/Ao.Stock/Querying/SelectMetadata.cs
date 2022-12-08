@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
@@ -10,6 +11,11 @@ namespace Ao.Stock.Querying
         }
 
         public IQueryMetadata Target { get; }
+
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            yield return Target;
+        }
 
         public override string? ToString()
         {

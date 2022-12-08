@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
-    public class FilterMetadata : MultipleQueryMetadata,IEquatable<FilterMetadata>
+    public class FilterMetadata : MultipleQueryMetadata, IEquatable<FilterMetadata>
     {
         public FilterMetadata()
         {
@@ -31,18 +31,21 @@ namespace Ao.Stock.Querying
             {
                 return string.Empty;
             }
-            var s = "(";
+            if (Count==1)
+            {
+                return this[0].ToString()!;
+            }
+            var s = string.Empty;
             for (int i = 0; i < Count; i++)
             {
                 s += " (";
                 s += this[i].ToString();
                 s += ") ";
-                if (i!=Count-1)
+                if (i != Count - 1)
                 {
                     s += @operator;
                 }
             }
-            s += ")";
             return s;
         }
         public override string ToString()

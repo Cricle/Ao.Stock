@@ -57,6 +57,14 @@ namespace Ao.Stock.Kata
             {
                 MergeSkip(query, skip);
             }
+            else if (metadata is FromMetadata from)
+            {
+                MergeFrom(query, from);
+            }
+            else if (metadata is QueryRawMetadata queryRaw)
+            {
+                MergeQueryRaw(query, queryRaw);
+            }
             else if (metadata is MethodMetadata method)
             {
                 query.WhereRaw(MergeMethod(method));
@@ -122,17 +130,25 @@ namespace Ao.Stock.Kata
         }
         public void MergeGroup(Query query, GroupMetadata metadata)
         {
-            if (metadata.Target is IValueMetadata value)
+            var groups = new List<string>();
+            foreach (var item in metadata.Target)
             {
-                query.GroupByRaw((string)MergeValue(value));
+                if (item is IValueMetadata value)
+                {
+                    groups.Add((string)MergeValue(value));
+                }
+                else if (item is MethodMetadata method)
+                {
+                    groups.Add(MergeMethod(method));
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
-            else if (metadata.Target is MethodMetadata method)
+            if (groups.Count!=0)
             {
-                query.GroupByRaw(MergeMethod(method));
-            }
-            else
-            {
-                throw new NotSupportedException();
+                query.GroupByRaw(string.Join(", ",groups));
             }
         }
         public string MergeQuery(IQueryMetadata query)
@@ -211,6 +227,22 @@ namespace Ao.Stock.Kata
         public void MergeSkip(Query query, SkipMetadata metadata)
         {
             query.Skip(metadata.Value);
+        }
+        public void MergeQueryRaw(Query query, QueryRawMetadata metadata)
+        {
+            var sql = Compiler.Compile(metadata.Query);
+            query.FromRaw(sql.ToString());
+        }
+        public void MergeFrom(Query query, FromMetadata metadata)
+        {
+            if (metadata.From is QueryRawMetadata queryMetadata)
+            {
+                MergeQueryRaw(query, queryMetadata);
+            }
+            else
+            {
+                query.FromRaw(metadata.ToString());
+            }
         }
     }
 }

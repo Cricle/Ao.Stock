@@ -3,13 +3,13 @@ using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class ValueMetadata : ValueMetadata<object>
+    public class ValueMetadata : ValueMetadata<object?>
     {
-        public ValueMetadata(object value) : base(value)
+        public ValueMetadata(object? value) : base(value)
         {
         }
 
-        public ValueMetadata(object value, bool quto) : base(value, quto)
+        public ValueMetadata(object? value, bool quto) : base(value, quto)
         {
         }
     }

@@ -51,14 +51,13 @@ namespace Ao.Stock.Querying
             {
                 return string.Empty;
             }
-            var s = "(";
+            var s = string.Empty;
             for (int i = 0; i < Count; i++)
             {
                 s += "(";
                 s += this[i].ToString();
                 s += ")";
             }
-            s += ")";
             return s;
         }
 
@@ -70,6 +69,11 @@ namespace Ao.Stock.Querying
         public void ToString(StringBuilder builder)
         {
             builder.Append(ToString());
+        }
+
+        public IEnumerable<IQueryMetadata> GetChildren()
+        {
+            return this;
         }
     }
 }

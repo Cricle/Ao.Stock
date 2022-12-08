@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-    public class BinaryMetadata : IEquatable<BinaryMetadata>, IQueryMetadata, IBinaryMetadata
+    public class BinaryMetadata : QueryMetadata,IEquatable<BinaryMetadata>, IBinaryMetadata
     {
         public BinaryMetadata(object left, ExpressionType expressionType, object right)
         {
@@ -27,6 +27,12 @@ namespace Ao.Stock.Querying
         public ExpressionType ExpressionType { get; }
 
         public IQueryMetadata Right { get; }
+
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            yield return Left;
+            yield return Right;
+        }
 
         protected virtual string Middle(string op)
         {
@@ -54,89 +60,98 @@ namespace Ao.Stock.Querying
         {
             return Equals(obj as BinaryMetadata);
         }
-        public override string ToString()
+
+        public virtual string GetToken()
         {
             switch (ExpressionType)
             {
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
-                    return Middle("+");
+                    return "+";
                 case ExpressionType.And:
-                    return Middle("&");
+                    return "&";
                 case ExpressionType.AndAlso:
-                    return Middle("&&");
+                    return "&&";
                 case ExpressionType.Coalesce:
-                    return Middle("??");
+                    return "??";
                 case ExpressionType.Divide:
-                    return Middle("/");
+                    return "/";
                 case ExpressionType.Equal:
-                    return Middle("==");
+                    return "==";
                 case ExpressionType.ExclusiveOr:
-                    return Middle("^");
+                    return "^";
                 case ExpressionType.GreaterThan:
-                    return Middle(">");
+                    return ">";
                 case ExpressionType.GreaterThanOrEqual:
-                    return Middle(">=");
+                    return ">=";
                 case ExpressionType.LeftShift:
-                    return Middle("<<");
+                    return "<<";
                 case ExpressionType.LessThan:
-                    return Middle("<");
+                    return "<";
                 case ExpressionType.LessThanOrEqual:
-                    return Middle("<=");
+                    return "<=";
                 case ExpressionType.Modulo:
-                    return Middle("%");
+                    return "%";
                 case ExpressionType.Multiply:
                 case ExpressionType.MultiplyChecked:
-                    return Middle("*");
+                    return "*";
                 case ExpressionType.NotEqual:
-                    return Middle("!=");
+                    return "!=";
                 case ExpressionType.Or:
-                    return Middle("|");
+                    return "|";
                 case ExpressionType.OrElse:
-                    return Middle("||");
+                    return "||";
                 case ExpressionType.RightShift:
-                    return Middle(">>");
+                    return ">>";
                 case ExpressionType.Subtract:
                 case ExpressionType.SubtractChecked:
-                    return Middle("-");
+                    return "-";
                 case ExpressionType.TypeAs:
-                    return Middle("as");
+                    return "as";
                 case ExpressionType.TypeIs:
-                    return Middle("is");
+                    return "is";
                 case ExpressionType.Assign:
-                    return Middle("=");
+                    return "=";
                 case ExpressionType.AddAssign:
-                    return Middle("+=");
+                    return "+=";
                 case ExpressionType.AndAssign:
-                    return Middle("&=");
+                    return "&=";
                 case ExpressionType.DivideAssign:
-                    return Middle("/=");
+                    return "/=";
                 case ExpressionType.ExclusiveOrAssign:
-                    return Middle("^=");
+                    return "^=";
                 case ExpressionType.LeftShiftAssign:
-                    return Middle("<<=");
+                    return "<<=";
                 case ExpressionType.ModuloAssign:
-                    return Middle("%=");
+                    return "%=";
                 case ExpressionType.MultiplyAssign:
-                    return Middle("*=");
+                    return "*=";
                 case ExpressionType.OrAssign:
-                    return Middle("|=");
+                    return "|=";
                 case ExpressionType.PowerAssign:
-                    return Middle("^=");
+                    return "^=";
                 case ExpressionType.RightShiftAssign:
-                    return Middle(">>=");
+                    return ">>=";
                 case ExpressionType.SubtractAssign:
                 case ExpressionType.AddAssignChecked:
-                    return Middle("-=");
+                    return "-=";
                 case ExpressionType.MultiplyAssignChecked:
-                    return Middle("*=");
+                    return "*=";
                 case ExpressionType.SubtractAssignChecked:
-                    return Middle("-=");
-                case ExpressionType.ArrayIndex:
-                    return ArrayIndex();
+                    return "-=";
                 default:
                     throw new NotSupportedException(ExpressionType.ToString());
             }
+        }
+
+        public override string ToString()
+        {
+            if (ExpressionType== ExpressionType.ArrayIndex)
+            {
+                return ArrayIndex();
+            }
+            var token = GetToken();
+            return Middle(token);
         }
 
         public bool Equals(BinaryMetadata? other)
@@ -170,17 +185,6 @@ namespace Ao.Stock.Querying
                 return false;
             }
             return otherRight.Equals(Right);
-        }
-
-
-        public void ToString(StringBuilder builder)
-        {
-            builder.Append(ToString());
-        }
-
-        private string GetDebuggerDisplay()
-        {
-            return ToString();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace Ao.Stock.Querying
@@ -22,22 +23,44 @@ namespace Ao.Stock.Querying
         }
 
         public MethodMetadata(string method,params IQueryMetadata[]? args)
+            :this(method,null,args)
         {
-            Method = method ?? throw new ArgumentNullException(nameof(method));
-            Args = args;
         }
 
         public MethodMetadata(string method)
-            :this(method, null)
+            : this(method, (MethodInfo?)null, (IList<IQueryMetadata>?)null)
         {
         }
-
+        public MethodMetadata(MethodInfo method)
+            : this(method.Name, method, (IList<IQueryMetadata>?)null)
+        {
+        }
+        public MethodMetadata(MethodInfo method, IList<IQueryMetadata>? args)
+            : this(method.Name, method, args)
+        {
+        }
+        public MethodMetadata(string method,MethodInfo? info, IList<IQueryMetadata>? args)
+        {
+            Method = method ?? throw new ArgumentNullException(nameof(method));
+            MethodInfo = info;
+            Args = args;
+        }
         public string Method { get; }
+
+        public MethodInfo? MethodInfo { get; }
 
         public ExpressionType ExpressionType { get; } = ExpressionType.Call;
 
         public IList<IQueryMetadata>? Args { get; }
 
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            if (Args!=null)
+            {
+                return Args;
+            }
+            return Enumerable.Empty<IQueryMetadata>();  
+        }
         public bool IsMethodIgnoreCase(string method)
         {
             return string.Equals(method, Method, StringComparison.OrdinalIgnoreCase);

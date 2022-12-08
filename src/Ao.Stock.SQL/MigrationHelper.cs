@@ -4,15 +4,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ao.Stock.SQL
 {
-    public class MigrationHelper
+    public class DefaultMigrationHelper : MigrationHelper
     {
-        public MigrationHelper(IReadOnlyList<IStockComparisonAction> actions)
+        public DefaultMigrationHelper(string connectionString)
         {
-            Actions = actions;
+            ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public IReadOnlyList<IStockComparisonAction> Actions { get; }
+        public string ConnectionString { get; }
 
+        protected override void ConfigMigrationRunnerBuilder(IMigrationRunnerBuilder builder)
+        {
+            builder.AddFirebird()
+                .AddSqlServer()
+                .AddMySql5()
+                .AddSQLite()
+                .AddSqlAnywhere()
+                .AddPostgres()
+                .AddOracle()
+                .AddDb2();
+        }
+    }
+    public class MigrationHelper
+    {
         protected virtual void ConfigMigrationRunnerBuilder(IMigrationRunnerBuilder builder)
         {
 
@@ -21,17 +35,17 @@ namespace Ao.Stock.SQL
         {
             services.AddLogging(lb => lb.AddFluentMigratorConsole());
         }
-        public void Migrate()
+        public void Migrate(IReadOnlyList<IStockComparisonAction> actions)
         {
             using (var provider = CreateProvider())
             {
-                Migrate(provider);
+                Migrate(actions,provider);
             }
         }
-        public void Migrate(IServiceProvider provider)
+        public void Migrate(IReadOnlyList<IStockComparisonAction> actions,IServiceProvider provider)
         {
             var runner = provider.GetRequiredService<IMigrationRunner>();
-            runner.Up(new DynamicMigration(Actions));
+            runner.Up(new DynamicMigration(actions));
         }
         public ServiceProvider CreateProvider()
         {

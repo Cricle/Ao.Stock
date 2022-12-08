@@ -18,6 +18,8 @@ namespace Ao.Stock.Querying
             [Datediff] = "DATEDIFF({1})",
             [Now] = "NOW()",
             [DateFormat] = "DATE_FORMAT({1},{2})",
+            [Weak] = "WEEK({1},{2})",
+            [Quarter] = "QUARTER({1})",
 
             [Like] = "{1} like {2}",
             [StrLen] = "CHAR_LENGTH({1})",
@@ -87,6 +89,8 @@ namespace Ao.Stock.Querying
         public const string Datediff = "datediff";
         public const string Now = "now";
         public const string DateFormat = "DATE_FORMAT";
+        public const string Weak = "weak";
+        public const string Quarter = "quarter";
 
         public const string Sum = "sum";
         public const string Avg = "avg";

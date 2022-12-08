@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Ao.Stock.Querying
@@ -19,6 +20,11 @@ namespace Ao.Stock.Querying
         public IQueryMetadata Left { get; }
 
         public ExpressionType ExpressionType { get; }
+
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            yield return Left;
+        }
 
         public override bool Equals(object? obj)
         {
@@ -42,38 +48,69 @@ namespace Ao.Stock.Querying
             return string.Concat(LeftToString(), " ", op);
         }
 
-        public override string ToString()
+        public virtual string GetToken()
         {
             switch (ExpressionType)
             {
                 case ExpressionType.UnaryPlus:
-                    return PreCombine("+");
+                    return "+";
                 case ExpressionType.Negate:
                 case ExpressionType.NegateChecked:
-                    return PreCombine("-");
+                    return "-";
                 case ExpressionType.Decrement:
-                    return PostCombine("-1");
+                    return "-1";
                 case ExpressionType.Increment:
-                    return PostCombine("+1");
+                    return "+1";
                 case ExpressionType.PreIncrementAssign:
-                    return PreCombine("++");
+                    return "++";
                 case ExpressionType.PreDecrementAssign:
-                    return PreCombine("--");
+                    return "--";
                 case ExpressionType.PostIncrementAssign:
-                    return PostCombine("++");
+                    return "++";
                 case ExpressionType.PostDecrementAssign:
-                    return PostCombine("--");
+                    return "--";
                 case ExpressionType.OnesComplement:
-                    return PreCombine("~");
+                    return "~";
                 case ExpressionType.Not:
-                    return PreCombine("!");
+                    return "!";
                 case ExpressionType.IsTrue:
-                    return PostCombine("is true");
+                    return "is true";
                 case ExpressionType.IsFalse:
-                    return PostCombine("is false");
+                    return "is false";
                 default:
                     throw new NotSupportedException(ExpressionType.ToString());
             }
+
+        }
+        public bool IsPostCombine()
+        {
+            return !IsPreCombine();
+        }
+        public bool IsPreCombine()
+        {
+            switch (ExpressionType)
+            {
+                case ExpressionType.UnaryPlus:
+                case ExpressionType.Negate:
+                case ExpressionType.NegateChecked:
+                case ExpressionType.PreIncrementAssign:
+                case ExpressionType.PreDecrementAssign:
+                case ExpressionType.PostIncrementAssign:
+                case ExpressionType.OnesComplement:
+                case ExpressionType.Not:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        public override string ToString()
+        {
+            var token = GetToken();
+            if (IsPreCombine())
+            {
+                return PreCombine(token);
+            }
+            return PostCombine(token);
         }
 
         public bool Equals(UnaryMetadata? other)

@@ -1,23 +1,39 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
     public class GroupMetadata : QueryMetadata, IEquatable<GroupMetadata>
     {
         public GroupMetadata(IQueryMetadata target)
+            : this(new[] {target})
+        {
+        }
+        public GroupMetadata(IList<IQueryMetadata> target)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
-        public IQueryMetadata Target { get; }
+        public IList<IQueryMetadata> Target { get; }
+
+        public override IEnumerable<IQueryMetadata> GetChildren()
+        {
+            return Target;
+        }
 
         public override string ToString()
         {
-            return "group by " + Target;
+            return "group by (" + string.Join(",", Target) + ")";
         }
         public override int GetHashCode()
         {
-            return Target.GetHashCode();
+            var hc = new HashCode();
+            for (int i = 0; i < Target.Count; i++)
+            {
+                hc.Add(Target[i]);
+            }
+            return hc.ToHashCode();
         }
         public override bool Equals(object? obj)
         {
@@ -30,7 +46,7 @@ namespace Ao.Stock.Querying
             {
                 return false;
             }
-            return other.Target.Equals(Target);
+            return other.Target.SequenceEqual(Target);
         }
     }
 }
