@@ -3,246 +3,88 @@ using SqlKata;
 using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace Ao.Stock.Kata
 {
-    public class KataQueryBuilder
+    public class KataMetadataVisitor : DefaultMetadataVisitor<DefaultQueryContext>
     {
-        public static readonly KataQueryBuilder Mysql = new KataQueryBuilder(new MySqlCompiler(), new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
+        public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator=null)
+        {
+            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new MethodTranslator<Compiler>(KnowsMethods.Functions));
+        }
 
-        public KataQueryBuilder(Compiler compiler, MethodTranslator<Compiler> translator)
+        public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
         {
             Compiler = compiler;
+            Root = root;
             Translator = translator;
         }
 
         public Compiler Compiler { get; }
 
+        public Query Root { get; }
+
         public MethodTranslator<Compiler> Translator { get; }
 
-        public SqlResult MergeAndCompile(Query query, IQueryMetadata metadata)
+        public override DefaultQueryContext CreateContext(IQueryMetadata metadata)
         {
-            Merge(query, metadata);
-            return Compiler.Compile(query);
+            return new DefaultQueryContext ();
         }
 
-        public void Merge(Query query, IQueryMetadata metadata)
+        protected override void OnVisitFilter(FilterMetadata value, IQueryMetadata metadata, DefaultQueryContext context)
         {
-            if (metadata is SelectMetadata select)
+            Root.WhereRaw(context.Expression);
+        }
+
+        protected override void OnVisitGroup(GroupMetadata value, DefaultQueryContext context, List<string> groups)
+        {
+            Root.GroupByRaw(string.Join(", ", groups));
+        }
+
+        protected override void OnVisitMethod(MethodMetadata method, DefaultQueryContext context, string[] args)
+        {
+            context.Expression = Translator.Translate(method, Compiler);
+        }
+
+        protected override void OnVisitSelect(SelectMetadata value, DefaultQueryContext context, List<string> selects)
+        {
+            Root.SelectRaw(string.Join(", ", selects));
+        }
+        public override void VisitAlias(AliasMetadata value, DefaultQueryContext context)
+        {
+            var ctx = CreateContext(value.Target);
+            Visit(value.Target, ctx);
+            context.Expression += $"{ctx.Expression} as {Compiler.Wrap(value.Alias)}";
+        }
+        public override void VisitValue(ValueMetadata value, DefaultQueryContext context)
+        {
+            if (context.MustQuto || value.Quto)
             {
-                MergeSelect(query, select);
-            }
-            else if (metadata is GroupMetadata group)
-            {
-                MergeGroup(query, group);
-            }
-            else if (metadata is SortMetadata sort)
-            {
-                MergeSort(query, sort);
-            }
-            else if (metadata is AliasMetadata alias)
-            {
-                MergeAlias(query, alias);
-            }
-            else if (metadata is FilterMetadata filter)
-            {
-                MergeFilter(query, filter);
-            }
-            else if (metadata is LimitMetadata limit)
-            {
-                MergeLimit(query, limit);
-            }
-            else if (metadata is SkipMetadata skip)
-            {
-                MergeSkip(query, skip);
-            }
-            else if (metadata is FromMetadata from)
-            {
-                MergeFrom(query, from);
-            }
-            else if (metadata is QueryRawMetadata queryRaw)
-            {
-                MergeQueryRaw(query, queryRaw);
-            }
-            else if (metadata is MethodMetadata method)
-            {
-                query.WhereRaw(MergeMethod(method));
-            }
-            else if (metadata is FilterMetadata filters)
-            {
-                foreach (var item in filters)
-                {
-                    if (item is IUnaryMetadata unary)
-                    {
-                        query.Where(MergeUnary(unary));
-                    }
-                    else if (item is IBinaryMetadata binary)
-                    {
-                        query.Where(MergeBinary(binary));
-                    }
-                }
-            }
-            else if (metadata is IEnumerable<IQueryMetadata> muliple)
-            {
-                foreach (var item in muliple)
-                {
-                    Merge(query, item);
-                }
+                context.Expression += ValueToString(value.Value);
             }
             else
             {
-                throw new NotSupportedException();
-            }
-        }
-        public object MergeValue(IValueMetadata valueMetadata)
-        {
-            if (valueMetadata.Quto)
-            {
-                return Compiler.Wrap((string)valueMetadata.Value);
-            }
-            return valueMetadata.Value;
-        }
-        public void MergeAlias(Query query, AliasMetadata metadata)
-        {
-            var subQuery = new Query();
-            Merge(subQuery, metadata.Target);
-            query.Select(subQuery, metadata.Alias);
-        }
-        public string MergeMethod(MethodMetadata metadata)
-        {
-            return Translator.Translate(metadata, Compiler);
-        }
-        public void MergeSelect(Query query, SelectMetadata metadata)
-        {
-            if (metadata.Target is IValueMetadata value)
-            {
-                query.SelectRaw(MergeValue(value)?.ToString());
-            }
-            else if (metadata.Target is MethodMetadata method)
-            {
-                query.SelectRaw(MergeMethod(method));
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-        public void MergeGroup(Query query, GroupMetadata metadata)
-        {
-            var groups = new List<string>();
-            foreach (var item in metadata.Target)
-            {
-                if (item is IValueMetadata value)
+                if (value.Value is DateTime||value .Value is string)
                 {
-                    groups.Add((string)MergeValue(value));
-                }
-                else if (item is MethodMetadata method)
-                {
-                    groups.Add(MergeMethod(method));
+                    context.Expression += "'" + ValueToString(value.Value) + "'";
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    context.Expression += ValueToString(value.Value);
                 }
             }
-            if (groups.Count!=0)
-            {
-                query.GroupByRaw(string.Join(", ",groups));
-            }
         }
-        public string MergeQuery(IQueryMetadata query)
+        protected virtual string ValueToString(object value)
         {
-            string leftStr;
-            if (query is IValueMetadata valueMetadata)
+            if (value ==null)
             {
-                leftStr = MergeValue(valueMetadata)?.ToString();
+                return "null";
             }
-            else if (query is MethodMetadata methodMetadata)
+            if (value is DateTime||value is DateTime?)
             {
-                leftStr = MergeMethod(methodMetadata)?.ToString();
+                return ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
             }
-            else
-            {
-                leftStr = query?.ToString();
-            }
-            if (leftStr==null)
-            {
-                leftStr = "null";
-            }
-            return leftStr;
-        }
-        public string MergeUnary(IUnaryMetadata unaryMetadata)
-        {
-            return new UnaryMetadata(MergeQuery(unaryMetadata.Left), unaryMetadata.ExpressionType).ToString();   
-        }
-        public string MergeBinary(IBinaryMetadata binaryMetadata)
-        {
-            var left = binaryMetadata.Left;
-            var right = binaryMetadata.Right;
-            if (binaryMetadata.ExpressionType== ExpressionType.Equal)
-            {
-                return left + " = " + right;
-            }
-            return new BinaryMetadata(left,binaryMetadata.ExpressionType,right).ToString();
-        }
-        public void MergeSort(Query query, SortMetadata metadata)
-        {
-            if (metadata.Target is IValueMetadata value)
-            {
-                if (metadata.SortMode == SortMode.Asc)
-                {
-                    query.OrderByRaw((string)MergeValue(value));
-                }
-                else if (metadata.SortMode == SortMode.Desc)
-                {
-                    query.OrderByRaw((string)MergeValue(value) + " DESC");
-                }
-            }
-            if (metadata.Target is MethodMetadata method)
-            {
-                if (metadata.SortMode == SortMode.Asc)
-                {
-                    query.OrderByRaw(MergeMethod(method));
-                }
-                else if (metadata.SortMode == SortMode.Desc)
-                {
-                    query.OrderByRaw(MergeMethod(method) + " DESC");
-                }
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-        public void MergeFilter(Query query, FilterMetadata metadata)
-        {
-            var str = metadata.Combine("AND");
-            query.WhereRaw(str);
-        }
-        public void MergeLimit(Query query, LimitMetadata metadata)
-        {
-            query.Limit(metadata.Value);
-        }
-        public void MergeSkip(Query query, SkipMetadata metadata)
-        {
-            query.Skip(metadata.Value);
-        }
-        public void MergeQueryRaw(Query query, QueryRawMetadata metadata)
-        {
-            var sql = Compiler.Compile(metadata.Query);
-            query.FromRaw(sql.ToString());
-        }
-        public void MergeFrom(Query query, FromMetadata metadata)
-        {
-            if (metadata.From is QueryRawMetadata queryMetadata)
-            {
-                MergeQueryRaw(query, queryMetadata);
-            }
-            else
-            {
-                query.FromRaw(metadata.ToString());
-            }
+            return value.ToString();
         }
     }
 }

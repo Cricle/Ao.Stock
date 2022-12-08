@@ -14,10 +14,6 @@ namespace Ao.Stock.Sample.MySql
 {
     class MyMigrationHelper : MigrationHelper
     {
-        public MyMigrationHelper(IReadOnlyList<IStockComparisonAction> actions) : base(actions)
-        {
-        }
-
         public string GlobalString { get; set; }
 
         protected override void ConfigMigrationRunnerBuilder(IMigrationRunnerBuilder builder)
@@ -49,8 +45,8 @@ namespace Ao.Stock.Sample.MySql
             var mx = m.GetEntityTypes().FirstOrDefault(x => x.GetTableName() == "student")?.AsStockType();
             var mt1 = StockHelper.FromType(typeof(Student1), new ReflectionOptions { TypeNameGetter = _ => "student" });
             var res = DefaultStockTypeComparer.Default.Compare(mx, mt1);
-            var h = new MyMigrationHelper(res) { GlobalString = mysql };
-            h.Migrate();
+            var h = new MyMigrationHelper() { GlobalString = mysql };
+            h.Migrate(res);
 
         }
     }
