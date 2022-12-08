@@ -1,4 +1,0 @@
-﻿namespace Ao.Stock.Dynamics
-{
-
-}
