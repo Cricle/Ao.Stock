@@ -1,30 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ao.Stock.Querying
 {
     public class SelectMetadata : QueryMetadata, IEquatable<SelectMetadata>
     {
         public SelectMetadata(IQueryMetadata target)
+            : this(new[] { target })
+        {
+        }
+
+        public SelectMetadata(IList<IQueryMetadata> target)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
-        public IQueryMetadata Target { get; }
+        public IList<IQueryMetadata> Target { get; }
 
         public override IEnumerable<IQueryMetadata> GetChildren()
         {
-            yield return Target;
+            return Target;
         }
 
         public override string? ToString()
         {
-            return Target.ToString();
+            return "(" + string.Join(",", Target) + ")";
         }
 
         public override int GetHashCode()
         {
-            return Target.GetHashCode();
+            var hc = new HashCode();
+            for (int i = 0; i < Target.Count; i++)
+            {
+                hc.Add(Target[i]);
+            }
+            return hc.ToHashCode();
         }
 
         public override bool Equals(object? obj)
@@ -34,11 +45,11 @@ namespace Ao.Stock.Querying
 
         public bool Equals(SelectMetadata? other)
         {
-            if (other==null)
+            if (other == null)
             {
                 return false;
             }
-            return other.Target.Equals(Target);
+            return other.Target.SequenceEqual(Target);
         }
     }
 }

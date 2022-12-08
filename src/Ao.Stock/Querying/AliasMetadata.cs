@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
+
     public class AliasMetadata : QueryMetadata, IEquatable<AliasMetadata>
     {
         public AliasMetadata(IQueryMetadata target, string alias)
