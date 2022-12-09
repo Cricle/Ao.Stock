@@ -26,15 +26,15 @@ namespace Ao.Stock.Sample.Kata
                             new BinaryMetadata(new ValueMetadata("Time",true), ExpressionType.LessThan,new ValueMetadata(DateTime.Parse("2023-12-8")) )
                     ))
                 },
-                new GroupMetadata(new AliasMetadata(new ValueMetadata("Name"),"Name")),
+                new GroupMetadata(new AliasMetadata(new ValueMetadata("Name",true),"Name")),
                 new SelectMetadata(new IQueryMetadata[]
                 {
-                    new AliasMetadata(new MethodMetadata(KnowsMethods.DistinctCount,new ValueMetadata("Scope")),"sum_name"),
-                    new AliasMetadata(new MethodMetadata(KnowsMethods.Count,new ValueMetadata("Scope")),"count_name"),
-                    new AliasMetadata(new ValueMetadata("Name"),"rawname"),
+                    new AliasMetadata(new MethodMetadata(KnowsMethods.DistinctCount,new ValueMetadata("Scope",true)),"sum_name"),
+                    new AliasMetadata(new MethodMetadata(KnowsMethods.Count,new ValueMetadata("Scope",true)),"count_name"),
+                    new AliasMetadata(new ValueMetadata("Name", true),"rawname"),
                 }),
-                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope")),
-                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope")),
+                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope", true)),
+                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope", true)),
                 new LimitMetadata(10)
             };
             Console.WriteLine(msub);

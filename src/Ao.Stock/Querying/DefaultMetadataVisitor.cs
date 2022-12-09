@@ -91,15 +91,9 @@ namespace Ao.Stock.Querying
         }
         public override void VisitWrapper(WrapperMetadata value, T context)
         {
-            var leftCtx = CreateContext(value.Left);
-            leftCtx.MustQuto = true;
             var targetCtx = CreateContext(value.Target);
-            var rightCtx = CreateContext(value.Right);
-            rightCtx.MustQuto = true;
-            Visit(value.Left, leftCtx);
             Visit(value.Target, targetCtx);
-            Visit(value.Right, rightCtx);
-            context.Expression += leftCtx.Expression + targetCtx.Expression + rightCtx.Expression;
+            context.Expression += value.Left + targetCtx.Expression + value.Right;
         }
         public override void VisitAlias(AliasMetadata value, T context)
         {
