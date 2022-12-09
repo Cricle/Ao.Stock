@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Kata", "sam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Dynamics", "src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj", "{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{A981BED9-2B9E-4F92-B0BD-2035059DB1F5}"
+	ProjectSection(SolutionItems) = preProject
+		eng\pkg.props = eng\pkg.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Dynamics", "samples\Ao.Stock.Sample.Dynamics\Ao.Stock.Sample.Dynamics.csproj", "{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +60,10 @@ Global
 		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +72,7 @@ Global
 		{3EFADA5A-A532-4A27-BAC4-E1ED19CC0585} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{C3D68BBF-C60C-40AF-B8E6-92E5D84D3DD6} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{0E91E518-4775-411A-869D-B5E12D4F0104} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
+		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A46E8088-BF9D-4D37-BD69-9B957A02B5BF}

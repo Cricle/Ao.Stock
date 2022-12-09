@@ -7,12 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ExpressionTreeToString" Version="3.4.71" />
-  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj" />
     <ProjectReference Include="..\..\src\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
   </ItemGroup>
 

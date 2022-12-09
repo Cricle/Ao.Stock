@@ -55,10 +55,6 @@ namespace Ao.Stock.Querying
                 var left = Parse(unary.Operand);
                 return new UnaryMetadata(left, unary.NodeType);
             }
-            //else if (expression is expression)
-            //{
-
-            //}
             else if (expression is BlockExpression block)
             {
                 var metadatas = new MultipleQueryMetadata(block.Expressions.Count);

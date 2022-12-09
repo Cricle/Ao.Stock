@@ -12,6 +12,14 @@ namespace Ao.Stock.Kata
         {
             return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new MethodTranslator<Compiler>(KnowsMethods.Functions));
         }
+        public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
+        {
+            var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.StrLen] = "LEN({1})";
+            funcs[KnowsMethods.StrIndexOf] = "CHARINDEX({1},{2})";
+            funcs[KnowsMethods.StrSub] = "SUBSTRING({1},{2},{3})";
+            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new MethodTranslator<Compiler>(funcs));
+        }
 
         public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
         {
