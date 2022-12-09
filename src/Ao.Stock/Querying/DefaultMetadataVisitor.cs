@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace Ao.Stock.Querying
 {
@@ -131,5 +132,13 @@ namespace Ao.Stock.Querying
             OnVisitMethod(method, context, args);
         }
         protected abstract void OnVisitMethod(MethodMetadata method,T context, string[] args);
+
+        public override void VisitSort(SortMetadata value, T context)
+        {
+            var ctx=CreateContext(value.Target);
+            Visit(value.Target, ctx);
+            OnVisitSort(value, ctx);
+        }
+        protected abstract void OnVisitSort(SortMetadata method, T context);
     }
 }

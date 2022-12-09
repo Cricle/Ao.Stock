@@ -25,7 +25,7 @@ namespace Ao.Stock.Querying
 
         public override string? ToString()
         {
-            return "(" + string.Join(",", Target) + ")";
+            return "select (" + string.Join(",", Target) + ")";
         }
 
         public override int GetHashCode()

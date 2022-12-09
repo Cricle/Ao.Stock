@@ -51,12 +51,23 @@ namespace Ao.Stock.Querying
             {
                 VisitSkip(skip, context);
             }
+            else if (query is SortMetadata sort)
+            {
+                VisitSort(sort, context);
+            }
             else if (query is IEnumerable<IQueryMetadata> querys)
             {
                 foreach (var item in querys)
                 {
                     Visit(item, context);
                 }
+            }
+        }
+        public virtual void VisitSort(SortMetadata value, TContext context)
+        {
+            foreach (var item in value.GetChildren())
+            {
+                Visit(item, context);
             }
         }
         public virtual void VisitLimit(LimitMetadata value, TContext context)

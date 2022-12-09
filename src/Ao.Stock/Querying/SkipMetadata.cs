@@ -9,5 +9,9 @@
         public SkipMetadata(int value, bool quto) : base(value, quto)
         {
         }
+        public override string ToString()
+        {
+            return "skip " + base.ToString();
+        }
     }
 }

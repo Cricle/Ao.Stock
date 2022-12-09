@@ -37,6 +37,22 @@ namespace Ao.Stock.Dynamics
 
         public IQueryable Queryable => queryable;
 
+        private bool hasOrder = false;
+
+        protected override void OnVisitSort(SortMetadata method, T context)
+        {
+            var exp = context.Expression + (method.SortMode == SortMode.Desc ? " DESC" : "");
+            if (hasOrder&&queryable is IOrderedQueryable ordered)
+            {
+                queryable = ordered.ThenBy(exp, Args.ToArray());
+            }
+            else
+            {
+                queryable = queryable.OrderBy(exp, Args.ToArray());
+                hasOrder = true;
+            }
+        }
+
         protected override void OnVisitSelect(SelectMetadata value, T context, List<string> selects)
         {
             queryable = queryable.Select($"new ({string.Join(",", selects)})", Args.ToArray());

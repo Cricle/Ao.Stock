@@ -150,16 +150,15 @@ namespace Ao.Stock.SQL
             }
             return columnTypeSyntax.AsString(len);
         }
-        protected virtual TNext AsCustom<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
-            where TNext : IFluentSyntax
-        {
-            throw new NotSupportedException();
-        }
         protected TNext Property<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
             where TNext : IFluentSyntax
         {
             TNext? next = default;
             var type = property.Type;
+            if (type.IsGenericType&&type.GetGenericTypeDefinition()==typeof(Nullable<>))
+            {
+                type = type.GetGenericArguments()[0];
+            }
             if (type == null)
             {
                 throw new NotSupportedException("Null type for property");
@@ -211,10 +210,6 @@ namespace Ao.Stock.SQL
             else if (type == typeof(string))
             {
                 next = AsString(columnTypeSyntax, property);
-            }
-            if (next == null)
-            {
-                next = AsCustom(columnTypeSyntax, property);
             }
             return next;
         }

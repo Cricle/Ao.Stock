@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj" />
-    <ProjectReference Include="..\src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj" />
-    <ProjectReference Include="..\src\Ao.Stock\Ao.Stock.csproj" />
   </ItemGroup>
 
 </Project>

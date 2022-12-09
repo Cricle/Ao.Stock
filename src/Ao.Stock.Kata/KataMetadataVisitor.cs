@@ -10,7 +10,7 @@ namespace Ao.Stock.Kata
     {
         public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator=null)
         {
-            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new MethodTranslator<Compiler>(KnowsMethods.Functions));
+            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
         {
@@ -18,7 +18,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.StrLen] = "LEN({1})";
             funcs[KnowsMethods.StrIndexOf] = "CHARINDEX({1},{2})";
             funcs[KnowsMethods.StrSub] = "SUBSTRING({1},{2},{3})";
-            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new MethodTranslator<Compiler>(funcs));
+            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
         }
 
         public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
@@ -37,6 +37,16 @@ namespace Ao.Stock.Kata
         public override DefaultQueryContext CreateContext(IQueryMetadata metadata)
         {
             return new DefaultQueryContext ();
+        }
+
+        protected override void OnVisitSort(SortMetadata value, DefaultQueryContext context)
+        {
+            Root.OrderByRaw(context.Expression + (value.SortMode == SortMode.Desc ?" DESC":""));
+        }
+
+        public override void VisitSort(SortMetadata value, DefaultQueryContext context)
+        {
+            base.VisitSort(value, context);
         }
 
         protected override void OnVisitFilter(FilterMetadata value, IQueryMetadata metadata, DefaultQueryContext context)
@@ -68,7 +78,7 @@ namespace Ao.Stock.Kata
         {
             if (context.MustQuto || value.Quto)
             {
-                context.Expression += ValueToString(value.Value);
+                context.Expression += Compiler.Wrap(value.Value?.ToString());
             }
             else
             {

@@ -9,5 +9,9 @@
         public LimitMetadata(int value, bool quto) : base(value, quto)
         {
         }
+        public override string ToString()
+        {
+            return "limit " + base.ToString();
+        }
     }
 }

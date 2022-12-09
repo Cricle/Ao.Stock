@@ -38,10 +38,12 @@ namespace Ao.Stock.Sample.Dynamics
                 new GroupMetadata(new AliasMetadata(new ValueMetadata("Name"),"Name")),
                 new SelectMetadata(new IQueryMetadata[]
                 {
+                    new AliasMetadata(new ValueMetadata("it.Key.Name",true),"sum_namedd"),
                     new AliasMetadata(new MethodMetadata(KnowsMethods.DistinctCount,new ValueMetadata("Scope")),"sum_name"),
                     new AliasMetadata(new MethodMetadata(KnowsMethods.Count,new ValueMetadata("Scope")),"count_name"),
                 }),
-                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope")),
+                new SortMetadata(SortMode.Desc,new ValueMetadata("count_name",true)),
+                new SortMetadata(SortMode.Asc,new ValueMetadata("sum_name",true)),
                 new LimitMetadata(10)
             };
             var ss = new List<Student>();

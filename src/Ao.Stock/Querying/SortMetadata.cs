@@ -23,7 +23,7 @@ namespace Ao.Stock.Querying
 
         public override string ToString()
         {
-            return $"{Target} {SortMode}";
+            return $"order by {Target} {SortMode}";
         }
 
         public bool Equals(SortMetadata? other)

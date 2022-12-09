@@ -31,7 +31,9 @@ namespace Ao.Stock.Sample.Kata
                 {
                     new AliasMetadata(new MethodMetadata(KnowsMethods.DistinctCount,new ValueMetadata("Scope")),"sum_name"),
                     new AliasMetadata(new MethodMetadata(KnowsMethods.Count,new ValueMetadata("Scope")),"count_name"),
+                    new AliasMetadata(new ValueMetadata("Name"),"rawname"),
                 }),
+                new SortMetadata(SortMode.Desc,new ValueMetadata("Scope")),
                 new SortMetadata(SortMode.Desc,new ValueMetadata("Scope")),
                 new LimitMetadata(10)
             };
