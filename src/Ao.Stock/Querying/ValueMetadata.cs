@@ -30,6 +30,8 @@ namespace Ao.Stock.Querying
 
         public bool Quto { get; }
 
+        public Type? ValueType => typeof(T) == typeof(object) ? Value?.GetType() : typeof(T);
+
         object? IValueMetadata.Value => Value;
 
         public override int GetHashCode()

@@ -48,11 +48,15 @@ namespace Ao.Stock.Querying
             {
                 var left = Parse(binary.Left);
                 var right = Parse(binary.Right);
-                return new BinaryMetadata(left, binary.NodeType, right);
+                return WrapperMetadata.Brackets(new BinaryMetadata(left, binary.NodeType, right));
             }
             else if (expression is UnaryExpression unary)
             {
                 var left = Parse(unary.Operand);
+                if (unary.NodeType == ExpressionType.Convert || unary.NodeType == ExpressionType.ConvertChecked)
+                {
+                    return new UnaryMetadata(left, ExpressionType.Default);
+                }
                 return new UnaryMetadata(left, unary.NodeType);
             }
             else if (expression is BlockExpression block)
@@ -63,6 +67,22 @@ namespace Ao.Stock.Querying
                     metadatas.Add(Parse(block.Expressions[i]));
                 }
                 return metadatas;
+            }
+            else if (expression is ParameterExpression parameter)
+            {
+                return new ValueMetadata(parameter.Name, true);
+            }
+            else if (expression is InvocationExpression invocation)
+            {
+                var expLambda=Expression.Lambda(invocation.Expression).Compile();
+                var res = (Delegate)expLambda.DynamicInvoke();
+                var args = new object[invocation.Arguments.Count];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    args[i]= Expression.Lambda(invocation.Arguments[i]).Compile().DynamicInvoke();
+                }
+                var data = res.DynamicInvoke(args);
+                return new ValueMetadata(res, true);
             }
             else
             {

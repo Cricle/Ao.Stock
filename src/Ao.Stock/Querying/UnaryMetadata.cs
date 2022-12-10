@@ -47,40 +47,13 @@ namespace Ao.Stock.Querying
         {
             return string.Concat(LeftToString(), " ", op);
         }
-
         public virtual string GetToken()
         {
-            switch (ExpressionType)
+            if (OperatorHelpers.TokenMap.TryGetValue(ExpressionType, out var tk))
             {
-                case ExpressionType.UnaryPlus:
-                    return "+";
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                    return "-";
-                case ExpressionType.Decrement:
-                    return "-1";
-                case ExpressionType.Increment:
-                    return "+1";
-                case ExpressionType.PreIncrementAssign:
-                    return "++";
-                case ExpressionType.PreDecrementAssign:
-                    return "--";
-                case ExpressionType.PostIncrementAssign:
-                    return "++";
-                case ExpressionType.PostDecrementAssign:
-                    return "--";
-                case ExpressionType.OnesComplement:
-                    return "~";
-                case ExpressionType.Not:
-                    return "!";
-                case ExpressionType.IsTrue:
-                    return "is true";
-                case ExpressionType.IsFalse:
-                    return "is false";
-                default:
-                    throw new NotSupportedException(ExpressionType.ToString());
+                return tk.Token;
             }
-
+            throw new NotSupportedException(ExpressionType.ToString());
         }
         public bool IsPostCombine()
         {

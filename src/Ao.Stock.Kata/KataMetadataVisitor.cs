@@ -3,6 +3,7 @@ using SqlKata;
 using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Ao.Stock.Kata
 {
@@ -10,7 +11,27 @@ namespace Ao.Stock.Kata
     {
         public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator=null)
         {
-            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
+            return new KataMetadataVisitor(new MySqlCompiler(), root, 
+                translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
+        }
+        public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
+        {
+            var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.Year] = "strftime('%Y',{1})";
+            funcs[KnowsMethods.Month] = "strftime('%m',{1})";
+            funcs[KnowsMethods.Day] = "strftime('%d',{1})";
+            funcs[KnowsMethods.Hour] = "strftime('%H',{1})";
+            funcs[KnowsMethods.Minute] = "strftime('%M',{1})";
+            funcs[KnowsMethods.Second] = "strftime('%S',{1})";
+            funcs[KnowsMethods.Date] = "strftime('%Y-%m-%d',{1})";
+            funcs[KnowsMethods.Now] = "strftime('%Y-%m-%d %H-%M-%S','now')";
+            funcs[KnowsMethods.DateFormat] = "strftime({2},{1})";
+            funcs[KnowsMethods.Weak] = "strftime('%W',{1})";
+            funcs[KnowsMethods.Quarter] = "COALESCE(NULLIF((SUBSTR({1}, 4, 2) - 1) / 3, 0), 4)";
+            funcs[KnowsMethods.StrLen] = "LENGTH({1})";
+            funcs[KnowsMethods.StrIndexOf] = "instr({1},{2})";
+            return new KataMetadataVisitor(new SqliteCompiler(), root, 
+                translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Sqlite));
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
         {
@@ -18,7 +39,8 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.StrLen] = "LEN({1})";
             funcs[KnowsMethods.StrIndexOf] = "CHARINDEX({1},{2})";
             funcs[KnowsMethods.StrSub] = "SUBSTRING({1},{2},{3})";
-            return new KataMetadataVisitor(new MySqlCompiler(), root, translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
+            return new KataMetadataVisitor(new MySqlCompiler(), root, 
+                translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
         }
 
         public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
@@ -63,7 +85,11 @@ namespace Ao.Stock.Kata
         {
             context.Expression = Translator.Translate(method, Compiler);
         }
-
+        protected override void OnVisitBinary(BinaryMetadata value, DefaultQueryContext context, DefaultQueryContext leftContext, DefaultQueryContext rightContext)
+        {
+            var tk =value.ExpressionType== ExpressionType.Equal?"=": value.GetToken();
+            context.Expression += leftContext.Expression + tk + rightContext.Expression;
+        }
         protected override void OnVisitSelect(SelectMetadata value, DefaultQueryContext context, List<string> selects)
         {
             Root.SelectRaw(string.Join(", ", selects));
@@ -103,6 +129,14 @@ namespace Ao.Stock.Kata
                 return ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
             }
             return value.ToString();
+        }
+        public override void VisitSkip(SkipMetadata value, DefaultQueryContext context)
+        {
+            Root.Skip(value.Value);
+        }
+        public override void VisitLimit(LimitMetadata value, DefaultQueryContext context)
+        {
+            Root.Limit(value.Value);
         }
     }
 }

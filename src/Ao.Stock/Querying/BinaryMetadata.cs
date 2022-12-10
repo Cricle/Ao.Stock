@@ -61,87 +61,14 @@ namespace Ao.Stock.Querying
             return Equals(obj as BinaryMetadata);
         }
 
+
         public virtual string GetToken()
         {
-            switch (ExpressionType)
+            if (OperatorHelpers.TokenMap.TryGetValue(ExpressionType,out var tk))
             {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                    return "+";
-                case ExpressionType.And:
-                    return "&";
-                case ExpressionType.AndAlso:
-                    return "&&";
-                case ExpressionType.Coalesce:
-                    return "??";
-                case ExpressionType.Divide:
-                    return "/";
-                case ExpressionType.Equal:
-                    return "==";
-                case ExpressionType.ExclusiveOr:
-                    return "^";
-                case ExpressionType.GreaterThan:
-                    return ">";
-                case ExpressionType.GreaterThanOrEqual:
-                    return ">=";
-                case ExpressionType.LeftShift:
-                    return "<<";
-                case ExpressionType.LessThan:
-                    return "<";
-                case ExpressionType.LessThanOrEqual:
-                    return "<=";
-                case ExpressionType.Modulo:
-                    return "%";
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                    return "*";
-                case ExpressionType.NotEqual:
-                    return "!=";
-                case ExpressionType.Or:
-                    return "|";
-                case ExpressionType.OrElse:
-                    return "||";
-                case ExpressionType.RightShift:
-                    return ">>";
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                    return "-";
-                case ExpressionType.TypeAs:
-                    return "as";
-                case ExpressionType.TypeIs:
-                    return "is";
-                case ExpressionType.Assign:
-                    return "=";
-                case ExpressionType.AddAssign:
-                    return "+=";
-                case ExpressionType.AndAssign:
-                    return "&=";
-                case ExpressionType.DivideAssign:
-                    return "/=";
-                case ExpressionType.ExclusiveOrAssign:
-                    return "^=";
-                case ExpressionType.LeftShiftAssign:
-                    return "<<=";
-                case ExpressionType.ModuloAssign:
-                    return "%=";
-                case ExpressionType.MultiplyAssign:
-                    return "*=";
-                case ExpressionType.OrAssign:
-                    return "|=";
-                case ExpressionType.PowerAssign:
-                    return "^=";
-                case ExpressionType.RightShiftAssign:
-                    return ">>=";
-                case ExpressionType.SubtractAssign:
-                case ExpressionType.AddAssignChecked:
-                    return "-=";
-                case ExpressionType.MultiplyAssignChecked:
-                    return "*=";
-                case ExpressionType.SubtractAssignChecked:
-                    return "-=";
-                default:
-                    throw new NotSupportedException(ExpressionType.ToString());
+                return tk.Token;
             }
+            throw new NotSupportedException(ExpressionType.ToString());
         }
 
         public override string ToString()
@@ -186,5 +113,6 @@ namespace Ao.Stock.Querying
             }
             return otherRight.Equals(Right);
         }
+
     }
 }

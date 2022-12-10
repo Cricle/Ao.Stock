@@ -67,12 +67,16 @@ namespace Ao.Stock.Querying
 
         public override void VisitBinary(BinaryMetadata value, T context)
         {
-            var token = value.GetToken();
             var leftCtx = CreateContext(value.Left);
             var rightCtx = CreateContext(value.Right);
             Visit(value.Left, leftCtx);
             Visit(value.Right, rightCtx);
-            context.Expression += leftCtx.Expression + token + rightCtx.Expression;
+            OnVisitBinary(value,context,leftCtx, rightCtx);
+        }
+        protected virtual void OnVisitBinary(BinaryMetadata value, T context,T leftContext,T rightContext)
+        {
+            var token = value.GetToken();
+            context.Expression += leftContext.Expression + token + rightContext.Expression;
         }
 
         public override void VisitUnary(UnaryMetadata value, T context)

@@ -1,10 +1,27 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Reflection;
+using System.Linq;
 
 namespace Ao.Stock.Querying
 {
     public static class KnowsMethods
     {
+        public static readonly IReadOnlyDictionary<string,string> KnowsMethodNames;
+
+        private static readonly string[] NotIncludes = new string[]
+        {
+            nameof(AllPlaceholder),
+            nameof(RangeSkip1)
+        };
+
+        static KnowsMethods()
+        {
+            KnowsMethodNames = typeof(KnowsMethods).GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(x => x.FieldType == typeof(string) && !NotIncludes.Contains(x.Name))
+                .ToDictionary(x => x.Name, x => (string)x.GetValue(null));
+        }
+
         public static Dictionary<string, string> Functions => new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             [Year] = "YEAR({1})",
