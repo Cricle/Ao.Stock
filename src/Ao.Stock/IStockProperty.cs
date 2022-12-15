@@ -3,10 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock
 {
-    public interface IStockProperty : INamed
+    public interface IStockProperty : INamed, IStockAttachable, IStockTyped
     {
-        Type? Type { get; }
-
-        IReadOnlyList<IStockAttack>? Attacks { get; }
     }
 }

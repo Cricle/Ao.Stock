@@ -1,48 +1,44 @@
-﻿using Ao.Stock.SQL.Announcation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System.ComponentModel.DataAnnotations;
 
 namespace Ao.Stock.SQL
 {
     public static class StockEFModelHelper
     {
+        public static IStockType? AsStockType(this IModel model, string tableName, IEFEntityTypeToStockConverter converter, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return AsStockType(model.GetEntityTypes(), tableName, converter, comparison);
+        }
+        public static IStockType? AsStockType(this IEnumerable<IEntityType> types, string tableName, IEFEntityTypeToStockConverter converter,StringComparison comparison= StringComparison.OrdinalIgnoreCase)
+        {
+            return types.FirstOrDefault(x => string.Equals(x.GetTableName() ,tableName, comparison))?.AsStockType(converter);
+        }
+        public static IStockType? AsStockType(this IModel model, string tableName, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return AsStockType(model.GetEntityTypes(), tableName, DefaultEFEntityTypeToStockConverter.Instance, comparison);
+        }
+        public static IStockType? AsStockType(this IEnumerable<IEntityType> types, string tableName, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return types.FirstOrDefault(x => string.Equals(x.GetTableName(), tableName, comparison))?.AsStockType(DefaultEFEntityTypeToStockConverter.Instance);
+        }
         public static IStockType? AsStockType(this IEntityType type)
         {
-            if (type == null)
+            return AsStockType(type, DefaultEFEntityTypeToStockConverter.Instance);
+        }
+
+        public static IStockType? AsStockType(this IEntityType type, IEFEntityTypeToStockConverter converter)
+        {
+            if (type is null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(type));
             }
-            var tableName = type.GetTableName();
-            var t = new StockType
+
+            if (converter is null)
             {
-                Name = tableName,
-            };
-            var props = new List<IStockProperty>();
-            t.Properties = props;
-            foreach (var item in type.GetProperties())
-            {
-                var isPrimayKey = item.IsPrimaryKey();
-                var isIndex = item.IsIndex();
-                var store = StoreObjectIdentifier.Create(type, StoreObjectType.Table) ?? default;
-                var prop = new StockProperty
-                {
-                    Name = item.GetColumnName(store),
-                    Type = item.ClrType,
-                };
-                var atts = new List<IStockAttack>(0);
-                if (isPrimayKey)
-                {
-                    atts.Add(new StockAttributeAttack(new KeyAttribute()));
-                }
-                if (isIndex)
-                {
-                    atts.Add(new StockAttributeAttack(new SqlIndexAttribute()));
-                }
-                prop.Attacks = atts;
-                props.Add(prop);
+                throw new ArgumentNullException(nameof(converter));
             }
-            return t;
+
+            return converter.AsStockType(type);
         }
     }
 }

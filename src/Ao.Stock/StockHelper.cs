@@ -6,6 +6,10 @@ namespace Ao.Stock
 {
     public static class StockHelper
     {
+        public static IStockType FromType(Type type)
+        {
+            return FromType(type, null);
+        }
         public static IStockType FromType(Type type, ReflectionOptions? options)
         {
             var t = new StockType

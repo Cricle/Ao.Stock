@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ao.Stock
 {
-    public interface IStockType : INamed
+    public interface IStockType : INamed, IStockAttachable, IStockTyped
     {
-        Type? Type { get; }
-
         IReadOnlyList<IStockProperty>? Properties { get; }
-
-        IReadOnlyList<IStockAttack>? Attacks { get; }
     }
 }
