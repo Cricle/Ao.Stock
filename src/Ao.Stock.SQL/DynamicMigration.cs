@@ -21,6 +21,17 @@ namespace Ao.Stock.SQL
         }
         protected virtual void Attacks(StockAttackChangeComparisonAction action)
         {
+            if (action.RightProperty != null)
+            {
+                var maxLen = (StockAttributeAttack?)action.Ups?.FirstOrDefault(x => x is StockAttributeAttack attack && attack.Attribute is MaxLengthAttribute);
+                if (maxLen != null)
+                {
+                    var prop = action.RightProperty;
+                    var syntax=Alter.Column(prop.Name)
+                        .OnTable(action.RightType.Name);
+                    var next = Property(syntax, prop);
+                }
+            }
         }
         protected virtual void Columns(StockTypePropertiesComparisonAction action)
         {

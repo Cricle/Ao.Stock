@@ -15,9 +15,9 @@ namespace Ao.Stock.Comparering
 
         public IStockPropertyComparer PropertyComparer { get; }
 
-        protected virtual IStockComparisonAction? CompareAttacks(IReadOnlyList<IStockAttack>? lefts, IReadOnlyList<IStockAttack>? rights)
+        protected virtual IStockComparisonAction? CompareAttacks(IStockType left, IStockType right,IReadOnlyList<IStockAttack>? lefts, IReadOnlyList<IStockAttack>? rights)
         {
-            return StockAttackComparerHelper.CompareAttack(lefts, rights);
+            return StockAttackComparerHelper.CompareAttack(left,null,right,null,lefts, rights);
         }
 
         protected virtual bool IsPropertyEquals(IStockProperty left, IStockProperty right)
@@ -89,7 +89,7 @@ namespace Ao.Stock.Comparering
             {
                 lst.Add(new StockTypeTypeChangedComparisonAction(left, right, left.Type, right.Type));
             }
-            var attackAct = CompareAttacks(left.Attacks, right.Attacks);
+            var attackAct = CompareAttacks(left,right,left.Attacks, right.Attacks);
             if (attackAct != null)
             {
                 lst.Add(attackAct);

@@ -21,6 +21,10 @@ namespace Ao.Stock.SQL
             stockProperty.Name = property.GetColumnName(store);
             stockProperty.Type = property.ClrType;
             var atts = new List<IStockAttack>(0);
+            if (property.ClrType==typeof(string)&&property.GetMaxLength() is int len)
+            {
+                atts.Add(new StockAttributeAttack(new MaxLengthAttribute(len)));
+            }
             if (isPrimayKey)
             {
                 atts.Add(new StockAttributeAttack(new KeyAttribute()));
