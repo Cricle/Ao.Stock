@@ -16,7 +16,7 @@ namespace Ao.Stock.Comparering
             var lst = new List<IStockComparisonAction>(0);
             if (left.Name != right.Name)
             {
-                lst.Add(new RenamePropertyComparisonAction(leftType,rightType,left, right, left.Name, right.Name));
+                lst.Add(new RenamePropertyComparisonAction(leftType, rightType, left, right, left.Name, right.Name));
             }
             if (left.Type != right.Type)
             {

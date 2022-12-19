@@ -15,13 +15,13 @@
 
     public class StockCreateTypeComparisonAction : StockTypeComparisonAction
     {
-        public StockCreateTypeComparisonAction(IStockType left, IStockType right) : base(left, right)
+        public StockCreateTypeComparisonAction(IStockType? left, IStockType right) : base(left, right)
         {
         }
     }
     public class StockDropTypeComparisonAction : StockTypeComparisonAction
     {
-        public StockDropTypeComparisonAction(IStockType left, IStockType right) : base(left, right)
+        public StockDropTypeComparisonAction(IStockType left, IStockType? right) : base(left, right)
         {
         }
     }

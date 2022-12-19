@@ -15,7 +15,7 @@ namespace Ao.Stock.Comparering
             {
                 var ups = rights.Except(lefts).ToList();
                 var downs = lefts.Except(rights).ToList();
-                if (ups.Count==0&&downs.Count==0)
+                if (ups.Count == 0 && downs.Count == 0)
                 {
                     return null;
                 }

@@ -4,9 +4,9 @@ namespace Ao.Stock.Comparering
 {
     public class StockPropertyTypeChangedComparisonAction : StockPropertyComparisonAction
     {
-        public StockPropertyTypeChangedComparisonAction(IStockType leftStockType, 
-            IStockType rightStockType, 
-            IStockProperty left, 
+        public StockPropertyTypeChangedComparisonAction(IStockType leftStockType,
+            IStockType rightStockType,
+            IStockProperty left,
             IStockProperty right,
             Type? leftType,
             Type? rightType)

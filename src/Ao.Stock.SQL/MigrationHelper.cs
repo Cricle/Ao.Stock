@@ -6,13 +6,6 @@ namespace Ao.Stock.SQL
 {
     public class MigrationHelper
     {
-        public MigrationHelper(IReadOnlyList<IStockComparisonAction> actions)
-        {
-            Actions = actions;
-        }
-
-        public IReadOnlyList<IStockComparisonAction> Actions { get; }
-
         protected virtual void ConfigMigrationRunnerBuilder(IMigrationRunnerBuilder builder)
         {
 
@@ -21,21 +14,21 @@ namespace Ao.Stock.SQL
         {
             services.AddLogging(lb => lb.AddFluentMigratorConsole());
         }
-        public void Migrate()
+        public void Migrate(IReadOnlyList<IStockComparisonAction> actions)
         {
-            using (var provider=CreateProvider())
+            using (var provider = CreateProvider())
             {
-                Migrate(provider);
+                Migrate(actions,provider);
             }
         }
-        public void Migrate(IServiceProvider provider)
+        public void Migrate(IReadOnlyList<IStockComparisonAction> actions,IServiceProvider provider)
         {
             var runner = provider.GetRequiredService<IMigrationRunner>();
-            runner.Up(new DynamicMigration(Actions));
+            runner.Up(new DynamicMigration(actions));
         }
         public ServiceProvider CreateProvider()
         {
-            var services= new ServiceCollection()
+            var services = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb =>
                 {
