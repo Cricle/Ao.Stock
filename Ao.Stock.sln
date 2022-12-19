@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Kata", "src\Ao.Sto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Kata", "samples\Ao.Stock.Sample.Kata\Ao.Stock.Sample.Kata.csproj", "{0E91E518-4775-411A-869D-B5E12D4F0104}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Dynamics", "src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj", "{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Dynamics", "src\Ao.Stock.Dynamics\Ao.Stock.Dynamics.csproj", "{F737C1CB-1E03-45E3-BAC4-9107DA4BA082}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{A981BED9-2B9E-4F92-B0BD-2035059DB1F5}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{A981BED9-2B9
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Dynamics", "samples\Ao.Stock.Sample.Dynamics\Ao.Stock.Sample.Dynamics.csproj", "{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.MySql", "src\Ao.Stock.SQL.MySql\Ao.Stock.SQL.MySql.csproj", "{068CC35A-3B21-4F3D-919B-E2D590D69D65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.MSSQL", "src\Ao.Stock.SQL.MSSQL\Ao.Stock.SQL.MSSQL.csproj", "{CD764E37-38C9-4D23-9AB1-DD61427F517B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +68,14 @@ Global
 		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{068CC35A-3B21-4F3D-919B-E2D590D69D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{068CC35A-3B21-4F3D-919B-E2D590D69D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{068CC35A-3B21-4F3D-919B-E2D590D69D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{068CC35A-3B21-4F3D-919B-E2D590D69D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD764E37-38C9-4D23-9AB1-DD61427F517B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD764E37-38C9-4D23-9AB1-DD61427F517B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD764E37-38C9-4D23-9AB1-DD61427F517B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD764E37-38C9-4D23-9AB1-DD61427F517B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
