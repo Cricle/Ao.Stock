@@ -95,7 +95,7 @@ namespace Ao.Stock.SQL
         }
         protected virtual void ChangePropertyType(StockPropertyTypeChangedComparisonAction action)
         {
-            var syntx = Alter.Column(action.LeftPropertyType!.Name)
+            var syntx = Alter.Column(action.Left!.Name)
                 .OnTable(action.LeftType.Name);
             var next = Property(syntx, action.Right);
             if (action.RightPropertyType != null && IsNullable(action.RightPropertyType))
