@@ -39,8 +39,36 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.StrLen] = "LEN({1})";
             funcs[KnowsMethods.StrIndexOf] = "CHARINDEX({1},{2})";
             funcs[KnowsMethods.StrSub] = "SUBSTRING({1},{2},{3})";
-            return new KataMetadataVisitor(new MySqlCompiler(), root, 
+            funcs[KnowsMethods.DateFormat] = "FORMAT({2},{1})";
+            funcs[KnowsMethods.Weak] = "DATEPART(WEEK,{1})";
+            funcs[KnowsMethods.Quarter] = "DATEPART(QUARTER,{1})";
+            return new KataMetadataVisitor(new SqlServerCompiler(), root, 
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
+        }
+        public static KataMetadataVisitor PostgrSql(Query root, MethodTranslator<Compiler> translator = null)
+        {
+            var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.Year] = "date_part(year,{1})";
+            funcs[KnowsMethods.Month] = "date_part(month,{1})";
+            funcs[KnowsMethods.Day] = "date_part(day,{1})";
+            funcs[KnowsMethods.Hour] = "date_part(hour,{1})";
+            funcs[KnowsMethods.Minute] = "date_part(minute,{1})";
+            funcs[KnowsMethods.Second] = "date_part(second,{1})";
+            funcs[KnowsMethods.Microsecond] = "date_part(microseconds,{1})";
+            funcs[KnowsMethods.StrLen] = "length({1})";
+            funcs[KnowsMethods.StrLowercase] = "lower({1})";
+            funcs[KnowsMethods.StrUppercase] = "upper({1})";
+            funcs[KnowsMethods.StrIndexOf] = "strpos({1},{2})";
+            funcs[KnowsMethods.StrTrim] = "trim(both ' ' from {1})";
+            funcs[KnowsMethods.StrSub] = "substring({1} from {2} to {3})";
+            funcs[KnowsMethods.Date] = "to_date({1},'yyyy-MM-dd')";
+            funcs[KnowsMethods.Datediff] = "age(timestamp {1},timestamp {2})";
+            funcs[KnowsMethods.Now] = "now()";
+            funcs[KnowsMethods.DateFormat] = "DateFormat({1},{2})";
+            funcs[KnowsMethods.Weak] = "DATE_PART(Weak,{1})";
+            funcs[KnowsMethods.Quarter] = "DATE_PART(Quarter,{1})";
+            return new KataMetadataVisitor(new PostgresCompiler(), root,
+                translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Postgres));
         }
 
         public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
