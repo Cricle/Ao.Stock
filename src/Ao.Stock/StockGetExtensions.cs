@@ -14,7 +14,7 @@ namespace Ao.Stock
         {
             return GetAttributeAttacks(attachable).Any(x => attributeType == x.GetType());
         }
-        public static StockAttributeAttack GetAttributeAttack(this IStockAttachable attachable)
+        public static StockAttributeAttack? GetAttributeAttack(this IStockAttachable attachable)
         {
             return GetAttributeAttacks(attachable).FirstOrDefault();
         }
@@ -27,7 +27,7 @@ namespace Ao.Stock
         {
             return GetAttacks(attachable,attackCondition).Any();
         }
-        public static IStockAttack GetAttack(this IStockAttachable attachable, Func<IStockAttack, bool> attackCondition)
+        public static IStockAttack? GetAttack(this IStockAttachable attachable, Func<IStockAttack, bool> attackCondition)
         {
             return GetAttacks(attachable, attackCondition).FirstOrDefault();
         }

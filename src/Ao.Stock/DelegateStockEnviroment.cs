@@ -7,7 +7,7 @@ namespace Ao.Stock
 
     public delegate void ConfigHandler<T>(ref T input, IIntangibleContext context);
 
-    public class DelegateStockEnviroment : IStockEnviroment
+    public class DelegateStockEnviroment : IStockIntangible
     {
         public DelegateStockEnviroment()
             :this(new Dictionary<Type, Delegate>(),new Dictionary<Type, Delegate>())

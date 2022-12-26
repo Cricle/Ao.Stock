@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.31" />
-    <PackageReference Include="DynamicExpresso.Core" Version="2.13.0" />
   </ItemGroup>
 
 
