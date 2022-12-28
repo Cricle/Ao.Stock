@@ -74,7 +74,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.Now] = "now()";
             funcs[KnowsMethods.DateFormat] = "to_char({1},{2})";
             funcs[KnowsMethods.Weak] = "to_char({1},'WW')";
-            funcs[KnowsMethods.Quarter] = "EXTRACT (QUARTER FROM TIMESTAMP {1})";
+            funcs[KnowsMethods.Quarter] = "EXTRACT (QUARTER FROM {1})";
             return new KataMetadataVisitor(new PostgresCompiler(), root,
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Postgres));
         }
