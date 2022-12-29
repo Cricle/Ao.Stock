@@ -30,6 +30,7 @@ namespace Ao.Stock.Kata
         public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
         {
             var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.StrConcat] = KnowsMethods.AllOrAlso;
             funcs[KnowsMethods.Year] = "strftime('%Y',{1})";
             funcs[KnowsMethods.Month] = "strftime('%m',{1})";
             funcs[KnowsMethods.Day] = "strftime('%d',{1})";

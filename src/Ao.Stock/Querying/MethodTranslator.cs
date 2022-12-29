@@ -154,6 +154,10 @@ namespace Ao.Stock.Querying
             {
                 formatter = formatter.Replace(KnowsMethods.RangeSkip1, string.Join(",", args.Skip(2)));
             }
+            if (formatter.Contains(KnowsMethods.AllOrAlso))
+            {
+                formatter = formatter.Replace(KnowsMethods.AllOrAlso, string.Join("||", args.Skip(1)));
+            }
             return string.Format(formatter, args);
         }
 

@@ -12,7 +12,8 @@ namespace Ao.Stock.Querying
         private static readonly string[] NotIncludes = new string[]
         {
             nameof(AllPlaceholder),
-            nameof(RangeSkip1)
+            nameof(RangeSkip1),
+            nameof(AllOrAlso),
         };
 
         static KnowsMethods()
@@ -73,6 +74,7 @@ namespace Ao.Stock.Querying
         };
 
         public const string AllPlaceholder = "{**}";
+        public const string AllOrAlso = "{*||*}";
 
         public const string RangeSkip1 = "{1-~}";
 
