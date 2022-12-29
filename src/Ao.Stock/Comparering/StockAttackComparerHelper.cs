@@ -19,9 +19,9 @@ namespace Ao.Stock.Comparering
                 {
                     return null;
                 }
-                return new StockAttackChangeComparisonAction(lefts, rights, ups, downs,leftType,rightType,left,right);
+                return new StockAttackChangedComparisonAction(lefts, rights, ups, downs,leftType,rightType,left,right);
             }
-            return new StockAttackChangeComparisonAction(lefts, rights, rights, lefts, leftType, rightType, left, right);
+            return new StockAttackChangedComparisonAction(lefts, rights, rights, lefts, leftType, rightType, left, right);
         }
     }
 }

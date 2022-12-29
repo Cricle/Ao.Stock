@@ -19,7 +19,7 @@ namespace Ao.Stock.SQL
         public override void Down()
         {
         }
-        protected virtual void Attacks(StockAttackChangeComparisonAction action)
+        protected virtual void Attacks(StockAttackChangedComparisonAction action)
         {
             if (action.RightProperty != null)
             {
@@ -248,7 +248,7 @@ namespace Ao.Stock.SQL
                     case StockTypePropertiesComparisonAction action:
                         Columns(action);
                         break;
-                    case StockAttackChangeComparisonAction action:
+                    case StockAttackChangedComparisonAction action:
                         Attacks(action);
                         break;
                     default:

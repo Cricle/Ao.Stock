@@ -22,6 +22,11 @@ namespace Ao.Stock.Kata
             return new KataMetadataVisitor(new MySqlCompiler(), root, 
                 translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
         }
+        public static KataMetadataVisitor MariaDB(Query root, MethodTranslator<Compiler> translator = null)
+        {
+            return new KataMetadataVisitor(new MySqlCompiler(), root,
+                translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions, DefaultMethodWrapper<Compiler>.MySql));
+        }
         public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
         {
             var funcs = KnowsMethods.Functions;

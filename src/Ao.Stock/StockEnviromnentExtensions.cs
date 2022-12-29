@@ -8,6 +8,10 @@ namespace Ao.Stock
         {
             return CheckDbCode(enviromnent,KnowsDbCode.Mysql);
         }
+        public static bool CurrentIsMariaDB(this IStockEnviromnent enviromnent)
+        {
+            return CheckDbCode(enviromnent, KnowsDbCode.MariaDB);
+        }
         public static bool CurrentIsSqlServer(this IStockEnviromnent enviromnent)
         {
             return CheckDbCode(enviromnent, KnowsDbCode.SqlServer);

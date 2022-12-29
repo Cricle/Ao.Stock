@@ -2,9 +2,9 @@
 
 namespace Ao.Stock.Comparering
 {
-    public class StockAttackChangeComparisonAction : StockComparisonAction
+    public class StockAttackChangedComparisonAction : StockComparisonAction
     {
-        public StockAttackChangeComparisonAction(IReadOnlyList<IStockAttack>? lefts,
+        public StockAttackChangedComparisonAction(IReadOnlyList<IStockAttack>? lefts,
             IReadOnlyList<IStockAttack>? rights,
             IReadOnlyList<IStockAttack>? ups, 
             IReadOnlyList<IStockAttack>? downs, 
