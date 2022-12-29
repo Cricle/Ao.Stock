@@ -7,24 +7,16 @@ using System.Linq.Expressions;
 
 namespace Ao.Stock.Kata
 {
-    public static class KataMetadataVisitorExtensions
-    {
-        public static SqlResult VisitAndCompile(this KataMetadataVisitor visitor,IQueryMetadata metadata,Query query)
-        {
-            visitor.Visit(metadata, visitor.CreateContext(metadata));
-            return visitor.Compiler.Compile(query);
-        }
-    }
     public class KataMetadataVisitor : DefaultMetadataVisitor<DefaultQueryContext>
     {
         public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator=null)
         {
-            return new KataMetadataVisitor(new MySqlCompiler(), root, 
+            return new KataMetadataVisitor(CompilerFetcher.Mysql, root, 
                 translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
         }
         public static KataMetadataVisitor MariaDB(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(new MySqlCompiler(), root,
+            return new KataMetadataVisitor(CompilerFetcher.Mysql, root,
                 translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions, DefaultMethodWrapper<Compiler>.MySql));
         }
         public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
@@ -44,7 +36,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.Quarter] = "COALESCE(NULLIF((SUBSTR({1}, 4, 2) - 1) / 3, 0), 4)";
             funcs[KnowsMethods.StrLen] = "LENGTH({1})";
             funcs[KnowsMethods.StrIndexOf] = "instr({1},{2})";
-            return new KataMetadataVisitor(new SqliteCompiler(), root, 
+            return new KataMetadataVisitor(CompilerFetcher.Sqlite, root, 
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Sqlite));
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
@@ -56,7 +48,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.DateFormat] = "FORMAT({1},{2})";
             funcs[KnowsMethods.Weak] = "DATEPART(WEEK,{1})";
             funcs[KnowsMethods.Quarter] = "DATEPART(QUARTER,{1})";
-            return new KataMetadataVisitor(new SqlServerCompiler(), root, 
+            return new KataMetadataVisitor(CompilerFetcher.SqlServer, root, 
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
         }
         public static KataMetadataVisitor PostgrSql(Query root, MethodTranslator<Compiler> translator = null)
@@ -81,7 +73,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.DateFormat] = "to_char({1},{2})";
             funcs[KnowsMethods.Weak] = "to_char({1},'WW')";
             funcs[KnowsMethods.Quarter] = "EXTRACT (QUARTER FROM {1})";
-            return new KataMetadataVisitor(new PostgresCompiler(), root,
+            return new KataMetadataVisitor(CompilerFetcher.PostgresSql, root,
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Postgres));
         }
 

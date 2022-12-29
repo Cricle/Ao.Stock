@@ -30,9 +30,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.MySql", "src\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.MSSQL", "src\Ao.Stock.SQL.MSSQL\Ao.Stock.SQL.MSSQL.csproj", "{CD764E37-38C9-4D23-9AB1-DD61427F517B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Sample.Sqlite", "samples\Ao.Stock.Sample.Sqlite\Ao.Stock.Sample.Sqlite.csproj", "{B0F5A477-B6A5-4978-87BB-E7C0B7D8029C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Sqlite", "samples\Ao.Stock.Sample.Sqlite\Ao.Stock.Sample.Sqlite.csproj", "{B0F5A477-B6A5-4978-87BB-E7C0B7D8029C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.Sqlite", "src\Ao.Stock.SQL.Sqlite\Ao.Stock.SQL.Sqlite.csproj", "{DB3F7300-FA01-4219-A973-566A3BD2E183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.Sqlite", "src\Ao.Stock.SQL.Sqlite\Ao.Stock.SQL.Sqlite.csproj", "{DB3F7300-FA01-4219-A973-566A3BD2E183}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.PostgreSql", "src\Ao.Stock.SQL.PostgreSql\Ao.Stock.SQL.PostgreSql.csproj", "{56BEDA55-DFC5-4F73-AA42-F9337E70534D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,10 @@ Global
 		{DB3F7300-FA01-4219-A973-566A3BD2E183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB3F7300-FA01-4219-A973-566A3BD2E183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB3F7300-FA01-4219-A973-566A3BD2E183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
