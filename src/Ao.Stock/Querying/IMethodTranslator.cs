@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace Ao.Stock.Querying
+﻿namespace Ao.Stock.Querying
 {
     public interface IMethodTranslator
     {

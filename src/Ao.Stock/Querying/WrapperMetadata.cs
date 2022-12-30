@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock.Querying
 {
-    public class WrapperMetadata : QueryMetadata,IEquatable<WrapperMetadata>
+    public class WrapperMetadata : QueryMetadata, IEquatable<WrapperMetadata>
     {
         private static readonly IQueryMetadata LeftBracket = new ValueMetadata("(");
         private static readonly IQueryMetadata RightBracket = new ValueMetadata(")");
@@ -49,12 +49,12 @@ namespace Ao.Stock.Querying
 
         public bool Equals(WrapperMetadata? other)
         {
-            if (other==null)
+            if (other == null)
             {
                 return false;
             }
-            return other.Left.Equals(Left)&&
-                other.Target.Equals(Target)&&
+            return other.Left.Equals(Left) &&
+                other.Target.Equals(Target) &&
                 other.Right.Equals(Right);
         }
     }

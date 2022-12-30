@@ -1,6 +1,6 @@
 ﻿namespace Ao.Stock.Querying
 {
-    public interface IValueMetadata: IQueryMetadata
+    public interface IValueMetadata : IQueryMetadata
     {
         object? Value { get; }
 

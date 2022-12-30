@@ -17,7 +17,7 @@ namespace Ao.Stock
         public const string MinPoolSizeKey = "postgresql.MinPoolSize";
 
         public const string MaxPoolSizeKey = "postgresql.MaxPoolSize";
-        
+
         public bool IntegratedSecurity
         {
             get => this.GetOrDefault<bool>(IntegratedSecurityKey);

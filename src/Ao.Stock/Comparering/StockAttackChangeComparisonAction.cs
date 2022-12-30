@@ -6,11 +6,11 @@ namespace Ao.Stock.Comparering
     {
         public StockAttackChangedComparisonAction(IReadOnlyList<IStockAttack>? lefts,
             IReadOnlyList<IStockAttack>? rights,
-            IReadOnlyList<IStockAttack>? ups, 
-            IReadOnlyList<IStockAttack>? downs, 
+            IReadOnlyList<IStockAttack>? ups,
+            IReadOnlyList<IStockAttack>? downs,
             IStockType leftType,
-            IStockType rightType, 
-            IStockProperty? leftProperty, 
+            IStockType rightType,
+            IStockProperty? leftProperty,
             IStockProperty? rightProperty)
         {
             Lefts = lefts;

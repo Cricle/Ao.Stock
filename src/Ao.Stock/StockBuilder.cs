@@ -6,8 +6,8 @@ namespace Ao.Stock
     {
         protected abstract void SetAttack(List<IStockAttack> attacks);
 
-        protected void HasAttack<T>(T input,IStockAttack attack)
-            where T:IStockAttachable
+        protected void HasAttack<T>(T input, IStockAttack attack)
+            where T : IStockAttachable
         {
             if (input.Attacks == null)
             {

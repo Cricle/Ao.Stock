@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 
 namespace Ao.Stock.Querying
 {
@@ -35,9 +34,9 @@ namespace Ao.Stock.Querying
                 Visit(target, ctx);
                 selects.Add(ctx.Expression);
             }
-            OnVisitSelect(value, context,selects);
+            OnVisitSelect(value, context, selects);
         }
-        protected abstract void OnVisitSelect(SelectMetadata value, T context,List<string> selects);
+        protected abstract void OnVisitSelect(SelectMetadata value, T context, List<string> selects);
 
         public override void VisitGroup(GroupMetadata value, T context)
         {
@@ -63,7 +62,7 @@ namespace Ao.Stock.Querying
                 OnVisitFilter(value, item, ctx);
             }
         }
-        protected abstract void OnVisitFilter(FilterMetadata value,IQueryMetadata metadata, T context);
+        protected abstract void OnVisitFilter(FilterMetadata value, IQueryMetadata metadata, T context);
 
         public override void VisitBinary(BinaryMetadata value, T context)
         {
@@ -71,9 +70,9 @@ namespace Ao.Stock.Querying
             var rightCtx = CreateContext(value.Right);
             Visit(value.Left, leftCtx);
             Visit(value.Right, rightCtx);
-            OnVisitBinary(value,context,leftCtx, rightCtx);
+            OnVisitBinary(value, context, leftCtx, rightCtx);
         }
-        protected virtual void OnVisitBinary(BinaryMetadata value, T context,T leftContext,T rightContext)
+        protected virtual void OnVisitBinary(BinaryMetadata value, T context, T leftContext, T rightContext)
         {
             var token = value.GetToken();
             context.Expression += leftContext.Expression + token + rightContext.Expression;
@@ -129,11 +128,11 @@ namespace Ao.Stock.Querying
             }
             OnVisitMethod(method, context, args);
         }
-        protected abstract void OnVisitMethod(MethodMetadata method,T context, string[] args);
+        protected abstract void OnVisitMethod(MethodMetadata method, T context, string[] args);
 
         public override void VisitSort(SortMetadata value, T context)
         {
-            var ctx=CreateContext(value.Target);
+            var ctx = CreateContext(value.Target);
             Visit(value.Target, ctx);
             OnVisitSort(value, ctx);
         }

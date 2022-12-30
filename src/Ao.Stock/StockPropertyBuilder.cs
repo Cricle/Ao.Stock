@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock
 {
-    public class StockPropertyBuilder: StockBuilder
+    public class StockPropertyBuilder : StockBuilder
     {
         public StockPropertyBuilder(StockTypeBuilder stockTypeBuilder, StockProperty property)
         {

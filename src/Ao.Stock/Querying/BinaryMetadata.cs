@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class BinaryMetadata : QueryMetadata,IEquatable<BinaryMetadata>, IBinaryMetadata
+    public class BinaryMetadata : QueryMetadata, IEquatable<BinaryMetadata>, IBinaryMetadata
     {
         public BinaryMetadata(object left, ExpressionType expressionType, object right)
         {
@@ -64,7 +61,7 @@ namespace Ao.Stock.Querying
 
         public virtual string GetToken()
         {
-            if (OperatorHelpers.TokenMap.TryGetValue(ExpressionType,out var tk))
+            if (OperatorHelpers.TokenMap.TryGetValue(ExpressionType, out var tk))
             {
                 return tk.Token;
             }
@@ -73,7 +70,7 @@ namespace Ao.Stock.Querying
 
         public override string ToString()
         {
-            if (ExpressionType== ExpressionType.ArrayIndex)
+            if (ExpressionType == ExpressionType.ArrayIndex)
             {
                 return ArrayIndex();
             }

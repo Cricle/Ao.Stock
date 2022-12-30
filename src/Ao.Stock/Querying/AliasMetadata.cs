@@ -22,7 +22,7 @@ namespace Ao.Stock.Querying
         }
         public bool Equals(AliasMetadata? other)
         {
-            if (other==null)
+            if (other == null)
             {
                 return false;
             }

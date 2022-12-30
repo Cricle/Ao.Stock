@@ -18,10 +18,10 @@ namespace Ao.Stock.SQL
         {
             using (var provider = CreateProvider())
             {
-                Migrate(actions,provider);
+                Migrate(actions, provider);
             }
         }
-        public void Migrate(IReadOnlyList<IStockComparisonAction> actions,IServiceProvider provider)
+        public void Migrate(IReadOnlyList<IStockComparisonAction> actions, IServiceProvider provider)
         {
             var runner = provider.GetRequiredService<IMigrationRunner>();
             runner.Up(new DynamicMigration(actions));

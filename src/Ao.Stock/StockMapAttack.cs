@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Ao.Stock
 {
-    public class StockMapAttack :Dictionary<string,object>, IStockAttack
+    public class StockMapAttack : Dictionary<string, object>, IStockAttack
     {
         public StockMapAttack()
         {

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Ao.Stock.Querying
 {
     public static class KnowsMethods
     {
-        public static readonly IReadOnlyDictionary<string,string> KnowsMethodNames;
+        public static readonly IReadOnlyDictionary<string, string> KnowsMethodNames;
 
         private static readonly string[] NotIncludes = new string[]
         {
@@ -69,8 +69,8 @@ namespace Ao.Stock.Querying
             [Div] = "{1} / {2}",
             [Mod] = "{1} % {2}",
 
-            [In]= $"{{1}} in ({RangeSkip1})",
-            [NotIn]= $"{{1}} not in ({RangeSkip1})"
+            [In] = $"{{1}} in ({RangeSkip1})",
+            [NotIn] = $"{{1}} not in ({RangeSkip1})"
         };
 
         public const string AllPlaceholder = "{**}";

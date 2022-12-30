@@ -1,5 +1,4 @@
 ﻿using FluentMigrator.Runner;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Data.Common;
@@ -19,9 +18,9 @@ namespace Ao.Stock.SQL
 
         public ConnectionStringBox? GetConnectionStringBox(IIntangibleContext? context)
         {
-            if (context.TryGetValue(ConnectionStringKey,out var strObj)&& strObj is string str)
+            if (context.TryGetValue(ConnectionStringKey, out var strObj) && strObj is string str)
             {
-                return new ConnectionStringBox(str,null);
+                return new ConnectionStringBox(str, null);
             }
             return ConnectStringStockIntangible.Get<ConnectionStringBox>(context);
         }
@@ -57,7 +56,7 @@ namespace Ao.Stock.SQL
 
         public virtual T Get<T>(IIntangibleContext? context)
         {
-            if (typeof(T)==typeof(DbContext))
+            if (typeof(T) == typeof(DbContext))
             {
                 var builder = new DbContextOptionsBuilder();
                 Config(ref builder, context);
@@ -66,14 +65,14 @@ namespace Ao.Stock.SQL
             if (typeof(T) == typeof(IDbConnection))
             {
                 var connBox = GetConnectionStringBox(context);
-                return (T)(object)CreateDbConnection(connBox,context);
+                return (T)(object)CreateDbConnection(connBox, context);
             }
             if (typeof(T) == typeof(DbConnection))
             {
                 var connBox = GetConnectionStringBox(context);
                 return (T)(object)CreateDbConnection(connBox, context);
             }
-            if (typeof(T)==typeof(AutoMigrationHelper))
+            if (typeof(T) == typeof(AutoMigrationHelper))
             {
                 return (T)(object)new AutoMigrationHelperBuilder()
                     .WithBuilderConfig(x => Config(ref x, context))

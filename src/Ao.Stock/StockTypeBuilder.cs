@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ao.Stock
 {
-    public class StockTypeBuilder: StockBuilder
+    public class StockTypeBuilder : StockBuilder
     {
         public StockTypeBuilder(StockType stockType)
         {
@@ -11,7 +11,7 @@ namespace Ao.Stock
         }
 
         public StockTypeBuilder(string name)
-            :this(new StockType { Name=name})
+            : this(new StockType { Name = name })
         {
         }
 
@@ -26,7 +26,7 @@ namespace Ao.Stock
         {
             return WithProperty(propertyFunc());
         }
-        public StockTypeBuilder WithProperty(string name, Type type,Action<StockPropertyBuilder>? propertyAction=null)
+        public StockTypeBuilder WithProperty(string name, Type type, Action<StockPropertyBuilder>? propertyAction = null)
         {
             var prop = new StockProperty { Name = name, Type = type };
             if (propertyAction != null)
@@ -67,7 +67,7 @@ namespace Ao.Stock
         {
             return HasAttack(attack);
         }
-        public StockTypeBuilder HasAttribute(Attribute attribute,string? name=null)
+        public StockTypeBuilder HasAttribute(Attribute attribute, string? name = null)
         {
             return HasAttack(new StockAttributeAttack { Attribute = attribute, Name = name });
         }

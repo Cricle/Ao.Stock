@@ -8,9 +8,9 @@ namespace Ao.Stock
     {
         public static bool HasAttributeAttack<T>(this IStockAttachable attachable)
         {
-            return HasAttributeAttack(attachable,typeof(T));
+            return HasAttributeAttack(attachable, typeof(T));
         }
-        public static bool HasAttributeAttack(this IStockAttachable attachable,Type attributeType)
+        public static bool HasAttributeAttack(this IStockAttachable attachable, Type attributeType)
         {
             return GetAttributeAttacks(attachable).Any(x => attributeType == x.GetType());
         }
@@ -20,12 +20,12 @@ namespace Ao.Stock
         }
         public static IEnumerable<StockAttributeAttack> GetAttributeAttacks(this IStockAttachable attachable)
         {
-            return GetAttacks(attachable,x=>x is StockAttributeAttack).OfType<StockAttributeAttack>();
+            return GetAttacks(attachable, x => x is StockAttributeAttack).OfType<StockAttributeAttack>();
         }
 
         public static bool HasAttack(this IStockAttachable attachable, Func<IStockAttack, bool> attackCondition)
         {
-            return GetAttacks(attachable,attackCondition).Any();
+            return GetAttacks(attachable, attackCondition).Any();
         }
         public static IStockAttack? GetAttack(this IStockAttachable attachable, Func<IStockAttack, bool> attackCondition)
         {
@@ -50,7 +50,7 @@ namespace Ao.Stock
         {
             return GetProperties(type, propertyCondition).Any();
         }
-        public static IStockProperty? GetProperty(this IStockType type, string propertyType, StringComparison comparison= StringComparison.Ordinal)
+        public static IStockProperty? GetProperty(this IStockType type, string propertyType, StringComparison comparison = StringComparison.Ordinal)
         {
             return GetProperty(type, x => string.Equals(x.Name, propertyType, comparison));
         }
@@ -58,9 +58,9 @@ namespace Ao.Stock
         {
             return GetProperties(type, propertyCondition).FirstOrDefault();
         }
-        public static IEnumerable<IStockProperty> GetProperties(this IStockType type,Func<IStockProperty,bool> propertyCondition)
+        public static IEnumerable<IStockProperty> GetProperties(this IStockType type, Func<IStockProperty, bool> propertyCondition)
         {
-            if (type.Properties==null)
+            if (type.Properties == null)
             {
                 yield break;
             }
@@ -75,11 +75,11 @@ namespace Ao.Stock
         }
         public static IReadOnlyList<string?> GetPropertyNames(this IStockType type)
         {
-            if (type.Properties==null)
+            if (type.Properties == null)
             {
                 return Array.Empty<string?>();
             }
-            var names=new string?[type.Properties.Count];
+            var names = new string?[type.Properties.Count];
             for (int i = 0; i < names.Length; i++)
             {
                 names[i] = type.Properties[i].Name;

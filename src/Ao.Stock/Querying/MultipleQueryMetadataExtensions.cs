@@ -4,37 +4,37 @@ namespace Ao.Stock.Querying
 {
     public static class MultipleQueryMetadataExtensions
     {
-        public static IList<IQueryMetadata> SelectColumn(this IList<IQueryMetadata> metadata, string column,string? alias=null)
+        public static IList<IQueryMetadata> SelectColumn(this IList<IQueryMetadata> metadata, string column, string? alias = null)
         {
             var select = new SelectMetadata(new ValueMetadata<string>(column, true));
-            if (alias!=null)
+            if (alias != null)
             {
-                return Alias(metadata,select, alias);
+                return Alias(metadata, select, alias);
             }
             metadata.Add(select);
             return metadata;
         }
         public static IList<IQueryMetadata> SelectMethod(this IList<IQueryMetadata> metadata, string methodName, string alias, params object[] args)
         {
-            if (args==null)
+            if (args == null)
             {
                 return SelectMethod(metadata, methodName, alias, null);
             }
             var m = new IQueryMetadata[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                m[i]=new ValueMetadata<object>(args[i],true);
+                m[i] = new ValueMetadata<object>(args[i], true);
             }
             return SelectMethod(metadata, methodName, alias, m);
         }
-        public static IList<IQueryMetadata> SelectMethod(this IList<IQueryMetadata> metadata,string methodName,string alias,params IQueryMetadata[]? args)
+        public static IList<IQueryMetadata> SelectMethod(this IList<IQueryMetadata> metadata, string methodName, string alias, params IQueryMetadata[]? args)
         {
-            metadata.Add(new AliasMetadata(new SelectMetadata(new MethodMetadata(methodName,args)),alias));
+            metadata.Add(new AliasMetadata(new SelectMetadata(new MethodMetadata(methodName, args)), alias));
             return metadata;
         }
-        public static IList<IQueryMetadata> SortColumn(this IList<IQueryMetadata> metadata, string column,SortMode sort)
+        public static IList<IQueryMetadata> SortColumn(this IList<IQueryMetadata> metadata, string column, SortMode sort)
         {
-            metadata.Add(new SortMetadata(sort,new ValueMetadata(column, true)));
+            metadata.Add(new SortMetadata(sort, new ValueMetadata(column, true)));
             return metadata;
         }
         public static IList<IQueryMetadata> Skip(this IList<IQueryMetadata> metadata, int skip)
@@ -71,7 +71,7 @@ namespace Ao.Stock.Querying
             return GroupMethod(metadata, methodName, m);
         }
 
-        public static IList<IQueryMetadata> Alias(this IList<IQueryMetadata> metadata, IQueryMetadata query,string alias)
+        public static IList<IQueryMetadata> Alias(this IList<IQueryMetadata> metadata, IQueryMetadata query, string alias)
         {
             metadata.Add(new AliasMetadata(query, alias));
             return metadata;

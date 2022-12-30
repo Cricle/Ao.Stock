@@ -7,6 +7,6 @@ namespace Ao.Stock
     {
         Task<IList<string>> GetDatabasesAsync();
 
-        Task<IList<string>> GetTablesAsync(string database,IIntangibleContext? context);
+        Task<IList<string>> GetTablesAsync(string database, IIntangibleContext? context);
     }
 }

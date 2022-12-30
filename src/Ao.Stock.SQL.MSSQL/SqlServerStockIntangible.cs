@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.SqlServer.Design.Internal;
-using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 
@@ -17,7 +16,7 @@ namespace Ao.Stock.SQL.MSSQL
         public static readonly SqlServerStockIntangible Default = new SqlServerStockIntangible(ConnectStringStockIntangible.Instance);
 
         public SqlServerStockIntangible(ConnectStringStockIntangible connectStringStockIntangible)
-            :base(connectStringStockIntangible)
+            : base(connectStringStockIntangible)
         {
         }
 

@@ -9,10 +9,10 @@ namespace Ao.Stock.Kata
 {
     public class KataMetadataVisitor : DefaultMetadataVisitor<DefaultQueryContext>
     {
-        public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator=null)
+        public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.Mysql, root, 
-                translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions,DefaultMethodWrapper<Compiler>.MySql));
+            return new KataMetadataVisitor(CompilerFetcher.Mysql, root,
+                translator ?? new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions, DefaultMethodWrapper<Compiler>.MySql));
         }
         public static KataMetadataVisitor MariaDB(Query root, MethodTranslator<Compiler> translator = null)
         {
@@ -36,7 +36,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.Quarter] = "COALESCE(NULLIF((SUBSTR({1}, 4, 2) - 1) / 3, 0), 4)";
             funcs[KnowsMethods.StrLen] = "LENGTH({1})";
             funcs[KnowsMethods.StrIndexOf] = "instr({1},{2})";
-            return new KataMetadataVisitor(CompilerFetcher.Sqlite, root, 
+            return new KataMetadataVisitor(CompilerFetcher.Sqlite, root,
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Sqlite));
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
@@ -48,7 +48,7 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.DateFormat] = "FORMAT({1},{2})";
             funcs[KnowsMethods.Weak] = "DATEPART(WEEK,{1})";
             funcs[KnowsMethods.Quarter] = "DATEPART(QUARTER,{1})";
-            return new KataMetadataVisitor(CompilerFetcher.SqlServer, root, 
+            return new KataMetadataVisitor(CompilerFetcher.SqlServer, root,
                 translator ?? new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer));
         }
         public static KataMetadataVisitor PostgrSql(Query root, MethodTranslator<Compiler> translator = null)
@@ -92,12 +92,12 @@ namespace Ao.Stock.Kata
 
         public override DefaultQueryContext CreateContext(IQueryMetadata metadata)
         {
-            return new DefaultQueryContext ();
+            return new DefaultQueryContext();
         }
 
         protected override void OnVisitSort(SortMetadata value, DefaultQueryContext context)
         {
-            Root.OrderByRaw(context.Expression + (value.SortMode == SortMode.Desc ?" DESC":""));
+            Root.OrderByRaw(context.Expression + (value.SortMode == SortMode.Desc ? " DESC" : ""));
         }
 
         public override void VisitSort(SortMetadata value, DefaultQueryContext context)
@@ -121,7 +121,7 @@ namespace Ao.Stock.Kata
         }
         protected override void OnVisitBinary(BinaryMetadata value, DefaultQueryContext context, DefaultQueryContext leftContext, DefaultQueryContext rightContext)
         {
-            var tk =value.ExpressionType== ExpressionType.Equal?"=": value.GetToken();
+            var tk = value.ExpressionType == ExpressionType.Equal ? "=" : value.GetToken();
             context.Expression += leftContext.Expression + tk + rightContext.Expression;
         }
         protected override void OnVisitSelect(SelectMetadata value, DefaultQueryContext context, List<string> selects)
@@ -142,7 +142,7 @@ namespace Ao.Stock.Kata
             }
             else
             {
-                if (value.Value is DateTime||value .Value is string)
+                if (value.Value is DateTime || value.Value is string)
                 {
                     context.Expression += "'" + ValueToString(value.Value) + "'";
                 }
@@ -154,11 +154,11 @@ namespace Ao.Stock.Kata
         }
         protected virtual string ValueToString(object value)
         {
-            if (value ==null)
+            if (value == null)
             {
                 return "null";
             }
-            if (value is DateTime||value is DateTime?)
+            if (value is DateTime || value is DateTime?)
             {
                 return ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
             }

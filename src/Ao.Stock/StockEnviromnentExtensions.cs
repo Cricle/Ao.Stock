@@ -2,11 +2,11 @@
 
 namespace Ao.Stock
 {
-    public static class StockEnviromnentExtensions 
+    public static class StockEnviromnentExtensions
     {
         public static bool CurrentIsMysql(this IStockEnviromnent enviromnent)
         {
-            return CheckDbCode(enviromnent,KnowsDbCode.Mysql);
+            return CheckDbCode(enviromnent, KnowsDbCode.Mysql);
         }
         public static bool CurrentIsMariaDB(this IStockEnviromnent enviromnent)
         {
@@ -29,7 +29,7 @@ namespace Ao.Stock
             return CheckDbCode(enviromnent, KnowsDbCode.Oracle);
         }
 
-        private static bool CheckDbCode(IStockEnviromnent enviromnent,string code)
+        private static bool CheckDbCode(IStockEnviromnent enviromnent, string code)
         {
             return string.Equals(code, enviromnent.CurrentCode, StringComparison.OrdinalIgnoreCase);
         }

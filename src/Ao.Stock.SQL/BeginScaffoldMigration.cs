@@ -1,5 +1,4 @@
 ﻿using Ao.Stock.Comparering;
-using System;
 
 namespace Ao.Stock.SQL
 {
@@ -40,9 +39,9 @@ namespace Ao.Stock.SQL
             actions = Comparer.Compare(oldType, NewType);
             return this;
         }
-        public BeginScaffoldMigration Migrate(Func<IReadOnlyList<IStockComparisonAction>, IReadOnlyList<IStockComparisonAction>>? project=null)
+        public BeginScaffoldMigration Migrate(Func<IReadOnlyList<IStockComparisonAction>, IReadOnlyList<IStockComparisonAction>>? project = null)
         {
-            if (actions==null)
+            if (actions == null)
             {
                 throw new InvalidOperationException("No actions to migrate");
             }
@@ -51,11 +50,11 @@ namespace Ao.Stock.SQL
             return this;
         }
         public BeginScaffoldMigration ScaffoldCompareAndMigrate(
-            string tableName, 
+            string tableName,
             IEFEntityTypeToStockConverter converter,
             Func<IReadOnlyList<IStockComparisonAction>, IReadOnlyList<IStockComparisonAction>>? project = null)
         {
-            Scaffold(tableName,converter);
+            Scaffold(tableName, converter);
             Compare();
             return Migrate(project);
         }

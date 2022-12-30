@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Ao.Stock
 {
@@ -38,7 +36,7 @@ namespace Ao.Stock
             return NoCastEquals(type, Oracle);
         }
 
-        private static bool NoCastEquals(string a,string b)
+        private static bool NoCastEquals(string a, string b)
         {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }

@@ -28,13 +28,13 @@ namespace Ao.Stock
         {
             for (int i = 0; i < Count; i++)
             {
-                var val= this[i].Get<T>(context);
+                var val = this[i].Get<T>(context);
                 if (!IsEmpty(val))
                 {
                     return val;
                 }
             }
-            return default(T);
+            return default;
         }
 
         protected virtual bool IsEmpty<T>(T val)

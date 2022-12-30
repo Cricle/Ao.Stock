@@ -22,7 +22,7 @@ namespace Ao.Stock
         }
         public override string ToString()
         {
-            return NoContainsIgnore(Host, "Data Source")+
+            return NoContainsIgnore(Host, "Data Source") +
                 NoContainsIgnore(UserNameKey, "User Id") +
                 NoContainsIgnore(PasswordKey, "Password") +
                 NoContainsIgnore(IntegratedSecurityKey, "Integrated Security") +

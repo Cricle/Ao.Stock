@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
 namespace Ao.Stock.Querying
 {
@@ -33,9 +32,9 @@ namespace Ao.Stock.Querying
 
         public string QutoEnd { get; }
 
-        public string ValueStart { get;  }
+        public string ValueStart { get; }
 
-        public string ValueEnd { get;  }
+        public string ValueEnd { get; }
 
         public string Quto(object? input, TContext context)
         {
@@ -52,7 +51,7 @@ namespace Ao.Stock.Querying
             {
                 return ValueStart + input + ValueEnd;
             }
-            else if (input is DateTime||input is DateTime?)
+            else if (input is DateTime || input is DateTime?)
             {
                 var dt = (DateTime)input;
                 return ValueStart + dt.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ValueEnd;
@@ -137,7 +136,7 @@ namespace Ao.Stock.Querying
             {
                 for (int i = 0; i < metadata.Args.Count; i++)
                 {
-                    args[i + 1] = ToString(metadata.Args[i],context);
+                    args[i + 1] = ToString(metadata.Args[i], context);
                 }
             }
             return args;

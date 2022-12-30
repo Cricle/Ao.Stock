@@ -29,7 +29,7 @@ namespace Ao.Stock.Querying
             }
             else if (expression is MemberExpression member)
             {
-                if (member.Member is PropertyInfo|| member.Member is FieldInfo)
+                if (member.Member is PropertyInfo || member.Member is FieldInfo)
                 {
                     return new ValueMetadata(GetMemberName(member), true);
                 }
@@ -74,12 +74,12 @@ namespace Ao.Stock.Querying
             }
             else if (expression is InvocationExpression invocation)
             {
-                var expLambda=Expression.Lambda(invocation.Expression).Compile();
+                var expLambda = Expression.Lambda(invocation.Expression).Compile();
                 var res = (Delegate)expLambda.DynamicInvoke();
                 var args = new object[invocation.Arguments.Count];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    args[i]= Expression.Lambda(invocation.Arguments[i]).Compile().DynamicInvoke();
+                    args[i] = Expression.Lambda(invocation.Arguments[i]).Compile().DynamicInvoke();
                 }
                 var data = res.DynamicInvoke(args);
                 return new ValueMetadata(res, true);

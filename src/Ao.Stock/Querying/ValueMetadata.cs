@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Ao.Stock.Querying
 {
@@ -13,7 +12,7 @@ namespace Ao.Stock.Querying
         {
         }
     }
-    public class ValueMetadata<T> : QueryMetadata, IEquatable<ValueMetadata<T>>, IQueryMetadata, IValueMetadata<T>,IValueMetadata
+    public class ValueMetadata<T> : QueryMetadata, IEquatable<ValueMetadata<T>>, IQueryMetadata, IValueMetadata<T>, IValueMetadata
     {
         public ValueMetadata(T value, bool quto)
         {

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ao.Stock.Querying
 {
     public class GroupMetadata : QueryMetadata, IEquatable<GroupMetadata>
     {
         public GroupMetadata(IQueryMetadata target)
-            : this(new[] {target})
+            : this(new[] { target })
         {
         }
         public GroupMetadata(IList<IQueryMetadata> target)

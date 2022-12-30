@@ -20,7 +20,7 @@ namespace Ao.Stock
 
         protected override bool IsNotOthers(KeyValuePair<object, object> input)
         {
-            return Equals(input.Key ,IntegratedSecurityKey);
+            return Equals(input.Key, IntegratedSecurityKey);
         }
 
         public override string ToString()
@@ -30,7 +30,7 @@ namespace Ao.Stock
                 NoContainsIgnore(PasswordKey, "Password") +
                 NoContainsIgnore(DatabaseKey, "Initial Catalog") +
                 NoContainsIgnore(IntegratedSecurityKey, "Integrated Security") +
-                NoContainsIgnore(ConnectTimeoutKey, "Connection Timeout")+
+                NoContainsIgnore(ConnectTimeoutKey, "Connection Timeout") +
                 JoinOthers();
         }
     }

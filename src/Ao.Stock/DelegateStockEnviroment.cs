@@ -10,7 +10,7 @@ namespace Ao.Stock
     public class DelegateStockEnviroment : IStockIntangible
     {
         public DelegateStockEnviroment()
-            :this(new Dictionary<Type, Delegate>(),new Dictionary<Type, Delegate>())
+            : this(new Dictionary<Type, Delegate>(), new Dictionary<Type, Delegate>())
         {
         }
 
@@ -31,13 +31,13 @@ namespace Ao.Stock
         }
         public DelegateStockEnviroment AddGetHandler<T>(GetHandler<T> handler)
         {
-            GetHandlers[typeof(T)]=handler;
+            GetHandlers[typeof(T)] = handler;
             return this;
         }
 
         public void Config<T>(ref T input, IIntangibleContext context)
         {
-            if (ConfigHandlers.TryGetValue(typeof(T),out var del)&&del is ConfigHandler<T> hander)
+            if (ConfigHandlers.TryGetValue(typeof(T), out var del) && del is ConfigHandler<T> hander)
             {
                 hander(ref input, context);
             }
@@ -51,7 +51,7 @@ namespace Ao.Stock
         {
             if (GetHandlers.TryGetValue(typeof(T), out var del) && del is GetHandler<T> hander)
             {
-               return hander(context);
+                return hander(context);
             }
             throw new NotSupportedException($"Not support handler {typeof(T)}");
         }

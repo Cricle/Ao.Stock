@@ -18,7 +18,7 @@ namespace Ao.Stock.SQL.Sqlite
                 if (item is StockPropertyTypeChangedComparisonAction typeChanged)
                 {
                     var leftRaw = GetRawType(typeChanged.Left);
-                    var rightRaw= GetRawType(typeChanged.Right);
+                    var rightRaw = GetRawType(typeChanged.Right);
                     if (string.Equals(leftRaw, rightRaw, StringComparison.OrdinalIgnoreCase))
                     {
                         continue;

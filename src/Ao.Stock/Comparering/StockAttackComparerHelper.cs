@@ -5,7 +5,7 @@ namespace Ao.Stock.Comparering
 {
     public static class StockAttackComparerHelper
     {
-        public static IStockComparisonAction? CompareAttack(IStockType leftType, IStockProperty? left, IStockType rightType, IStockProperty? right,IReadOnlyList<IStockAttack>? lefts, IReadOnlyList<IStockAttack>? rights)
+        public static IStockComparisonAction? CompareAttack(IStockType leftType, IStockProperty? left, IStockType rightType, IStockProperty? right, IReadOnlyList<IStockAttack>? lefts, IReadOnlyList<IStockAttack>? rights)
         {
             if (lefts == null && rights == null)
             {
@@ -19,7 +19,7 @@ namespace Ao.Stock.Comparering
                 {
                     return null;
                 }
-                return new StockAttackChangedComparisonAction(lefts, rights, ups, downs,leftType,rightType,left,right);
+                return new StockAttackChangedComparisonAction(lefts, rights, ups, downs, leftType, rightType, left, right);
             }
             return new StockAttackChangedComparisonAction(lefts, rights, rights, lefts, leftType, rightType, left, right);
         }

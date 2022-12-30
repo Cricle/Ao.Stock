@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Ao.Stock.Querying
 {
-    public class SortMetadata : QueryMetadata,IEquatable<SortMetadata>, IQueryMetadata
+    public class SortMetadata : QueryMetadata, IEquatable<SortMetadata>, IQueryMetadata
     {
         public SortMetadata(SortMode sortMode, IQueryMetadata target)
         {
@@ -28,11 +27,11 @@ namespace Ao.Stock.Querying
 
         public bool Equals(SortMetadata? other)
         {
-            if (other==null)
+            if (other == null)
             {
-                return false;   
+                return false;
             }
-            return other.SortMode==SortMode&&
+            return other.SortMode == SortMode &&
                 other.Target.Equals(Target);
         }
 

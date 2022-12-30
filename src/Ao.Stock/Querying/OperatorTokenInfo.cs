@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Ao.Stock.Querying
 {
-    public class OperatorTokenInfo:IEquatable<OperatorTokenInfo>
+    public class OperatorTokenInfo : IEquatable<OperatorTokenInfo>
     {
         public OperatorTokenInfo(ExpressionType expressionType, string token, OperatorTokenPlacement placement)
         {
@@ -25,7 +25,7 @@ namespace Ao.Stock.Querying
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ExpressionType, Token,Placement);
+            return HashCode.Combine(ExpressionType, Token, Placement);
         }
 
         public override bool Equals(object obj)
@@ -35,13 +35,13 @@ namespace Ao.Stock.Querying
 
         public bool Equals(OperatorTokenInfo? other)
         {
-            if (other ==null)
+            if (other == null)
             {
                 return false;
             }
-            return other.ExpressionType==ExpressionType&&
-                other.Token==Token&&
-                other.Placement==Placement;
+            return other.ExpressionType == ExpressionType &&
+                other.Token == Token &&
+                other.Placement == Placement;
         }
     }
 }

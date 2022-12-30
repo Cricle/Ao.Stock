@@ -27,7 +27,7 @@ namespace Ao.Stock.SQL
                 if (maxLen != null)
                 {
                     var prop = action.RightProperty;
-                    var syntax=Alter.Column(prop.Name)
+                    var syntax = Alter.Column(prop.Name)
                         .OnTable(action.RightType.Name);
                     var next = Property(syntax, prop);
                 }
@@ -166,7 +166,7 @@ namespace Ao.Stock.SQL
         {
             TNext? next = default;
             var type = property.Type;
-            if (type.IsGenericType&&type.GetGenericTypeDefinition()==typeof(Nullable<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 type = type.GetGenericArguments()[0];
             }

@@ -1,7 +1,5 @@
 ﻿using Ao.Stock.Comparering;
 using FluentMigrator.Runner;
-using FluentMigrator.Runner.BatchParser.RangeSearchers;
-using FluentMigrator.Runner.Processors.Firebird;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -25,7 +23,7 @@ namespace Ao.Stock.SQL
         }
         public AutoMigrationHelperBuilder WithScaffold(DbConnection connection, Action<IServiceCollection> serviceConfigAction)
         {
-            return WithScaffold(new DefaultScaffoldHelper(connection,serviceConfigAction));
+            return WithScaffold(new DefaultScaffoldHelper(connection, serviceConfigAction));
         }
         public AutoMigrationHelperBuilder WithMigration(MigrationHelper helper)
         {
@@ -43,14 +41,14 @@ namespace Ao.Stock.SQL
         }
         public AutoMigrationHelper Build()
         {
-            if (scaffold==null||migration==null||builderConfig==null)
+            if (scaffold == null || migration == null || builderConfig == null)
             {
                 throw new InvalidOperationException("scaffold, migration, builderConfig must not null");
             }
             return new AutoMigrationHelper(scaffold, migration, builderConfig);
         }
     }
-    public class AutoMigrationHelper:IDisposable
+    public class AutoMigrationHelper : IDisposable
     {
         public ScaffoldHelper ScaffoldHelper { get; }
 
@@ -89,9 +87,9 @@ namespace Ao.Stock.SQL
         {
             return Begin(newType, DefaultStockTypeComparer.Default);
         }
-        public BeginScaffoldMigration Begin(IStockType newType,IStockTypeComparer stockTypeComparer)
+        public BeginScaffoldMigration Begin(IStockType newType, IStockTypeComparer stockTypeComparer)
         {
-            return new BeginScaffoldMigration(this,newType, stockTypeComparer);
+            return new BeginScaffoldMigration(this, newType, stockTypeComparer);
         }
     }
     public abstract class ScaffoldHelper : IDisposable
@@ -110,7 +108,7 @@ namespace Ao.Stock.SQL
         private ServiceProvider? provider;
 
         public bool LeaveCloseDbConnection { get; set; } = true;
-        
+
         public IModel Scaffold()
         {
             if (provider == null)

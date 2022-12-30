@@ -23,7 +23,7 @@ namespace Ao.Stock.Sample.Kata
                                 new ValueMetadata(0))),"aaaa"))
             };
             var q = new Query().From("1d85aeb8-046a-4619-902d-799d09b34bd4");
-            var sql = KataMetadataVisitor.Mysql(q).VisitAndCompile(m,q);
+            var sql = KataMetadataVisitor.Mysql(q).VisitAndCompile(m, q);
             Console.WriteLine(sql);
         }
     }

@@ -71,23 +71,23 @@ namespace Ao.Stock
             return hc.ToHashCode();
         }
 
-        public string NoContainsIgnore(string key,string actualName, string connect = "=",string end=";")
+        public string NoContainsIgnore(string key, string actualName, string connect = "=", string end = ";")
         {
-            if (TryGetValue(key,out var obj))
+            if (TryGetValue(key, out var obj))
             {
                 return $"{actualName}{connect}{obj}{end}";
             }
             return string.Empty;
         }
 
-        protected virtual bool IsNotOthers(KeyValuePair<object,object> input)
+        protected virtual bool IsNotOthers(KeyValuePair<object, object> input)
         {
             return false;
         }
 
         public string JoinOthers()
         {
-            return string.Join(";", this.Where(x => !KnowsSet.Contains(x.Key)&& !IsNotOthers(x)).Select(x => $"{x.Key}={x.Value}"));
+            return string.Join(";", this.Where(x => !KnowsSet.Contains(x.Key) && !IsNotOthers(x)).Select(x => $"{x.Key}={x.Value}"));
         }
     }
 

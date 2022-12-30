@@ -9,11 +9,11 @@ namespace Ao.Stock.SQL
     {
         public static readonly DefaultEFEntityTypeToStockConverter Instance = new DefaultEFEntityTypeToStockConverter();
 
-        protected virtual void ConfigType(IEntityType type,StockType stockType)
+        protected virtual void ConfigType(IEntityType type, StockType stockType)
         {
             stockType.Name = type.GetTableName();
         }
-        protected virtual void ConfigProperty(IEntityType type,IProperty property,StockType stockType,StockProperty stockProperty)
+        protected virtual void ConfigProperty(IEntityType type, IProperty property, StockType stockType, StockProperty stockProperty)
         {
             var isPrimayKey = property.IsPrimaryKey();
             var isIndex = property.IsIndex();
@@ -21,8 +21,8 @@ namespace Ao.Stock.SQL
             stockProperty.Name = property.GetColumnName(store);
             stockProperty.Type = property.ClrType;
             var columnType = property.GetColumnType();
-            var atts = new List<IStockAttack> { new StockAttributeAttack(new RawDbTypeAttribute(columnType))};
-            if (property.ClrType==typeof(string)&&property.GetMaxLength() is int len)
+            var atts = new List<IStockAttack> { new StockAttributeAttack(new RawDbTypeAttribute(columnType)) };
+            if (property.ClrType == typeof(string) && property.GetMaxLength() is int len)
             {
                 atts.Add(new StockAttributeAttack(new MaxLengthAttribute(len)));
             }

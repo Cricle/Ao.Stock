@@ -9,9 +9,9 @@ namespace Ao.Stock.SQL
         {
             return AsStockType(model.GetEntityTypes(), tableName, converter, comparison);
         }
-        public static IStockType? AsStockType(this IEnumerable<IEntityType> types, string tableName, IEFEntityTypeToStockConverter converter,StringComparison comparison= StringComparison.OrdinalIgnoreCase)
+        public static IStockType? AsStockType(this IEnumerable<IEntityType> types, string tableName, IEFEntityTypeToStockConverter converter, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            return types.FirstOrDefault(x => string.Equals(x.GetTableName() ,tableName, comparison))?.AsStockType(converter);
+            return types.FirstOrDefault(x => string.Equals(x.GetTableName(), tableName, comparison))?.AsStockType(converter);
         }
         public static IStockType? AsStockType(this IModel model, string tableName, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {

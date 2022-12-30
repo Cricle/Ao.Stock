@@ -31,7 +31,7 @@ namespace Ao.Stock.Querying
             {
                 return string.Empty;
             }
-            if (Count==1)
+            if (Count == 1)
             {
                 return this[0].ToString()!;
             }

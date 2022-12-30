@@ -2,7 +2,7 @@
 
 namespace Ao.Stock.Querying
 {
-    public interface IMethodMetadata:IQueryMetadata,IExpressionTypeProvider
+    public interface IMethodMetadata : IQueryMetadata, IExpressionTypeProvider
     {
         string Method { get; }
 

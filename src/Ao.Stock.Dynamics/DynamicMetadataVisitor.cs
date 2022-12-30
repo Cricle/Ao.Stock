@@ -21,12 +21,12 @@ namespace Ao.Stock.Dynamics
         }
     }
     public abstract class DynamicMetadataVisitor<T> : DefaultMetadataVisitor<T>
-        where T: DefaultQueryContext
+        where T : DefaultQueryContext
     {
         private IQueryable queryable;
 
-        public DynamicMetadataVisitor(IQueryable queryable,IList<object> args)
-            :base(args)
+        public DynamicMetadataVisitor(IQueryable queryable, IList<object> args)
+            : base(args)
         {
             this.queryable = queryable;
         }
@@ -42,7 +42,7 @@ namespace Ao.Stock.Dynamics
         protected override void OnVisitSort(SortMetadata method, T context)
         {
             var exp = context.Expression + (method.SortMode == SortMode.Desc ? " DESC" : "");
-            if (hasOrder&&queryable is IOrderedQueryable ordered)
+            if (hasOrder && queryable is IOrderedQueryable ordered)
             {
                 queryable = ordered.ThenBy(exp, Args.ToArray());
             }
