@@ -53,7 +53,7 @@ namespace Ao.Stock.SQL
         protected abstract void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context);
 
         protected abstract DbConnection CreateDbConnection(ConnectionStringBox box, IIntangibleContext? context);
-
+         
         public virtual T Get<T>(IIntangibleContext? context)
         {
             if (typeof(T) == typeof(DbContext))
@@ -62,12 +62,7 @@ namespace Ao.Stock.SQL
                 Config(ref builder, context);
                 return (T)(object)new DbContext(builder.Options);
             }
-            if (typeof(T) == typeof(IDbConnection))
-            {
-                var connBox = GetConnectionStringBox(context);
-                return (T)(object)CreateDbConnection(connBox, context);
-            }
-            if (typeof(T) == typeof(DbConnection))
+            if (typeof(T) == typeof(IDbConnection)|| typeof(T) == typeof(DbConnection))
             {
                 var connBox = GetConnectionStringBox(context);
                 return (T)(object)CreateDbConnection(connBox, context);

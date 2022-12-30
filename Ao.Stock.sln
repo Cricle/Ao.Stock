@@ -34,7 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Sqlite", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.Sqlite", "src\Ao.Stock.SQL.Sqlite\Ao.Stock.SQL.Sqlite.csproj", "{DB3F7300-FA01-4219-A973-566A3BD2E183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.PostgreSql", "src\Ao.Stock.SQL.PostgreSql\Ao.Stock.SQL.PostgreSql.csproj", "{56BEDA55-DFC5-4F73-AA42-F9337E70534D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.PostgreSql", "src\Ao.Stock.SQL.PostgreSql\Ao.Stock.SQL.PostgreSql.csproj", "{56BEDA55-DFC5-4F73-AA42-F9337E70534D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.Oracle", "src\Ao.Stock.SQL.Oracle\Ao.Stock.SQL.Oracle.csproj", "{50560B9E-FA62-4286-9D06-5271982BB411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +96,10 @@ Global
 		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56BEDA55-DFC5-4F73-AA42-F9337E70534D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50560B9E-FA62-4286-9D06-5271982BB411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50560B9E-FA62-4286-9D06-5271982BB411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50560B9E-FA62-4286-9D06-5271982BB411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50560B9E-FA62-4286-9D06-5271982BB411}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
