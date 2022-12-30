@@ -20,6 +20,8 @@ namespace Ao.Stock.SQL.MSSQL
         {
         }
 
+        public override string EngineCode => KnowsDbCode.SqlServer;
+
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {
             var optionAction = context.GetOrDefault<Action<SqlServerDbContextOptionsBuilder>>(OptionActionKey);

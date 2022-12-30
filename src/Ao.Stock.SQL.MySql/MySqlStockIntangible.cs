@@ -25,9 +25,16 @@ namespace Ao.Stock.SQL.MySql
         {
         }
 
+        public override string EngineCode => KnowsDbCode.Mysql;
+
+        protected virtual ServerVersion GetDefaultServerVersion()
+        {
+            return DefaultServerVersion;
+        }
+
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {
-            var serviceVersion = context.GetOrDefault<ServerVersion>(ServiceVersionKey) ?? DefaultServerVersion;
+            var serviceVersion = context.GetOrDefault<ServerVersion>(ServiceVersionKey) ?? GetDefaultServerVersion();
             var optionAction = context.GetOrDefault<Action<MySqlDbContextOptionsBuilder>>(OptionActionKey);
             builder.UseMySql(box.ConnectionString, serviceVersion, optionAction);
         }

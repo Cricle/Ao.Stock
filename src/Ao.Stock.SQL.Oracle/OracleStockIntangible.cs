@@ -19,6 +19,7 @@ namespace Ao.Stock.SQL.Oracle
             : base(connectStringStockIntangible)
         {
         }
+        public override string EngineCode => KnowsDbCode.Oracle;
 
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {

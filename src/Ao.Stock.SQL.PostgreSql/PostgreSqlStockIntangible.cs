@@ -20,6 +20,8 @@ namespace Ao.Stock.SQL.PostgreSql
         {
         }
 
+        public override string EngineCode => KnowsDbCode.PostgrSql;
+
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {
             var optionAction = context.GetOrDefault<Action<NpgsqlDbContextOptionsBuilder>>(OptionActionKey);

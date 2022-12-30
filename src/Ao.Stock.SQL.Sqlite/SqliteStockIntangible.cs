@@ -20,6 +20,8 @@ namespace Ao.Stock.SQL.Sqlite
         {
         }
 
+        public override string EngineCode => KnowsDbCode.Sqlite;
+
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {
             var optionAction = context.GetOrDefault<Action<SqliteDbContextOptionsBuilder>>(OptionActionKey);

@@ -5,7 +5,7 @@ using System.Data.Common;
 
 namespace Ao.Stock.SQL
 {
-    public abstract class SQLStockIntangible : IStockIntangible
+    public abstract class SQLStockIntangible : IStockIntangible,IEngineCodeProvider
     {
         public const string ConnectionStringKey = "ConnectionString";
 
@@ -15,6 +15,8 @@ namespace Ao.Stock.SQL
         }
 
         public ConnectStringStockIntangible ConnectStringStockIntangible { get; }
+
+        public abstract string EngineCode { get; }
 
         public ConnectionStringBox? GetConnectionStringBox(IIntangibleContext? context)
         {
