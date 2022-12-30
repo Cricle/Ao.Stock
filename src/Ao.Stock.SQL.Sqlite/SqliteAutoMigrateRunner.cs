@@ -5,7 +5,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite.Design.Internal;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
 
 namespace Ao.Stock.SQL.Sqlite
 {

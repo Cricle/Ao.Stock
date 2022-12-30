@@ -1,5 +1,6 @@
 ﻿using Ao.Stock.Comparering;
 using FluentMigrator.Runner;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Design.Internal;
@@ -10,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Ao.Stock.SQL.MySql
 {
+
     [SuppressMessage("","EF1001")]
     public class MySqlAutoMigrateRunner : IAutoMigrateRunner
     {

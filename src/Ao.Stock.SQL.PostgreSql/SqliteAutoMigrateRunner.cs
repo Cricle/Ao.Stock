@@ -1,5 +1,6 @@
 ﻿using Ao.Stock.Comparering;
 using FluentMigrator.Runner;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Design.Internal;
@@ -7,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Ao.Stock.SQL.PostgreSql
 {
+
     [SuppressMessage("", "EF1001")]
     public class PostgreSqlAutoMigrateRunner : IAutoMigrateRunner
     {
