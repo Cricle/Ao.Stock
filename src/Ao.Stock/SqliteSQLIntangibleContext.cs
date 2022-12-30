@@ -14,17 +14,17 @@ namespace Ao.Stock
 
         public string Mode
         {
-            get => GetOrDefault<string>(ModeKey);
+            get => this.GetOrDefault<string>(ModeKey);
             set => this[ModeKey] = value;
         }
         public string Cache
         {
-            get => GetOrDefault<string>(CacheKey);
+            get => this.GetOrDefault<string>(CacheKey);
             set => this[CacheKey] = value;
         }
         public bool Pooling
         {
-            get => GetOrDefault<bool>(PoolingKey);
+            get => this.GetOrDefault<bool>(PoolingKey);
             set => this[PoolingKey] = value;
         }
         protected override bool IsNotOthers(KeyValuePair<object, object> input)

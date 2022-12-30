@@ -14,7 +14,7 @@ namespace Ao.Stock
 
         public bool IntegratedSecurity
         {
-            get => GetOrDefault<bool>(IntegratedSecurityKey);
+            get => this.GetOrDefault<bool>(IntegratedSecurityKey);
             set => this[IntegratedSecurityKey] = value;
         }
 

@@ -14,7 +14,7 @@ namespace Ao.Stock
 
         public string SslMode
         {
-            get => GetOrDefault<string>(SslModeKey);
+            get => this.GetOrDefault<string>(SslModeKey);
             set => this[SslModeKey] = value;
         }
 

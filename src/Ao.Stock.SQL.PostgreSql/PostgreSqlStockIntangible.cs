@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentMigrator.Runner;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Design.Internal;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ao.Stock.SQL.PostgreSql
 {
+    [SuppressMessage("", "EF1001")]
     public class PostgreSqlStockIntangible : SQLStockIntangible
     {
         public const string OptionActionKey = "postgresql.OptionAction";
@@ -20,6 +24,15 @@ namespace Ao.Stock.SQL.PostgreSql
         {
             var optionAction = context.GetOrDefault<Action<NpgsqlDbContextOptionsBuilder>>(OptionActionKey);
             builder.UseNpgsql(box.ConnectionString, optionAction);
+        }
+        protected override void ConfigDesignTimeServices(ConnectionStringBox box1, DesignTimeServiceBox box2, IIntangibleContext? context)
+        {
+            new NpgsqlDesignTimeServices().ConfigureDesignTimeServices(box2.Services);
+        }
+
+        protected override void ConfigMigrationRunnerBuilder(ConnectionStringBox box, IMigrationRunnerBuilder builder, IIntangibleContext? context)
+        {
+            builder.AddPostgres().WithGlobalConnectionString(box.ConnectionString);
         }
 
         protected override DbConnection CreateDbConnection(ConnectionStringBox box, IIntangibleContext? context)

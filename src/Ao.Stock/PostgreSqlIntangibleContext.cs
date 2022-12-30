@@ -20,23 +20,23 @@ namespace Ao.Stock
         
         public bool IntegratedSecurity
         {
-            get => GetOrDefault<bool>(IntegratedSecurityKey);
+            get => this.GetOrDefault<bool>(IntegratedSecurityKey);
             set => this[IntegratedSecurityKey] = value;
         }
 
         public bool Pooling
         {
-            get => GetOrDefault<bool>(PoolingKey);
+            get => this.GetOrDefault<bool>(PoolingKey);
             set => this[PoolingKey] = value;
         }
         public int MinPoolSize
         {
-            get => GetOrDefault<int>(MinPoolSizeKey);
+            get => this.GetOrDefault<int>(MinPoolSizeKey);
             set => this[MinPoolSizeKey] = value;
         }
         public int MaxPoolSize
         {
-            get => GetOrDefault<int>(MaxPoolSizeKey);
+            get => this.GetOrDefault<int>(MaxPoolSizeKey);
             set => this[MaxPoolSizeKey] = value;
         }
         protected override bool IsNotOthers(KeyValuePair<object, object> input)

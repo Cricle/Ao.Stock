@@ -9,7 +9,7 @@ namespace Ao.Stock.Sample.MySql
     {
         static void Main(string[] args)
         {
-            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=355343;database=sakila;characterset=utf8mb4;";
+            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
             var mt1 = StockHelper.FromType(typeof(Student1), new ReflectionOptions { TypeNameGetter = _ => "student" });
             new MySqlAutoMigrateRunner(mysql, mt1, "student")
             {

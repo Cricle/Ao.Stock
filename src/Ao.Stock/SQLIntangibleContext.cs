@@ -25,33 +25,33 @@ namespace Ao.Stock
 
         public string Database
         {
-            get => GetOrDefault<string>(DatabaseKey);
+            get => this.GetOrDefault<string>(DatabaseKey);
             set => this[DatabaseKey] = value;
         }
 
         public string Host
         {
-            get => GetOrDefault<string>(HostKey);
+            get => this.GetOrDefault<string>(HostKey);
             set => this[HostKey] = value;
         }
         public short Port
         {
-            get => GetOrDefault<short>(PortKey);
+            get => this.GetOrDefault<short>(PortKey);
             set => this[PortKey] = value;
         }
         public string UserName
         {
-            get => GetOrDefault<string>(UserNameKey);
+            get => this.GetOrDefault<string>(UserNameKey);
             set => this[UserNameKey] = value;
         }
         public string Password
         {
-            get => GetOrDefault<string>(PasswordKey);
+            get => this.GetOrDefault<string>(PasswordKey);
             set => this[PasswordKey] = value;
         }
         public int ConnectTimeout
         {
-            get => GetOrDefault<int>(ConnectTimeoutKey);
+            get => this.GetOrDefault<int>(ConnectTimeoutKey);
             set => this[ConnectTimeoutKey] = value;
         }
 

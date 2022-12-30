@@ -1,43 +1,13 @@
 ﻿using Ao.Stock.Comparering;
 using Ao.Stock.SQL.Announcation;
-using FluentMigrator.Runner;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite.Design.Internal;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Ao.Stock.SQL.Sqlite
 {
-    [SuppressMessage("", "EF1001")]
-    public class SqliteAutoMigrateRunner : IAutoMigrateRunner
+    public class SqliteAutoMigrateRunner : DefaultAutoMigrateRunner
     {
         public SqliteAutoMigrateRunner(string connectionString, IStockType newStockType, string tableName)
+            : base(connectionString, newStockType, tableName, SqliteStockIntangible.Default)
         {
-            ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-            NewStockType = newStockType;
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        }
-
-        public string ConnectionString { get; }
-
-        public IStockType NewStockType { get; }
-
-        public string TableName { get; }
-
-        public Func<IReadOnlyList<IStockComparisonAction>, IReadOnlyList<IStockComparisonAction>>? Project { get; set; }
-
-        public void Migrate()
-        {
-            using (var auto = new AutoMigrationHelperBuilder()
-                .WithBuilderConfig(x => x.UseSqlite(ConnectionString))
-                .WithMigration(x => x.AddSQLite().WithGlobalConnectionString(ConnectionString))
-                .WithScaffold(new SqliteConnection(ConnectionString), x => new SqliteDesignTimeServices().ConfigureDesignTimeServices(x))
-                .Build())
-            {
-                auto.EnsureDatabaseCreated();
-                auto.Begin(NewStockType)
-                    .ScaffoldCompareAndMigrate(TableName, Project);
-            }
         }
 
         public static IEnumerable<IStockComparisonAction> RemoveRangeTypeChanges(IReadOnlyList<IStockComparisonAction> input)

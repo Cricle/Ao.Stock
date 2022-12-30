@@ -13,7 +13,7 @@ namespace Ao.Stock
 
         public string IntegratedSecurity
         {
-            get => GetOrDefault<string>(IntegratedSecurityKey);
+            get => this.GetOrDefault<string>(IntegratedSecurityKey);
             set => this[IntegratedSecurityKey] = value;
         }
         protected override bool IsNotOthers(KeyValuePair<object, object> input)
