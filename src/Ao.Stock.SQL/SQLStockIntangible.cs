@@ -8,6 +8,7 @@ namespace Ao.Stock.SQL
     public abstract class SQLStockIntangible : IStockIntangible,IEngineCodeProvider
     {
         public const string ConnectionStringKey = "ConnectionString";
+        public const string SQLContextKey = "SQLContext";
 
         public SQLStockIntangible(ConnectStringStockIntangible connectStringStockIntangible)
         {
@@ -18,11 +19,15 @@ namespace Ao.Stock.SQL
 
         public abstract string EngineCode { get; }
 
-        public ConnectionStringBox? GetConnectionStringBox(IIntangibleContext? context)
+        public virtual ConnectionStringBox? GetConnectionStringBox(IIntangibleContext? context)
         {
             if (context.TryGetValue(ConnectionStringKey, out var strObj) && strObj is string str)
             {
                 return new ConnectionStringBox(str, null);
+            }
+            if (context.TryGetValue(SQLContextKey, out var ctxObj) && ctxObj is IIntangibleContext ctx)
+            {
+                return new ConnectionStringBox(ctx.ToString(), null);
             }
             return ConnectStringStockIntangible.Get<ConnectionStringBox>(context);
         }
