@@ -27,7 +27,7 @@ namespace Ao.Stock
             get => this.GetOrDefault<bool>(PoolingKey);
             set => this[PoolingKey] = value;
         }
-        protected override bool IsNotOthers(KeyValuePair<object, object> input)
+        protected override bool IsOthers(KeyValuePair<object, object> input)
         {
             return Equals(input.Key, ModeKey) ||
                 Equals(input.Key, CacheKey) ||

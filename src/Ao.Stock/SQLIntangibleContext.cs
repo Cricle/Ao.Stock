@@ -80,14 +80,14 @@ namespace Ao.Stock
             return string.Empty;
         }
 
-        protected virtual bool IsNotOthers(KeyValuePair<object, object> input)
+        protected virtual bool IsOthers(KeyValuePair<object, object> input)
         {
             return false;
         }
 
         public string JoinOthers()
         {
-            return string.Join(";", this.Where(x => !KnowsSet.Contains(x.Key) && !IsNotOthers(x)).Select(x => $"{x.Key}={x.Value}"));
+            return string.Join(";", this.Where(x => !KnowsSet.Contains(x.Key) && !IsOthers(x)).Select(x => $"{x.Key}={x.Value}"));
         }
     }
 

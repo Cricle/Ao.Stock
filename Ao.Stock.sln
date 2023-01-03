@@ -36,7 +36,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.Sqlite", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.PostgreSql", "src\Ao.Stock.SQL.PostgreSql\Ao.Stock.SQL.PostgreSql.csproj", "{56BEDA55-DFC5-4F73-AA42-F9337E70534D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.SQL.Oracle", "src\Ao.Stock.SQL.Oracle\Ao.Stock.SQL.Oracle.csproj", "{50560B9E-FA62-4286-9D06-5271982BB411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.Oracle", "src\Ao.Stock.SQL.Oracle\Ao.Stock.SQL.Oracle.csproj", "{50560B9E-FA62-4286-9D06-5271982BB411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Sample.Scal", "samples\Ao.Stock.Sample.Scal\Ao.Stock.Sample.Scal.csproj", "{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +102,10 @@ Global
 		{50560B9E-FA62-4286-9D06-5271982BB411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50560B9E-FA62-4286-9D06-5271982BB411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50560B9E-FA62-4286-9D06-5271982BB411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{0E91E518-4775-411A-869D-B5E12D4F0104} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{B0F5A477-B6A5-4978-87BB-E7C0B7D8029C} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
+		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A46E8088-BF9D-4D37-BD69-9B957A02B5BF}

@@ -39,7 +39,7 @@ namespace Ao.Stock
             get => this.GetOrDefault<int>(MaxPoolSizeKey);
             set => this[MaxPoolSizeKey] = value;
         }
-        protected override bool IsNotOthers(KeyValuePair<object, object> input)
+        protected override bool IsOthers(KeyValuePair<object, object> input)
         {
             return Equals(input.Key, IntegratedSecurityKey) ||
                 Equals(input.Key, PoolingKey) ||
