@@ -42,5 +42,10 @@ namespace Ao.Stock.SQL.Sqlite
         {
             return new SqliteConnection(box.ConnectionString);
         }
+
+        protected override SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context)
+        {
+            return DelegateSQLArchitectureQuerying.Sqlite(CreateDbConnection(box, context));
+        }
     }
 }

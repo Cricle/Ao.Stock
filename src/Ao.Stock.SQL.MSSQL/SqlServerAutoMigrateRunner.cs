@@ -1,6 +1,4 @@
-﻿using Ao.Stock.SQL.MSSQL;
-
-namespace Ao.Stock.SQL.MySql
+﻿namespace Ao.Stock.SQL.MSSQL
 {
     public class SqlServerAutoMigrateRunner : DefaultAutoMigrateRunner
     {

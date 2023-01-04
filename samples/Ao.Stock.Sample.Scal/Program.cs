@@ -1,4 +1,7 @@
-﻿using Ao.Stock.SQL.MySql;
+﻿using Ao.Stock.Kata;
+using Ao.Stock.Kata.Copying;
+using Ao.Stock.SQL;
+using Ao.Stock.SQL.MySql;
 using FluentMigrator.Runner;
 using System.Data.Common;
 using System.Diagnostics;
@@ -9,25 +12,27 @@ namespace Ao.Stock.Sample.Scal
     {
         static async Task Main(string[] args)
         {
-            var connCtx = new MySqlSQLIntangibleContext
+            var targetDb = "123";
+            var ctxSource = new SQLIntangibleContext
             {
-                Database="sakila",
-                UserName="root"
+                [SQLStockIntangible.ConnectionStringKey] = $"server=192.168.1.100;port=3306;userid=root;password=;database={targetDb};characterset=utf8mb4;"
             };
-            Console.WriteLine(connCtx.ToString());
-            var conn = MySqlStockIntangible.Default.Get<DbConnection>(connCtx);
-            conn.Open();
-            var query=DelegateSQLArchitectureQuerying.Mysql(conn);
-            for (int i = 0; i < 10; i++)
+            var ctxDest = new SQLIntangibleContext
             {
-                var sw = Stopwatch.GetTimestamp();
-                var res=await query.GetDatabasesAsync();
-                foreach (var item in res)
-                {
-                    var tables = await query.GetTablesAsync(item, connCtx);
-                }
-                Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-sw));
-            }
+                [SQLStockIntangible.ConnectionStringKey] = $"server=192.168.1.100;port=3306;userid=root;password=;database={targetDb}1;characterset=utf8mb4;"
+            };
+            var source=new DelegateSQLDatabaseInfo(targetDb, 
+                ctxSource,
+                MySqlStockIntangible.Default,
+                CompilerFetcher.Mysql);
+            var dest = new DelegateSQLDatabaseInfo(targetDb+1,
+                ctxDest,
+                MySqlStockIntangible.Default,
+                CompilerFetcher.Mysql);
+            var copying = new SQLCopying(source, dest);
+            var sw = Stopwatch.GetTimestamp();
+            await copying.RunAsync();
+            Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-sw));
         }
     }
 }

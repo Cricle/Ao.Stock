@@ -52,5 +52,9 @@ namespace Ao.Stock.SQL.MySql
         {
             return new MySqlConnection(box.ConnectionString);
         }
+        protected override SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context)
+        {
+            return DelegateSQLArchitectureQuerying.Mysql(CreateDbConnection(box, context));
+        }
     }
 }

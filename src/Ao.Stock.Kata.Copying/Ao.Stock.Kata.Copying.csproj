@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../eng/pkg.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
+    <ProjectReference Include="..\Ao.Stock.SQL\Ao.Stock.SQL.csproj" />
+  </ItemGroup>
+
+</Project>

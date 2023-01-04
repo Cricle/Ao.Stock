@@ -23,7 +23,7 @@ namespace Ao.Stock
             }
         }
 
-        public async Task<IList<string>> GetDatabasesAsync()
+        public async Task<IList<string?>> GetDatabasesAsync()
         {
             await EnsureOpenAsync();
             using (var comm = GetGetDatabasesCommand())
@@ -34,23 +34,23 @@ namespace Ao.Stock
                 }
             }
         }
-        protected Task<IList<string>> ReadAsync(DbDataReader reader)
+        protected Task<IList<string?>> ReadAsync(DbDataReader reader)
         {
-            var ds = new List<string>();
+            var ds = new List<string?>();
             while (reader.Read())
             {
-                ds.Add(reader[0].ToString());
+                ds.Add(reader[0]?.ToString());
             }
-            return Task.FromResult<IList<string>>(ds);
+            return Task.FromResult<IList<string?>>(ds);
         }
-        protected Task<IList<string>> ReadDataBasesAsync(DbDataReader reader)
+        protected Task<IList<string?>> ReadDataBasesAsync(DbDataReader reader)
         {
             return ReadAsync(reader);
         }
 
         protected abstract DbCommand GetGetDatabasesCommand();
 
-        public async Task<IList<string>> GetTablesAsync(string database, IIntangibleContext context)
+        public async Task<IList<string?>> GetTablesAsync(string database, IIntangibleContext context)
         {
             await EnsureOpenAsync();
             using (var comm = GetGetTablesCommand(database, context))
@@ -64,9 +64,15 @@ namespace Ao.Stock
 
         protected abstract DbCommand GetGetTablesCommand(string database, IIntangibleContext context);
 
-        protected Task<IList<string>> ReadTablesAsync(DbDataReader reader)
+        protected Task<IList<string?>> ReadTablesAsync(DbDataReader reader)
         {
             return ReadAsync(reader);
+        }
+
+        public void Dispose()
+        {
+            DbConnection.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 

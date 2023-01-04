@@ -9,6 +9,7 @@ namespace Ao.Stock.SQL
     {
         public const string ConnectionStringKey = "ConnectionString";
         public const string SQLContextKey = "SQLContext";
+        public const string DbConnectionKey = "DbConnection";
 
         public SQLStockIntangible(ConnectStringStockIntangible connectStringStockIntangible)
         {
@@ -60,7 +61,9 @@ namespace Ao.Stock.SQL
         protected abstract void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context);
 
         protected abstract DbConnection CreateDbConnection(ConnectionStringBox box, IIntangibleContext? context);
-         
+
+        protected abstract SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context);
+
         public virtual T Get<T>(IIntangibleContext? context)
         {
             if (typeof(T) == typeof(DbContext))
@@ -85,6 +88,11 @@ namespace Ao.Stock.SQL
                         Config(ref designServiceBox, context);
                     })
                     .Build();
+            }
+            if (typeof(T)==typeof(IArchitectureQuerying)|| typeof(T) == typeof(SQLArchitectureQuerying))
+            {
+                var connBox = GetConnectionStringBox(context);
+                return (T)(object)CreateSQLArchitectureQuerying(connBox, context);
             }
             return default;
         }

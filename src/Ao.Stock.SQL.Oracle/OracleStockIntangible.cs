@@ -40,5 +40,10 @@ namespace Ao.Stock.SQL.Oracle
         {
             return new OracleConnection(box.ConnectionString);
         }
+
+        protected override SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

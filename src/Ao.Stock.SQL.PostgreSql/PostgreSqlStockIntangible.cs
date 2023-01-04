@@ -41,5 +41,9 @@ namespace Ao.Stock.SQL.PostgreSql
         {
             return new NpgsqlConnection(box.ConnectionString);
         }
+        protected override SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context)
+        {
+            return DelegateSQLArchitectureQuerying.PostgreSql(CreateDbConnection(box, context));
+        }
     }
 }

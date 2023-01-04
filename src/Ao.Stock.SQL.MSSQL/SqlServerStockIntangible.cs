@@ -40,5 +40,9 @@ namespace Ao.Stock.SQL.MSSQL
         {
             return new SqlConnection(box.ConnectionString);
         }
+        protected override SQLArchitectureQuerying CreateSQLArchitectureQuerying(ConnectionStringBox box, IIntangibleContext? context)
+        {
+            return DelegateSQLArchitectureQuerying.SqlServer(CreateDbConnection(box, context));
+        }
     }
 }

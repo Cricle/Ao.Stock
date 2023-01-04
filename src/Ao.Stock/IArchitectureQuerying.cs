@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Ao.Stock
 {
-    public interface IArchitectureQuerying
+    public interface IArchitectureQuerying : IDisposable
     {
         Task<IList<string>> GetDatabasesAsync();
 
