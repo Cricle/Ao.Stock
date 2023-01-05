@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
 {
@@ -18,7 +13,7 @@ namespace Ao.Stock.Mirror
         {
         }
 
-        protected override IEnumerable<IEnumerable<object?>> ConvertToInput(FlatArray<object?> arr, int? size, IIntangibleContext context)
+        protected override IEnumerable<IEnumerable<object?>> ConvertToInput(FlatArray<object?> arr, int? size, IIntangibleContext? context)
         {
             if (size == null)
             {

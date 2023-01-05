@@ -22,16 +22,37 @@ namespace Ao.Stock
         {
             return Equals(input.Key, SslModeKey);
         }
-
+        public override string ReplaceKey(string key)
+        {
+            switch (key)
+            {
+                case HostKey:
+                    return "Server";
+                case PortKey:
+                    return "Port";
+                case UserNameKey:
+                    return "Uid";
+                case PasswordKey:
+                    return "Pwd";
+                case DatabaseKey:
+                    return "Database";
+                case SslModeKey:
+                    return "SslMode";
+                case ConnectTimeoutKey:
+                    return "Connect Timeout";
+                default:
+                    return key;
+            }
+        }
         public override string ToString()
         {
-            return NoContainsIgnore(HostKey, "Server") +
-                NoContainsIgnore(PortKey, "Port") +
-                NoContainsIgnore(UserNameKey, "Uid") +
-                NoContainsIgnore(PasswordKey, "Pwd") +
-                NoContainsIgnore(DatabaseKey, "Database") +
-                NoContainsIgnore(SslModeKey, "SslMode") +
-                NoContainsIgnore(ConnectTimeoutKey, "Connect Timeout") +
+            return NoContainsIgnore(HostKey) +
+                NoContainsIgnore(PortKey) +
+                NoContainsIgnore(UserNameKey) +
+                NoContainsIgnore(PasswordKey) +
+                NoContainsIgnore(DatabaseKey) +
+                NoContainsIgnore(SslModeKey) +
+                NoContainsIgnore(ConnectTimeoutKey) +
                 JoinOthers();
         }
     }

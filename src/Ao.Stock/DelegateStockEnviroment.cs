@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ao.Stock
 {
-    public delegate T GetHandler<T>(IIntangibleContext context);
+    public delegate T GetHandler<T>(IIntangibleContext? context);
 
-    public delegate void ConfigHandler<T>(ref T input, IIntangibleContext context);
+    public delegate void ConfigHandler<T>(ref T input, IIntangibleContext? context);
 
     public class DelegateStockEnviroment : IStockIntangible
     {
@@ -35,7 +35,7 @@ namespace Ao.Stock
             return this;
         }
 
-        public void Config<T>(ref T input, IIntangibleContext context)
+        public void Config<T>(ref T input, IIntangibleContext? context)
         {
             if (ConfigHandlers.TryGetValue(typeof(T), out var del) && del is ConfigHandler<T> hander)
             {
@@ -47,7 +47,7 @@ namespace Ao.Stock
             }
         }
 
-        public T Get<T>(IIntangibleContext context)
+        public T Get<T>(IIntangibleContext? context)
         {
             if (GetHandlers.TryGetValue(typeof(T), out var del) && del is GetHandler<T> hander)
             {

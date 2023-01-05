@@ -46,6 +46,34 @@ namespace Ao.Stock
                 Equals(input.Key, MinPoolSizeKey) ||
                 Equals(input.Key, MaxPoolSizeKey);
         }
+        public override string ReplaceKey(string key)
+        {
+            switch (key)
+            {
+                case HostKey:
+                    return "Source";
+                case PortKey:
+                    return "Port";
+                case UserNameKey:
+                    return "User Id";
+                case PasswordKey:
+                    return "Password";
+                case DatabaseKey:
+                    return "Database";
+                case IntegratedSecurityKey:
+                    return "Integrated Security";
+                case ConnectTimeoutKey:
+                    return "CommandTimeout";
+                case PoolingKey:
+                    return "Pooling";
+                case MinPoolSizeKey:
+                    return "MinPoolSize";
+                case MaxPoolSizeKey:
+                    return "MaxPoolSize";
+                default:
+                    return key;
+            }
+        }
         public override string ToString()
         {
             return NoContainsIgnore(Host, "Server") +

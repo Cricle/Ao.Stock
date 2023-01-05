@@ -60,6 +60,11 @@ namespace Ao.Stock
             return string.Join(";", this.Select(x => $"{x.Key}={x.Value}"));
         }
 
+        public virtual string ReplaceKey(string key)
+        {
+            return key;
+        }
+
         public override int GetHashCode()
         {
             var hc = new HashCode();
@@ -71,11 +76,11 @@ namespace Ao.Stock
             return hc.ToHashCode();
         }
 
-        public string NoContainsIgnore(string key, string actualName, string connect = "=", string end = ";")
+        public string NoContainsIgnore(string key, string connect = "=", string end = ";")
         {
             if (TryGetValue(key, out var obj))
             {
-                return $"{actualName}{connect}{obj}{end}";
+                return $"{ReplaceKey(key)}{connect}{obj}{end}";
             }
             return string.Empty;
         }

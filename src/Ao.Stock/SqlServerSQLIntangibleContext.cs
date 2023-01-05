@@ -22,15 +22,35 @@ namespace Ao.Stock
         {
             return Equals(input.Key, IntegratedSecurityKey);
         }
+        public override string ReplaceKey(string key)
+        {
+            switch (key)
+            {
+                case HostKey:
+                    return "Source";
+                case UserNameKey:
+                    return "User Id";
+                case PasswordKey:
+                    return "Password";
+                case DatabaseKey:
+                    return "Initial Catalog";
+                case IntegratedSecurityKey:
+                    return "Integrated Security";
+                case ConnectTimeoutKey:
+                    return "Connect Timeout";
+                default:
+                    return key;
+            }
+        }
 
         public override string ToString()
         {
             return $"Data Source={Host},{Port};" +
-                NoContainsIgnore(UserNameKey, "User Id") +
-                NoContainsIgnore(PasswordKey, "Password") +
-                NoContainsIgnore(DatabaseKey, "Initial Catalog") +
-                NoContainsIgnore(IntegratedSecurityKey, "Integrated Security") +
-                NoContainsIgnore(ConnectTimeoutKey, "Connection Timeout") +
+                NoContainsIgnore(UserNameKey) +
+                NoContainsIgnore(PasswordKey) +
+                NoContainsIgnore(DatabaseKey) +
+                NoContainsIgnore(IntegratedSecurityKey) +
+                NoContainsIgnore(ConnectTimeoutKey) +
                 JoinOthers();
         }
     }

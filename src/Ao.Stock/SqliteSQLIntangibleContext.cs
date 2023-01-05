@@ -33,7 +33,26 @@ namespace Ao.Stock
                 Equals(input.Key, CacheKey) ||
                 Equals(input.Key, PoolingKey);
         }
-
+        public override string ReplaceKey(string key)
+        {
+            switch (key)
+            {
+                case HostKey:
+                    return "Source";
+                case PasswordKey:
+                    return "Password";
+                case ModeKey:
+                    return "Mode";
+                case PoolingKey:
+                    return "Pooling";
+                case CacheKey:
+                    return "Cache";
+                case ConnectTimeoutKey:
+                    return "Connect Timeout";
+                default:
+                    return key;
+            }
+        }
         public override string ToString()
         {
             return $"Data Source={Host}" +
