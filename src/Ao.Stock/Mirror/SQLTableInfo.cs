@@ -37,5 +37,15 @@ namespace Ao.Stock.Mirror
         {
             return $"{Database}.{Table}";
         }
+
+        public static bool operator ==(SQLTableInfo left, SQLTableInfo right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(SQLTableInfo left, SQLTableInfo right)
+        {
+            return !(left == right);
+        }
     }
 }

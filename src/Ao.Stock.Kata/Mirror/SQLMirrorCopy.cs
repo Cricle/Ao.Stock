@@ -12,14 +12,14 @@ namespace Ao.Stock.Kata.Mirror
         public SQLMirrorCopy(IRowDataReader dataReader, SQLMirrorTarget target, Compiler compiler)
             : base(dataReader)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
+            Target = target;
             Compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
         }
 
         public SQLMirrorCopy(IRowDataReader dataReader, SQLMirrorTarget target, Compiler compiler, int batchSize)
             : base(dataReader, batchSize)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
+            Target = target;
             Compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
         }
 
@@ -29,7 +29,7 @@ namespace Ao.Stock.Kata.Mirror
 
         private string[] names;
 
-        public string[] Names => names;
+        public IReadOnlyList<string> Names => names;
 
         protected override Task OnFirstReadAsync(IIntangibleContext context)
         {

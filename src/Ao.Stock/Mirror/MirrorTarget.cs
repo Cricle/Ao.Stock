@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace Ao.Stock.Mirror
 {
-    public class SQLMirrorTarget : IDisposable
+    public readonly struct SQLMirrorTarget : IDisposable
     {
         public SQLMirrorTarget(DbConnection connection, SQLTableInfo tableInfo)
         {

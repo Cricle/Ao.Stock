@@ -161,7 +161,7 @@ namespace Ao.Stock.SQL
             }
             return columnTypeSyntax.AsString(len);
         }
-        protected TNext Property<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
+        protected virtual TNext Property<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)
             where TNext : IFluentSyntax
         {
             TNext? next = default;
