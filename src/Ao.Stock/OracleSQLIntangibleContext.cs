@@ -40,11 +40,11 @@ namespace Ao.Stock
         }
         public override string ToString()
         {
-            return "Data"+ NoContainsIgnore(HostKey, "Source") +
-                NoContainsIgnore(UserNameKey, "User Id") +
-                NoContainsIgnore(PasswordKey, "Password") +
-                NoContainsIgnore(IntegratedSecurityKey, "Integrated Security") +
-                NoContainsIgnore(ConnectTimeoutKey, "Connection Timeout") +
+            return "Data"+ NoContainsIgnore(HostKey) +
+                NoContainsIgnore(UserNameKey) +
+                NoContainsIgnore(PasswordKey) +
+                NoContainsIgnore(IntegratedSecurityKey) +
+                NoContainsIgnore(ConnectTimeoutKey) +
                 JoinOthers();
         }
         public OracleSQLIntangibleContext SetIntegratedSecurity(bool enable)

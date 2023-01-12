@@ -56,11 +56,11 @@ namespace Ao.Stock
         public override string ToString()
         {
             return $"Data Source={Host}" +
-                NoContainsIgnore(PasswordKey, "Password") +
-                NoContainsIgnore(ModeKey, "Mode") +
-                NoContainsIgnore(PoolingKey, "Pooling") +
-                NoContainsIgnore(CacheKey, "Cache") +
-                NoContainsIgnore(ConnectTimeoutKey, "Default Timeout") +
+                NoContainsIgnore(PasswordKey) +
+                NoContainsIgnore(ModeKey) +
+                NoContainsIgnore(PoolingKey) +
+                NoContainsIgnore(CacheKey) +
+                NoContainsIgnore(ConnectTimeoutKey) +
                 JoinOthers();
         }
     }

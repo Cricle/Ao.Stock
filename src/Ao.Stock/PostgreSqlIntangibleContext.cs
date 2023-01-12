@@ -76,16 +76,16 @@ namespace Ao.Stock
         }
         public override string ToString()
         {
-            return NoContainsIgnore(Host, "Server") +
-                NoContainsIgnore(PortKey, "Port") +
-                NoContainsIgnore(UserNameKey, "User Id") +
-                NoContainsIgnore(PasswordKey, "Password") +
-                NoContainsIgnore(DatabaseKey, "Database") +
-                NoContainsIgnore(IntegratedSecurityKey, "Integrated Security") +
-                NoContainsIgnore(ConnectTimeoutKey, "CommandTimeout") +
-                NoContainsIgnore(PoolingKey, "Pooling") +
-                NoContainsIgnore(MinPoolSizeKey, "MinPoolSize") +
-                NoContainsIgnore(MaxPoolSizeKey, "MaxPoolSize") +
+            return NoContainsIgnore(HostKey) +
+                NoContainsIgnore(PortKey) +
+                NoContainsIgnore(UserNameKey) +
+                NoContainsIgnore(PasswordKey) +
+                NoContainsIgnore(DatabaseKey) +
+                NoContainsIgnore(IntegratedSecurityKey) +
+                NoContainsIgnore(ConnectTimeoutKey) +
+                NoContainsIgnore(PoolingKey) +
+                NoContainsIgnore(MinPoolSizeKey) +
+                NoContainsIgnore(MaxPoolSizeKey) +
                 JoinOthers();
         }
     }
