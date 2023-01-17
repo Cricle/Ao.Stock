@@ -49,6 +49,24 @@ namespace Ao.Stock.SQL
                         }
                     }
                 }
+                {
+                    var upIndex = action.Ups?.Any(x => x is StockAttributeAttack attack && attack.Attribute is SqlIndexAttribute) ?? false;
+                    var downIndex = action.Downs?.Any(x => x is StockAttributeAttack attack && attack.Attribute is SqlIndexAttribute) ?? false;
+                    if (upIndex != downIndex)
+                    {
+                        if (upIndex&&!downIndex)
+                        {
+                            EnsureCreateAlter();
+                            next!.Indexed();
+                        }
+                        else
+                        {
+                            Delete.Index()
+                                .OnTable(action.RightType.Name)
+                                .OnColumn(action.RightProperty.Name);
+                        }
+                    }
+                }
                 void EnsureCreateAlter()
                 {
                     if (next == null)
