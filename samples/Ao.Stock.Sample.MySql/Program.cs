@@ -22,8 +22,9 @@ namespace Ao.Stock.Sample.MySql
         [Key]
         public int Id { get; set; }
 
+        [Required]
         [SqlIndex]
-        [MaxLength(54)]
+        [MaxLength(555)]
         public string Name { get; set; }
     }
 }

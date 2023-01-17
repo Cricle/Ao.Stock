@@ -1,6 +1,6 @@
 ﻿namespace Ao.Stock
 {
-    public class ConnectionStringBox
+    public readonly struct ConnectionStringBox
     {
         public ConnectionStringBox(string? connectionString, IIntangibleContext? source)
         {

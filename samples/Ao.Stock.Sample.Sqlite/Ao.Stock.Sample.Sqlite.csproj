@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ao.Stock.SQL.Sqlite\Ao.Stock.SQL.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Ao.Stock.SQL\Ao.Stock.SQL.csproj" />
+    <ProjectReference Include="..\..\src\Ao.Stock\Ao.Stock.csproj" />
   </ItemGroup>
 
 </Project>

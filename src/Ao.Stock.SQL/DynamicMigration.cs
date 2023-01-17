@@ -2,8 +2,10 @@
 using Ao.Stock.SQL.Announcation;
 using FluentMigrator;
 using FluentMigrator.Builders;
+using FluentMigrator.Builders.Alter.Column;
 using FluentMigrator.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace Ao.Stock.SQL
 {
@@ -23,13 +25,39 @@ namespace Ao.Stock.SQL
         {
             if (action.RightProperty != null)
             {
+                IAlterColumnOptionSyntax? next=null;
                 var maxLen = (StockAttributeAttack?)action.Ups?.FirstOrDefault(x => x is StockAttributeAttack attack && attack.Attribute is MaxLengthAttribute);
                 if (maxLen != null)
                 {
                     var prop = action.RightProperty;
-                    var syntax = Alter.Column(prop.Name)
-                        .OnTable(action.RightType.Name);
-                    var next = Property(syntax, prop);
+                    EnsureCreateAlter();
+                }
+                if(!action.RightProperty.HasAttributeAttack<KeyAttribute>())
+                {
+                    var upRequired = action.Ups?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute)??false;
+                    var downRequired = action.Downs?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute)??false;
+                    if (upRequired != downRequired)
+                    {
+                        EnsureCreateAlter();
+                        if (upRequired && !downRequired)
+                        {
+                            next!.NotNullable();
+                        }
+                        else
+                        {
+                            next!.Nullable();
+                        }
+                    }
+                }
+                void EnsureCreateAlter()
+                {
+                    if (next == null)
+                    {
+                        var syntax = Alter.Column(action.RightProperty.Name)
+                            .OnTable(action.RightType.Name);
+                        next = Property(syntax, action.RightProperty);
+
+                    }
                 }
             }
         }
@@ -50,7 +78,7 @@ namespace Ao.Stock.SQL
                     var syntax = Create.Column(item.Name)
                         .OnTable(action.Right.Name);
                     var next = Property(syntax, item);
-                    if (item.Type != null && IsNullable(item.Type))
+                    if (item.Type != null && IsNullable(item))
                     {
                         next.Nullable();
                     }
@@ -74,7 +102,7 @@ namespace Ao.Stock.SQL
                 {
                     var col = syntax.WithColumn(item.Name);
                     var next = Property(col, item);
-                    if (item.Type != null && IsNullable(item.Type))
+                    if (item.Type != null && IsNullable(item))
                     {
                         next.Nullable();
                     }
@@ -98,7 +126,7 @@ namespace Ao.Stock.SQL
             var syntx = Alter.Column(action.Left!.Name)
                 .OnTable(action.LeftType.Name);
             var next = Property(syntx, action.Right);
-            if (action.RightPropertyType != null && IsNullable(action.RightPropertyType))
+            if (action.RightPropertyType != null && IsNullable(action.Right))
             {
                 next.Nullable();
             }
@@ -132,9 +160,18 @@ namespace Ao.Stock.SQL
             return false;
         }
 
-        protected virtual bool IsNullable(Type type)
+        protected virtual bool IsNullable(IStockProperty property)
         {
-            return type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            var type = property.Type;
+            if (type == null)
+            {
+                return true;
+            }
+            if (type.IsClass)
+            {
+                return !property.HasAttributeAttack<RequiredAttribute>();
+            }
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         protected virtual TNext AsDateTime<TNext>(IColumnTypeSyntax<TNext> columnTypeSyntax, IStockProperty property)

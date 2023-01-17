@@ -46,7 +46,7 @@ namespace Ao.Stock
             {
                 return false;
             }
-            return other.Name == Name && AttributeHelper.Equals(other.Attribute, Attribute);
+            return other.Name == Name && Equals(other.Attribute, Attribute);
         }
         public override string ToString()
         {

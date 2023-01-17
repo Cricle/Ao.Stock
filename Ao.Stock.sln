@@ -38,9 +38,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.PostgreSql", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.SQL.Oracle", "src\Ao.Stock.SQL.Oracle\Ao.Stock.SQL.Oracle.csproj", "{50560B9E-FA62-4286-9D06-5271982BB411}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Sample.Scal", "samples\Ao.Stock.Sample.Scal\Ao.Stock.Sample.Scal.csproj", "{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Sample.Scal", "samples\Ao.Stock.Sample.Scal\Ao.Stock.Sample.Scal.csproj", "{4EBA5A2C-8FFA-4996-8B6D-415B884B3854}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Kata.Copying", "src\Ao.Stock.Kata.Copying\Ao.Stock.Kata.Copying.csproj", "{246FE13C-4539-49AB-B6EF-1D56698FFBFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Kata.Copying", "src\Ao.Stock.Kata.Copying\Ao.Stock.Kata.Copying.csproj", "{246FE13C-4539-49AB-B6EF-1D56698FFBFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2B3F1085-9D6E-496F-9ED8-16AAA6E41C3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ao.Stock.Test", "tests\Ao.Stock.Test\Ao.Stock.Test.csproj", "{1313567B-B09A-42AE-A029-F7FE8525C18F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +116,10 @@ Global
 		{246FE13C-4539-49AB-B6EF-1D56698FFBFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{246FE13C-4539-49AB-B6EF-1D56698FFBFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{246FE13C-4539-49AB-B6EF-1D56698FFBFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +131,7 @@ Global
 		{DC8C0043-EA74-4F71-A5E2-A5D84B2A373A} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{B0F5A477-B6A5-4978-87BB-E7C0B7D8029C} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
 		{4EBA5A2C-8FFA-4996-8B6D-415B884B3854} = {18AFDE89-B6B8-45ED-97CB-2833637E1419}
+		{1313567B-B09A-42AE-A029-F7FE8525C18F} = {2B3F1085-9D6E-496F-9ED8-16AAA6E41C3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A46E8088-BF9D-4D37-BD69-9B957A02B5BF}

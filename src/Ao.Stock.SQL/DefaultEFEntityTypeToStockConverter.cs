@@ -26,6 +26,10 @@ namespace Ao.Stock.SQL
             {
                 atts.Add(new StockAttributeAttack(new MaxLengthAttribute(len)));
             }
+            if (!property.IsNullable)
+            {
+                atts.Add(new StockAttributeAttack(new RequiredAttribute()));
+            }
             if (isPrimayKey)
             {
                 atts.Add(new StockAttributeAttack(new KeyAttribute()));

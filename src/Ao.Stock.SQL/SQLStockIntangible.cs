@@ -20,7 +20,7 @@ namespace Ao.Stock.SQL
 
         public abstract string EngineCode { get; }
 
-        public virtual ConnectionStringBox? GetConnectionStringBox(IIntangibleContext? context)
+        public virtual ConnectionStringBox GetConnectionStringBox(IIntangibleContext? context)
         {
             if (context.TryGetValue(ConnectionStringKey, out var strObj) && strObj is string str)
             {

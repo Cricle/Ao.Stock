@@ -12,7 +12,7 @@ namespace Ao.Stock
         }
         public static bool HasAttributeAttack(this IStockAttachable attachable, Type attributeType)
         {
-            return GetAttributeAttacks(attachable).Any(x => attributeType == x.GetType());
+            return GetAttributeAttacks(attachable).Any(x => attributeType == x.Attribute?.GetType());
         }
         public static StockAttributeAttack? GetAttributeAttack(this IStockAttachable attachable)
         {

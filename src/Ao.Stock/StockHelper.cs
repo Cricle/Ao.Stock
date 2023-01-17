@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Ao.Stock
 {
@@ -8,7 +10,19 @@ namespace Ao.Stock
     {
         public static IStockType FromType(Type type)
         {
-            return FromType(type, null);
+            return FromType(type, (ReflectionOptions?)null);
+        }
+        public static IStockType FromType<T>(string typeName)
+        {
+            return FromType(typeof(T), typeName);
+        }
+        public static IStockType FromType(Type type, string typeName)
+        {
+            return FromType(type, new ReflectionOptions { TypeNameGetter = _ => typeName });
+        }
+        public static IStockType FromType<T>(ReflectionOptions? options)
+        {
+            return FromType(typeof(T), options);
         }
         public static IStockType FromType(Type type, ReflectionOptions? options)
         {
@@ -25,7 +39,10 @@ namespace Ao.Stock
                 t.Properties = props;
                 foreach (Attribute item in type.GetCustomAttributes(options?.AttributeInherit ?? false))
                 {
-                    attacks.Add(FromAttribute(item));
+                    if (item.GetType().GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                    {
+                        attacks.Add(FromAttribute(item));
+                    }
                 }
                 foreach (var item in type.GetProperties())
                 {
