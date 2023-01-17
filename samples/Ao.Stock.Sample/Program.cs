@@ -9,8 +9,8 @@ namespace Ao.Stock.Sample
     {
         static void Main(string[] args)
         {
-            var a = StockHelper.FromType(typeof(A), null);
-            var b = StockHelper.FromType(typeof(B), null);
+            var a = StockHelper.FromType(typeof(A),"a");
+            var b = StockHelper.FromType(typeof(B), "a");
 
             var res = DefaultStockTypeComparer.Default.Compare(a, b);
 
