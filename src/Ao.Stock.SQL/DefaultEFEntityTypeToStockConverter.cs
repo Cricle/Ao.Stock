@@ -28,7 +28,10 @@ namespace Ao.Stock.SQL
             }
             if (!property.IsNullable)
             {
-                atts.Add(new StockAttributeAttack(new RequiredAttribute()));
+                if (property.ClrType.IsClass)
+                {
+                    atts.Add(new StockAttributeAttack(new RequiredAttribute()));
+                }
             }
             if (isPrimayKey)
             {

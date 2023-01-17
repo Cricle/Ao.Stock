@@ -11,4 +11,4 @@ new MySqlAutoMigrateRunner(mysql, mt1, "student")
     Project = x => x.Where(y => y is not StockRenameTypeComparisonAction).ToList()
 }.Migrate();
 
-record class Student1([property: Key] int Id, [property: SqlIndex][property: MaxLength(256)] string Name);
+record class Student1([property: Key] int Id, [property: SqlIndex][property: MaxLength(256)] string Name,[property:Required]string Scope);
