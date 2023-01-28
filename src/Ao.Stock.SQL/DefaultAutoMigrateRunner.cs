@@ -22,12 +22,16 @@ namespace Ao.Stock.SQL
 
         public IStockIntangible StockIntangible { get; }
 
-        public void Migrate()
+        public AutoMigrationHelper? GetAutoMigrationHelper()
         {
-            using (var auto = StockIntangible.Get<AutoMigrationHelper>(new IntangibleContext
+            return StockIntangible.Get<AutoMigrationHelper>(new IntangibleContext
             {
                 [SQLStockIntangible.ConnectionStringKey] = ConnectionString
-            }))
+            });
+        }
+        public void Migrate()
+        {
+            using (var auto = GetAutoMigrationHelper())
             {
                 auto.EnsureDatabaseCreated();
                 auto.Begin(NewStockType)

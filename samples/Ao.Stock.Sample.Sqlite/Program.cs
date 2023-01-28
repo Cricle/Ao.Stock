@@ -1,32 +1,17 @@
-﻿using Ao.Stock.Comparering;
+﻿using Ao.Stock;
+using Ao.Stock.Comparering;
 using Ao.Stock.SQL.Announcation;
 using Ao.Stock.SQL.Sqlite;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
-namespace Ao.Stock.Sample.Sqlite
+var mt1 = StockHelper.FromType<Student1>("student");
+var sw = Stopwatch.GetTimestamp();
+var runner = new SqliteAutoMigrateRunner("Data source=a.db;", mt1, "student")
 {
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            var mysql = $"Data source=a.db;";
-            var mt1 = StockHelper.FromType<Student1>("student");
-            new SqliteAutoMigrateRunner(mysql, mt1, "student")
-            {
-                Project = x => SqliteAutoMigrateRunner.RemoveRangeTypeChanges(x).Where(y => y is not StockRenameTypeComparisonAction).ToList()
-            }.Migrate();
-        }
-    }
-    record class Student1
-    {
-        [Key]
-        public long Id { get; set; }
+    Project = x => SqliteAutoMigrateRunner.RemoveRangeTypeChanges(x).Where(y => y is not StockRenameTypeComparisonAction).ToList()
+};
+runner.Migrate();
+Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp() - sw));
 
-        [SqlIndex]
-        [MaxLength(54)]
-        public string Name { get; set; }
-
-        //[SqlIndex]
-        //public double Scope { get; set; }
-    }
-}
+record class Student1([property: Key] long Id, [property: SqlIndex][property: MaxLength(54)] string Name);

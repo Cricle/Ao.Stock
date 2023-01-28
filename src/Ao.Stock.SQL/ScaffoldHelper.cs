@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
@@ -111,22 +112,47 @@ namespace Ao.Stock.SQL
 
         public IModel Scaffold()
         {
+            var model = GetDatabaseModel();
+            var scaffoldingModelFactory = provider!.GetRequiredService<IScaffoldingModelFactory>();
+            return scaffoldingModelFactory.Create(model, ModelReverseEngineerOptions ?? new ModelReverseEngineerOptions());
+        }
+        public DatabaseModel? GetDatabaseModel()
+        {
             if (provider == null)
             {
                 provider = CreateProvider();
             }
-            var databaseModelFactory = provider.GetRequiredService<IDatabaseModelFactory>();
-            var scaffoldingModelFactory = provider.GetRequiredService<IScaffoldingModelFactory>();
-            var model = databaseModelFactory.Create(DbConnection, DatabaseModelFactoryOptions ?? new DatabaseModelFactoryOptions());
-            return scaffoldingModelFactory.Create(model, ModelReverseEngineerOptions ?? new ModelReverseEngineerOptions());
+            return GetDatabaseModel(provider);
         }
-
+        public DatabaseModel? GetDatabaseModel(IServiceProvider provider)
+        {
+            var databaseModelFactory = provider.GetRequiredService<IDatabaseModelFactory>();
+            var model = databaseModelFactory.Create(DbConnection, DatabaseModelFactoryOptions ?? new DatabaseModelFactoryOptions());
+            return model;
+        }
+        public ScaffoldedModel? GetScaffoldedModel(string connectionString, ModelCodeGenerationOptions? codeGenerationOptions)
+        {
+            if (provider == null)
+            {
+                provider = CreateProvider();
+            }
+            return GetScaffoldedModel(connectionString, codeGenerationOptions);
+        }
+        public ScaffoldedModel? GetScaffoldedModel(string connectionString,ModelCodeGenerationOptions? codeGenerationOptions,IServiceProvider provider)
+        {
+            var databaseModelFactory = provider.GetRequiredService<IReverseEngineerScaffolder>();
+            var model = databaseModelFactory.ScaffoldModel(connectionString,
+                DatabaseModelFactoryOptions ?? new DatabaseModelFactoryOptions(),
+                ModelReverseEngineerOptions??new ModelReverseEngineerOptions(),
+                codeGenerationOptions??new ModelCodeGenerationOptions());
+            return model;
+        }
         protected virtual void RegistServices(IServiceCollection services)
         {
 
         }
 
-        protected ServiceProvider CreateProvider()
+        public ServiceProvider CreateProvider()
         {
             var services = new ServiceCollection();
             services.AddEntityFrameworkDesignTimeServices();
