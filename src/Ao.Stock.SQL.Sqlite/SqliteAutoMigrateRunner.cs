@@ -9,7 +9,10 @@ namespace Ao.Stock.SQL.Sqlite
             : base(connectionString, newStockType, tableName, SqliteStockIntangible.Default)
         {
         }
-
+        public SqliteAutoMigrateRunner(string connectionString, IStockType newStockType)
+           : base(connectionString, newStockType, SqliteStockIntangible.Default)
+        {
+        }
         public static IEnumerable<IStockComparisonAction> RemoveRangeTypeChanges(IReadOnlyList<IStockComparisonAction> input)
         {
             for (int i = 0; i < input.Count; i++)

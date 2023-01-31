@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 var mt1 = StockHelper.FromType<Student1>("student");
 var sw = Stopwatch.GetTimestamp();
-var runner = new SqliteAutoMigrateRunner("Data source=a.db;", mt1, "student")
+var runner = new SqliteAutoMigrateRunner("Data source=a.db;", mt1)
 {
     Project = x => SqliteAutoMigrateRunner.RemoveRangeTypeChanges(x).Where(y => y is not StockRenameTypeComparisonAction).ToList()
 };

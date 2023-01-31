@@ -6,5 +6,9 @@
             : base(connectionString, newStockType, tableName, MySqlStockIntangible.Default)
         {
         }
+        public MySqlAutoMigrateRunner(string connectionString, IStockType newStockType)
+            : base(connectionString, newStockType, MySqlStockIntangible.Default)
+        {
+        }
     }
 }

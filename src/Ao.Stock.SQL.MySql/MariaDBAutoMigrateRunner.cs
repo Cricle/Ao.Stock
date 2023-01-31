@@ -6,5 +6,10 @@
             : base(connectionString, newStockType, tableName, MariaDBStockIntangible.Default)
         {
         }
+        public MariaDBAutoMigrateRunner(string connectionString, IStockType newStockType)
+            : base(connectionString, newStockType, MariaDBStockIntangible.Default)
+        {
+        }
+
     }
 }

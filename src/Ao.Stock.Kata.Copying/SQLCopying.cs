@@ -39,9 +39,11 @@ namespace Ao.Stock.Kata.Copying
                 destDbOptionsDest.UseModel(sourceModel);
                 var options = destDbOptionsDest.Options;
                 options.GetExtension<CoreOptionsExtension>().WithServiceProviderCachingEnabled(false);
-                var dbDesk = new DbContext(options);
-                await dbDesk.Database.EnsureDeletedAsync();
-                await dbDesk.Database.EnsureCreatedAsync();
+                using (var dbDesk = new DbContext(options))
+                {
+                    await dbDesk.Database.EnsureDeletedAsync();
+                    await dbDesk.Database.EnsureCreatedAsync();
+                }
             }
         }
 

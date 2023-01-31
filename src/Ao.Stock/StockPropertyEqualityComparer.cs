@@ -7,7 +7,7 @@ namespace Ao.Stock
     {
         public static readonly StockPropertyEqualityComparer Default = new StockPropertyEqualityComparer();
 
-        public bool Equals(IStockProperty x, IStockProperty y)
+        public bool Equals(IStockProperty? x, IStockProperty? y)
         {
             if (x == null && y == null)
             {
@@ -46,7 +46,7 @@ namespace Ao.Stock
             return true;
         }
 
-        public int GetHashCode(IStockProperty obj)
+        public int GetHashCode(IStockProperty? obj)
         {
             if (obj == null)
             {

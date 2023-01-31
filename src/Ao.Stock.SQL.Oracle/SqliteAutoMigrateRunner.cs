@@ -6,6 +6,9 @@
             : base(connectionString, newStockType, tableName, OracleStockIntangible.Default)
         {
         }
-
+        public OracleAutoMigrateRunner(string connectionString, IStockType newStockType)
+            : base(connectionString, newStockType, OracleStockIntangible.Default)
+        {
+        }
     }
 }

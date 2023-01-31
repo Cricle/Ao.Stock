@@ -4,6 +4,10 @@ namespace Ao.Stock.SQL
 {
     public class DefaultAutoMigrateRunner : IAutoMigrateRunner
     {
+        public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType,IStockIntangible stockIntangible)
+            :this(connectionString,newStockType,newStockType.Name??throw new ArgumentNullException("newStockType.Name"),stockIntangible)
+        {
+        }
         public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType, string tableName, IStockIntangible stockIntangible)
         {
             ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));

@@ -6,5 +6,11 @@
             : base(connectionString, newStockType, tableName, SqlServerStockIntangible.Default)
         {
         }
+
+        public SqlServerAutoMigrateRunner(string connectionString, IStockType newStockType)
+            : base(connectionString, newStockType, SqlServerStockIntangible.Default)
+        {
+        }
+
     }
 }
