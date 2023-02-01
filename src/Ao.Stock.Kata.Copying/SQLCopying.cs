@@ -25,11 +25,21 @@ namespace Ao.Stock.Kata.Copying
 
         public bool SynchronousStructure { get; set; } = true;
 
+        public bool SynchronousStructureWithDelete { get; set; } = true;
+
         public bool CleanTable { get; set; }
 
         public int BatchSize { get; set; } = 100;
 
-        protected virtual async Task SynchronousStructureAsync()
+        protected virtual void ConfigBuilder(DbContextOptionsBuilder builder)
+        {
+
+        }
+        protected virtual Task ConfigDbAsync(DbContext context, CancellationToken token = default)
+        {
+            return Task.CompletedTask;
+        }
+        public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
             using (var sourceMig = Source.StockIntangible.Get<AutoMigrationHelper>(Source.Context))
             {
@@ -37,12 +47,17 @@ namespace Ao.Stock.Kata.Copying
                 var destDbOptionsDest = new DbContextOptionsBuilder();
                 Destination.StockIntangible.Config(ref destDbOptionsDest, Destination.Context);
                 destDbOptionsDest.UseModel(sourceModel);
+                ConfigBuilder(destDbOptionsDest);
                 var options = destDbOptionsDest.Options;
                 options.GetExtension<CoreOptionsExtension>().WithServiceProviderCachingEnabled(false);
                 using (var dbDesk = new DbContext(options))
                 {
-                    await dbDesk.Database.EnsureDeletedAsync();
-                    await dbDesk.Database.EnsureCreatedAsync();
+                    if (SynchronousStructureWithDelete)
+                    {
+                        await dbDesk.Database.EnsureDeletedAsync(token);
+                    }
+                    await dbDesk.Database.EnsureCreatedAsync(token);
+                    await ConfigDbAsync(dbDesk, token);
                 }
             }
         }
