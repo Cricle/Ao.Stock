@@ -2,13 +2,17 @@
 using Ao.Stock.Comparering;
 using Ao.Stock.SQL.Announcation;
 using Ao.Stock.SQL.MySql;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Scaffolding;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 
-var mysql = $"server=127.0.0.1;port=3306;userid=root;password=355343;database=sakila;characterset=utf8mb4;";
+var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
 var mt1 = StockHelper.FromType<Student1>("student");
-new MySqlAutoMigrateRunner(mysql, mt1)
+var runner = new MySqlAutoMigrateRunner(mysql, mt1)
 {
     Project = x => x.Where(y => y is not StockRenameTypeComparisonAction).ToList()
-}.Migrate();
+};
+runner.Migrate();
 
 record class Student1([property: Key] int Id, [property: SqlIndex][property: MaxLength(20)] string Name);
