@@ -1,4 +1,5 @@
-﻿using Ao.Stock.Kata;
+﻿using Ao.Stock.IntangibleProviders;
+using Ao.Stock.Kata;
 using Ao.Stock.Kata.Copying;
 using Ao.Stock.SQL;
 using Ao.Stock.SQL.MySql;
@@ -13,14 +14,16 @@ namespace Ao.Stock.Sample.Scal
         static async Task Main(string[] args)
         {
             var targetDb = "123";
-            var ctxSource = new SQLIntangibleContext
+            var ctxSource = SQLIntangibleContextHelper.MySql(new IntangibleContext
             {
-                [SQLStockIntangible.ConnectionStringKey] = $"server=192.168.1.100;port=3306;userid=root;password=;database={targetDb};characterset=utf8mb4;"
-            };
-            var ctxDest = new SQLIntangibleContext
-            {
-                [SQLStockIntangible.ConnectionStringKey] = $"server=192.168.1.100;port=3306;userid=root;password=;database={targetDb}1;characterset=utf8mb4;"
-            };
+                [SQLIntangibleProvider.HostKey] = "127.0.0.1",
+                [SQLIntangibleProvider.PortKey] = 3306,
+                [SQLIntangibleProvider.UserNameKey] = "root",
+                [SQLIntangibleProvider.PasswordKey] = "",
+                [SQLIntangibleProvider.DatabaseKey] = targetDb,
+                ["characterset"] = "utf8mb4"
+            });
+            var ctxDest = SQLIntangibleContextHelper.MySql($"Server=127.0.0.1;Port=3306;UId=root;Pwd=;Database={targetDb}1;characterset=utf8mb4;");
             var source=new DelegateSQLDatabaseInfo(targetDb, 
                 ctxSource,
                 MySqlStockIntangible.Default,
@@ -29,7 +32,7 @@ namespace Ao.Stock.Sample.Scal
                 ctxDest,
                 MySqlStockIntangible.Default,
                 CompilerFetcher.Mysql);
-            var copying = new SQLCopying(source, dest);
+            var copying = new SQLCognateCopying(source, dest) { SynchronousStructure=false,SynchronousStructureWithDelete=false, CleanTable=true};
             var sw = Stopwatch.GetTimestamp();
             await copying.RunAsync();
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-sw));

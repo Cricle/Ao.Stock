@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Runner;
+﻿using Ao.Stock.IntangibleProviders;
+using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Data.Common;
@@ -8,6 +9,7 @@ namespace Ao.Stock.SQL
     public abstract class SQLStockIntangible : IStockIntangible,IEngineCodeProvider
     {
         public const string ConnectionStringKey = "ConnectionString";
+        public const string IntangibleProviderKey = "IntangibleProvider";
         public const string SQLContextKey = "SQLContext";
         public const string DbConnectionKey = "DbConnection";
 
@@ -20,6 +22,11 @@ namespace Ao.Stock.SQL
 
         public abstract string EngineCode { get; }
 
+        protected virtual IntangibleProviderJoinOptions GetIntangibleProviderJoinOptions()
+        {
+            return new IntangibleProviderJoinOptions();
+        }
+
         public virtual ConnectionStringBox GetConnectionStringBox(IIntangibleContext? context)
         {
             if (context.TryGetValue(ConnectionStringKey, out var strObj) && strObj is string str)
@@ -28,6 +35,10 @@ namespace Ao.Stock.SQL
             }
             if (context.TryGetValue(SQLContextKey, out var ctxObj) && ctxObj is IIntangibleContext ctx)
             {
+                if (context.TryGetValue(IntangibleProviderKey, out var providerObj)&& providerObj is IIntangibleProvider provider)
+                {
+                    return new ConnectionStringBox(ctx.MakeString(provider, GetIntangibleProviderJoinOptions()), null);
+                }
                 return new ConnectionStringBox(ctx.ToString(), null);
             }
             return ConnectStringStockIntangible.Get<ConnectionStringBox>(context);
