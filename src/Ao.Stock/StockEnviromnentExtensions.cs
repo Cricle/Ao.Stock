@@ -29,7 +29,7 @@ namespace Ao.Stock
             return CheckDbCode(enviromnent, KnowsDbCode.Oracle);
         }
 
-        private static bool CheckDbCode(IStockEnvironment enviromnent, string code)
+        public static bool CheckDbCode(IStockEnvironment enviromnent, string code)
         {
             return string.Equals(code, enviromnent.EngineCode, StringComparison.OrdinalIgnoreCase);
         }

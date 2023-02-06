@@ -4,8 +4,8 @@ namespace Ao.Stock.SQL
 {
     public class DefaultAutoMigrateRunner : IAutoMigrateRunner
     {
-        public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType,IStockIntangible stockIntangible)
-            :this(connectionString,newStockType,newStockType.Name??throw new ArgumentNullException("newStockType.Name"),stockIntangible)
+        public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType, IStockIntangible stockIntangible)
+            : this(connectionString, newStockType, newStockType.Name ?? throw new ArgumentNullException("newStockType.Name"), stockIntangible)
         {
         }
         public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType, string tableName, IStockIntangible stockIntangible)
@@ -33,11 +33,19 @@ namespace Ao.Stock.SQL
                 [SQLStockIntangible.ConnectionStringKey] = ConnectionString
             });
         }
-        public void Migrate()
+        public void Migrate(AutoMigrateOptions options = default)
         {
             using (var auto = GetAutoMigrationHelper())
             {
-                auto.EnsureDatabaseCreated();
+                if (auto == null)
+                {
+                    throw new InvalidOperationException($"Can't get AutoMigrationHelper from {StockIntangible.GetType()}");
+                }
+                var databaseCreatedResult = auto.EnsureDatabaseCreated();
+                if (!databaseCreatedResult && options.OnlyDataBaseCreated)
+                {
+                    return;
+                }
                 auto.Begin(NewStockType)
                     .ScaffoldCompareAndMigrate(TableName, Project);
             }

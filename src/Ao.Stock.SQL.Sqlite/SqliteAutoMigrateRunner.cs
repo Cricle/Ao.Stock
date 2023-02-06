@@ -1,5 +1,6 @@
 ﻿using Ao.Stock.Comparering;
 using Ao.Stock.SQL.Announcation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ao.Stock.SQL.Sqlite
 {
@@ -30,6 +31,14 @@ namespace Ao.Stock.SQL.Sqlite
                 }
                 else
                 {
+                    if (item is StockAttackChangedComparisonAction attackAction &&
+                        attackAction.Ups != null)
+                    {
+                        if (attackAction.Ups.All(x => x is StockAttributeAttack attack && (attack.Attribute is MaxLengthAttribute || attack.Attribute is StringLengthAttribute)))
+                        {
+                            continue;
+                        }   
+                    }
                     yield return item;
                 }
             }

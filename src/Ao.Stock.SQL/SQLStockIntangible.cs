@@ -1,4 +1,5 @@
 ﻿using Ao.Stock.IntangibleProviders;
+using Ao.Stock.Querying;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
