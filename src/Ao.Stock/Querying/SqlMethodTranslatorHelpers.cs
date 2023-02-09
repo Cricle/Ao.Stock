@@ -1,19 +1,16 @@
-﻿using Ao.Stock.Querying;
-using SqlKata.Compilers;
-
-namespace Ao.Stock.Kata
+﻿namespace Ao.Stock.Querying
 {
-    public static class KataMethodTranslatorHelpers
+    public static class SqlMethodTranslatorHelpers<TContext>
     {
-        public static DefaultMethodTranslator<Compiler> Mysql()
+        public static DefaultMethodTranslator<TContext> Mysql(IMethodWrapper<TContext>? wrapper=null)
         {
-            return new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions, DefaultMethodWrapper<Compiler>.MySql);
+            return new DefaultMethodTranslator<TContext>(KnowsMethods.Functions, wrapper??DefaultMethodWrapper<TContext>.MySql);
         }
-        public static DefaultMethodTranslator<Compiler> MariaDB()
+        public static DefaultMethodTranslator<TContext> MariaDB(IMethodWrapper<TContext>? wrapper = null)
         {
-            return new DefaultMethodTranslator<Compiler>(KnowsMethods.Functions, DefaultMethodWrapper<Compiler>.MySql);
+            return new DefaultMethodTranslator<TContext>(KnowsMethods.Functions, wrapper ?? DefaultMethodWrapper<TContext>.MySql);
         }
-        public static DefaultMethodTranslator<Compiler> Sqlite()
+        public static DefaultMethodTranslator<TContext> Sqlite(IMethodWrapper<TContext>? wrapper = null)
         {
             var funcs = KnowsMethods.Functions;
             funcs[KnowsMethods.StrConcat] = KnowsMethods.AllOrAlso;
@@ -30,9 +27,9 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.Quarter] = "COALESCE(NULLIF((SUBSTR({1}, 4, 2) - 1) / 3, 0), 4)";
             funcs[KnowsMethods.StrLen] = "LENGTH({1})";
             funcs[KnowsMethods.StrIndexOf] = "instr({1},{2})";
-            return new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Sqlite);
+            return new DefaultMethodTranslator<TContext>(funcs, wrapper ?? DefaultMethodWrapper<TContext>.Sqlite);
         }
-        public static DefaultMethodTranslator<Compiler> SqlServer()
+        public static DefaultMethodTranslator<TContext> SqlServer(IMethodWrapper<TContext>? wrapper = null)
         {
             var funcs = KnowsMethods.Functions;
             funcs[KnowsMethods.StrLen] = "LEN({1})";
@@ -41,9 +38,9 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.DateFormat] = "FORMAT({1},{2})";
             funcs[KnowsMethods.Weak] = "DATEPART(WEEK,{1})";
             funcs[KnowsMethods.Quarter] = "DATEPART(QUARTER,{1})";
-            return new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.SqlServer);
+            return new DefaultMethodTranslator<TContext>(funcs, wrapper ?? DefaultMethodWrapper<TContext>.SqlServer);
         }
-        public static DefaultMethodTranslator<Compiler> PostgrSql()
+        public static DefaultMethodTranslator<TContext> PostgrSql(IMethodWrapper<TContext>? wrapper = null)
         {
             var funcs = KnowsMethods.Functions;
             funcs[KnowsMethods.Year] = "to_char({1},'yyyy')";
@@ -65,7 +62,8 @@ namespace Ao.Stock.Kata
             funcs[KnowsMethods.DateFormat] = "to_char({1},{2})";
             funcs[KnowsMethods.Weak] = "to_char({1},'WW')";
             funcs[KnowsMethods.Quarter] = "EXTRACT (QUARTER FROM {1})";
-            return new DefaultMethodTranslator<Compiler>(funcs, DefaultMethodWrapper<Compiler>.Postgres);
+            return new DefaultMethodTranslator<TContext>(funcs, wrapper?? DefaultMethodWrapper<TContext>.Postgres);
         }
     }
+
 }

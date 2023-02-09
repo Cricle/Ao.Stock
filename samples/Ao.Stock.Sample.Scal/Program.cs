@@ -3,8 +3,6 @@ using Ao.Stock.Kata;
 using Ao.Stock.Kata.Copying;
 using Ao.Stock.SQL;
 using Ao.Stock.SQL.MySql;
-using FluentMigrator.Runner;
-using System.Data.Common;
 using System.Diagnostics;
 
 namespace Ao.Stock.Sample.Scal

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,10 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="SqlKata.Execution" Version="2.4.0" />
+		<PackageReference Include="Z.BulkOperations" Version="3.0.64" />
 	</ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
     <ProjectReference Include="..\..\src\Ao.Stock.SQL.Sqlite\Ao.Stock.SQL.Sqlite.csproj" />
   </ItemGroup>
 
