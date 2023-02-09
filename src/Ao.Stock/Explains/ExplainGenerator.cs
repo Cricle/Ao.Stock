@@ -2,17 +2,12 @@
 {
     public static class ExplainGenerator
     {
+        public static readonly string SqlServerStart = "SET SHOWPLAN_ALL ON;";
+        public static readonly string SqlServerEnd = "SET SHOWPLAN_ALL ON;";
+
         public static string MySql(string sql)
         {
             return "EXPLAIN " + sql;
-        }
-        public static string SqlServer(string sql)
-        {
-            if (!sql.EndsWith(";"))
-            {
-                sql += ";";
-            }
-            return "SET SHOWPLAN_ALL ON;\nGO;\n" + sql + "\nSET SHOWPLAN_ALL OFF;\nGO;";
         }
         public static string PostgreSql(string sql)
         {

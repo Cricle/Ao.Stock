@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace Ao.Stock.Explains
                 connection.Open();
             }
             using (var command=connection.CreateCommand())
-            {
+            {                
                 command.CommandText = sql;
                 commandAction?.Invoke(command);
                 using (var reader=command.ExecuteReader())

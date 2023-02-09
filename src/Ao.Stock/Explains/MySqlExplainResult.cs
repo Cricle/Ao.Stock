@@ -4,6 +4,18 @@ namespace Ao.Stock.Explains
 {
     public class MySqlExplainResult : ExplainResultBase<MySqlExplainResult>
     {
+        public enum Types
+        {
+            System,
+            Const,
+            EqRef,
+            Ref,
+            Range,
+            Index,
+            All,
+            Unknow
+        }
+
         [DisplayName("id")]
         public string? Id { get; set; }
 
@@ -39,5 +51,28 @@ namespace Ao.Stock.Explains
 
         [DisplayName("Extra")]
         public string? Extra { get; set; }
+
+        public Types GetTypes()
+        {
+            switch (Type)
+            {
+                case "system":
+                    return Types.System;
+                case "const":
+                    return Types.Const;
+                case "eq_ref":
+                    return Types.EqRef;
+                case "ref":
+                    return Types.Ref;
+                case "range":
+                    return Types.Range;
+                case "index":
+                    return Types.Index;
+                case "ALL":
+                    return Types.All;
+                default:
+                    return Types.Unknow;
+            }
+        }
     }
 }
