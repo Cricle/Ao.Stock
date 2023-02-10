@@ -10,9 +10,9 @@ namespace Ao.Stock.Mirror
 {
     public static class SQLExecuteExtensions
     {
-        public static async Task<int> ExecuteNoQueryAsync(this DbConnection connection, string sql, IEnumerable<KeyValuePair<string, object>>? args = null,CancellationToken token=default)
+        public static async Task<int> ExecuteNoQueryAsync(this DbConnection connection, string sql, IEnumerable<KeyValuePair<string, object>>? args = null, CancellationToken token = default)
         {
-            if (connection.State!= ConnectionState.Open)
+            if (connection.State != ConnectionState.Open)
             {
                 await connection.OpenAsync(token).ConfigureAwait(false);
             }
@@ -23,7 +23,7 @@ namespace Ao.Stock.Mirror
                 {
                     foreach (var arg in args)
                     {
-                        var par=comm.CreateParameter();
+                        var par = comm.CreateParameter();
                         par.Value = arg;
                         par.DbType = GetDbType(arg.Value);
                         comm.Parameters.Add(par);

@@ -14,7 +14,7 @@ namespace Ao.Stock.Explains
                 result.SetValue(name, val);
             }
         }
-        public static void WithMap<TKey,TValue>(this IExplainResult result, IEnumerable<KeyValuePair<TKey,TValue>> data)
+        public static void WithMap<TKey, TValue>(this IExplainResult result, IEnumerable<KeyValuePair<TKey, TValue>> data)
         {
             foreach (var item in data)
             {

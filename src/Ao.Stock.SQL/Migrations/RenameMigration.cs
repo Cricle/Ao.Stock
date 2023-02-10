@@ -28,7 +28,7 @@ namespace Ao.Stock.SQL.Migrations
                 Rename.Column(item.OldName)
                     .OnTable(item.Table)
                     .To(item.NewName);
-            }                
+            }
         }
     }
 }

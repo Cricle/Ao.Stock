@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ao.Stock.SQL
 {
-    public class DesignTimeProvider : IDisposable,IServiceProvider
+    public class DesignTimeProvider : IDisposable, IServiceProvider
     {
         public DesignTimeProvider(ServiceProvider provider, DbContext dbContext)
         {
@@ -53,19 +53,19 @@ namespace Ao.Stock.SQL
             dbContext?.Dispose();
             GC.SuppressFinalize(this);
         }
-        
-        public DesignTimeProvider GetDesignTimeProvider(IModel? model=null,Action<IServiceCollection>? config=null)
+
+        public DesignTimeProvider GetDesignTimeProvider(IModel? model = null, Action<IServiceCollection>? config = null)
         {
-            var dbc= GetDbContext(model);
+            var dbc = GetDbContext(model);
             var services = new ServiceCollection();
             services.AddEntityFrameworkDesignTimeServices();
             services.AddDbContextDesignTimeServices(dbc);
             //ScaffoldHelper.ConfigServices(services);
             config?.Invoke(services);
-            var provider= services.BuildServiceProvider();
+            var provider = services.BuildServiceProvider();
             return new DesignTimeProvider(provider, dbc);
         }
-        public DbContext GetDbContext(IModel? model=null)
+        public DbContext GetDbContext(IModel? model = null)
         {
             var opt = new DbContextOptionsBuilder();
             BuilderConfig(opt);
@@ -79,7 +79,7 @@ namespace Ao.Stock.SQL
         }
         public bool EnsureDatabaseCreated()
         {
-            if (dbContext==null)
+            if (dbContext == null)
             {
                 dbContext = GetDbContext();
             }

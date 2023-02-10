@@ -5,7 +5,6 @@ using FluentMigrator.Builders;
 using FluentMigrator.Builders.Alter.Column;
 using FluentMigrator.Infrastructure;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace Ao.Stock.SQL
 {
@@ -25,17 +24,17 @@ namespace Ao.Stock.SQL
         {
             if (action.RightProperty != null)
             {
-                IAlterColumnOptionSyntax? next=null;
+                IAlterColumnOptionSyntax? next = null;
                 var maxLen = (StockAttributeAttack?)action.Ups?.FirstOrDefault(x => x is StockAttributeAttack attack && attack.Attribute is MaxLengthAttribute);
                 if (maxLen != null)
                 {
                     var prop = action.RightProperty;
                     EnsureCreateAlter();
                 }
-                if(!action.RightProperty.HasAttributeAttack<KeyAttribute>())
+                if (!action.RightProperty.HasAttributeAttack<KeyAttribute>())
                 {
-                    var upRequired = action.Ups?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute)??false;
-                    var downRequired = action.Downs?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute)??false;
+                    var upRequired = action.Ups?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute) ?? false;
+                    var downRequired = action.Downs?.Any(x => x is StockAttributeAttack attack && attack.Attribute is RequiredAttribute) ?? false;
                     if (upRequired != downRequired)
                     {
                         EnsureCreateAlter();
@@ -54,7 +53,7 @@ namespace Ao.Stock.SQL
                     var downIndex = action.Downs?.Any(x => x is StockAttributeAttack attack && attack.Attribute is SqlIndexAttribute) ?? false;
                     if (upIndex != downIndex)
                     {
-                        if (upIndex&&!downIndex)
+                        if (upIndex && !downIndex)
                         {
                             EnsureCreateAlter();
                             next!.Indexed();

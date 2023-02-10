@@ -2,7 +2,7 @@
 
 namespace Ao.Stock
 {
-    public abstract class ApproachAdapter : IApproachAdapter,IDisposable
+    public abstract class ApproachAdapter : IApproachAdapter, IDisposable
     {
         protected ApproachAdapter(IStockType stockType)
         {

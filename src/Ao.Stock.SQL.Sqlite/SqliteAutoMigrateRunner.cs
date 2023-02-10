@@ -37,7 +37,7 @@ namespace Ao.Stock.SQL.Sqlite
                         if (attackAction.Ups.All(x => x is StockAttributeAttack attack && (attack.Attribute is MaxLengthAttribute || attack.Attribute is StringLengthAttribute)))
                         {
                             continue;
-                        }   
+                        }
                     }
                     yield return item;
                 }

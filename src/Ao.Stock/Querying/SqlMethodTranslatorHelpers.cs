@@ -2,9 +2,9 @@
 {
     public static class SqlMethodTranslatorHelpers<TContext>
     {
-        public static DefaultMethodTranslator<TContext> Mysql(IMethodWrapper<TContext>? wrapper=null)
+        public static DefaultMethodTranslator<TContext> Mysql(IMethodWrapper<TContext>? wrapper = null)
         {
-            return new DefaultMethodTranslator<TContext>(KnowsMethods.Functions, wrapper??DefaultMethodWrapper<TContext>.MySql);
+            return new DefaultMethodTranslator<TContext>(KnowsMethods.Functions, wrapper ?? DefaultMethodWrapper<TContext>.MySql);
         }
         public static DefaultMethodTranslator<TContext> MariaDB(IMethodWrapper<TContext>? wrapper = null)
         {
@@ -62,7 +62,7 @@
             funcs[KnowsMethods.DateFormat] = "to_char({1},{2})";
             funcs[KnowsMethods.Weak] = "to_char({1},'WW')";
             funcs[KnowsMethods.Quarter] = "EXTRACT (QUARTER FROM {1})";
-            return new DefaultMethodTranslator<TContext>(funcs, wrapper?? DefaultMethodWrapper<TContext>.Postgres);
+            return new DefaultMethodTranslator<TContext>(funcs, wrapper ?? DefaultMethodWrapper<TContext>.Postgres);
         }
     }
 

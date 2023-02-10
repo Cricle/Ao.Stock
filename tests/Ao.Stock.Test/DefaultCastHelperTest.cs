@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ao.Stock.Test
+﻿namespace Ao.Stock.Test
 {
     [TestClass]
     public class DefaultCastHelperTest

@@ -22,18 +22,18 @@ namespace Ao.Stock.Sample.Scal
                 ["characterset"] = "utf8mb4"
             });
             var ctxDest = SQLIntangibleContextHelper.MySql($"Server=127.0.0.1;Port=3306;UId=root;Pwd=;Database={targetDb}1;characterset=utf8mb4;");
-            var source=new DelegateSQLDatabaseInfo(targetDb, 
+            var source = new DelegateSQLDatabaseInfo(targetDb,
                 ctxSource,
                 MySqlStockIntangible.Default,
                 CompilerFetcher.Mysql);
-            var dest = new DelegateSQLDatabaseInfo(targetDb+1,
+            var dest = new DelegateSQLDatabaseInfo(targetDb + 1,
                 ctxDest,
                 MySqlStockIntangible.Default,
                 CompilerFetcher.Mysql);
-            var copying = new SQLCognateCopying(source, dest) { SynchronousStructure=false,SynchronousStructureWithDelete=false, CleanTable=true};
+            var copying = new SQLCognateCopying(source, dest) { SynchronousStructure = false, SynchronousStructureWithDelete = false, CleanTable = true };
             var sw = Stopwatch.GetTimestamp();
             await copying.RunAsync();
-            Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-sw));
+            Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp() - sw));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Ao.Stock.Kata.Approachs
 {
     public class TableApproachAdapter : ApproachAdapter
     {
-        public TableApproachAdapter(IStockType stockType, 
+        public TableApproachAdapter(IStockType stockType,
             string tableName,
             QueryFactory queryFactory)
             : base(stockType)

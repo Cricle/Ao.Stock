@@ -6,7 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace Ao.Stock.Explains
 {
@@ -22,7 +21,7 @@ namespace Ao.Stock.Explains
 
             public readonly Action<TResult, object>? Setter;
 
-            public PropertyMap(string name,Type actualType, Func<TResult, object>? getter, Action<TResult, object>? setter)
+            public PropertyMap(string name, Type actualType, Func<TResult, object>? getter, Action<TResult, object>? setter)
             {
                 Name = name;
                 ActualType = actualType;
@@ -51,7 +50,7 @@ namespace Ao.Stock.Explains
             get
             {
                 var val = valueMaps.First(x => x.Name == key);
-                if (val.Getter==null)
+                if (val.Getter == null)
                 {
                     throw new InvalidOperationException($"Property {key} can't get");
                 }
@@ -65,7 +64,7 @@ namespace Ao.Stock.Explains
                 .Where(x =>
                 {
                     var attr = x.GetCustomAttribute<BrowsableAttribute>();
-                    if (attr==null)
+                    if (attr == null)
                     {
                         return true;
                     }
@@ -87,7 +86,7 @@ namespace Ao.Stock.Explains
                 {
                     setter = CompileSetter(type, prop);
                 }
-                valueMaps.Add(new PropertyMap(name,prop.PropertyType, getter, setter));
+                valueMaps.Add(new PropertyMap(name, prop.PropertyType, getter, setter));
             }
         }
         private static Action<TResult, object> CompileSetter(Type type, PropertyInfo property)
@@ -118,7 +117,7 @@ namespace Ao.Stock.Explains
                 value = null;
                 return false;
             }
-            if (propMap.Getter==null)
+            if (propMap.Getter == null)
             {
                 throw new InvalidOperationException($"Property {key} can't get");
             }
@@ -147,7 +146,7 @@ namespace Ao.Stock.Explains
             {
                 throw new InvalidOperationException($"Property {key} can't set");
             }
-            propMap.Setter((TResult)(object)this, Convert.ChangeType(value,propMap.ActualType));
+            propMap.Setter((TResult)(object)this, Convert.ChangeType(value, propMap.ActualType));
         }
 
         public override string ToString()
@@ -158,7 +157,7 @@ namespace Ao.Stock.Explains
             {
                 blocks[idx++] = $"{item.Key}={item.Value}";
             }
-            return string.Join(", ",blocks);
+            return string.Join(", ", blocks);
         }
 
         class Enumerator : IEnumerator<KeyValuePair<string, object?>>

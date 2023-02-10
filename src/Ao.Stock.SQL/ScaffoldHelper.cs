@@ -52,13 +52,13 @@ namespace Ao.Stock.SQL
             }
             return GetScaffoldedModel(connectionString, codeGenerationOptions);
         }
-        public ScaffoldedModel? GetScaffoldedModel(string connectionString,ModelCodeGenerationOptions? codeGenerationOptions,IServiceProvider provider)
+        public ScaffoldedModel? GetScaffoldedModel(string connectionString, ModelCodeGenerationOptions? codeGenerationOptions, IServiceProvider provider)
         {
             var databaseModelFactory = provider.GetRequiredService<IReverseEngineerScaffolder>();
             var model = databaseModelFactory.ScaffoldModel(connectionString,
                 DatabaseModelFactoryOptions ?? new DatabaseModelFactoryOptions(),
-                ModelReverseEngineerOptions??new ModelReverseEngineerOptions(),
-                codeGenerationOptions??new ModelCodeGenerationOptions());
+                ModelReverseEngineerOptions ?? new ModelReverseEngineerOptions(),
+                codeGenerationOptions ?? new ModelCodeGenerationOptions());
             return model;
         }
         protected virtual void RegistServices(IServiceCollection services)

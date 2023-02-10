@@ -10,7 +10,7 @@ namespace Ao.Stock
         {
             return provider.MakeString(context.Keys.Select(x => x.ToString()), context.Values.Select(x => x.ToString()), options);
         }
-        public static IIntangibleContext Split(this IIntangibleProvider provider,string source)
+        public static IIntangibleContext Split(this IIntangibleProvider provider, string source)
         {
             var sps = source.Split(new string[] { provider.Separator }, StringSplitOptions.RemoveEmptyEntries);
             var ctx = new IntangibleContext();
@@ -21,8 +21,8 @@ namespace Ao.Stock
                 {
                     continue;
                 }
-                var key=item.Substring(0, first);
-                key = provider.TryInverseReplace(key, out var keyResult)&&keyResult!=null ? keyResult : key;
+                var key = item.Substring(0, first);
+                key = provider.TryInverseReplace(key, out var keyResult) && keyResult != null ? keyResult : key;
                 var value = item.Substring(first + provider.JoinSeparator.Length);
                 ctx[key] = value;
             }

@@ -7,7 +7,7 @@
             Func = func;
         }
 
-        public Func<ISQLDatabaseInfo,string,bool> Func { get; }
+        public Func<ISQLDatabaseInfo, string, bool> Func { get; }
 
         public bool IsAccept(ISQLDatabaseInfo info, string tableName)
         {

@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Ao.Stock.Explains
 {
     public class ExplainResultSet<TResult> : List<TResult>
-        where TResult: IExplainResult,new()
+        where TResult : IExplainResult, new()
     {
         public ExplainResultSet()
         {
@@ -38,17 +37,17 @@ namespace Ao.Stock.Explains
                 }
             }
         }
-        public static ExplainResultSet<TResult> FromDbConnection(IDbConnection connection,string sql,Action<IDbCommand>? commandAction=null)
+        public static ExplainResultSet<TResult> FromDbConnection(IDbConnection connection, string sql, Action<IDbCommand>? commandAction = null)
         {
-            if (connection.State!= ConnectionState.Open)
+            if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
             }
-            using (var command=connection.CreateCommand())
-            {                
+            using (var command = connection.CreateCommand())
+            {
                 command.CommandText = sql;
                 commandAction?.Invoke(command);
-                using (var reader=command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     return FromReader(reader);
                 }

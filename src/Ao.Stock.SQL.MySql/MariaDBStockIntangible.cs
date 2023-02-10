@@ -10,7 +10,7 @@ namespace Ao.Stock.SQL.MySql
 
         public static new readonly MariaDBStockIntangible Default = new MariaDBStockIntangible(ConnectStringStockIntangible.Instance);
 
-        public MariaDBStockIntangible(ConnectStringStockIntangible connectStringStockIntangible) 
+        public MariaDBStockIntangible(ConnectStringStockIntangible connectStringStockIntangible)
             : base(connectStringStockIntangible)
         {
         }

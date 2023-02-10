@@ -4,9 +4,9 @@ namespace Ao.Stock
 {
     public static class CastHelperCastExtensions
     {
-        public static object? Convert(this ICastHelper helper,object input,Type outputType,bool throwException=false)
+        public static object? Convert(this ICastHelper helper, object input, Type outputType, bool throwException = false)
         {
-            if (helper.TryConvert(input,outputType,out var output,out var ex))
+            if (helper.TryConvert(input, outputType, out var output, out var ex))
             {
                 return output;
             }

@@ -1,5 +1,4 @@
 ﻿using Ao.Stock.IntangibleProviders;
-using Ao.Stock.Querying;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -7,7 +6,7 @@ using System.Data.Common;
 
 namespace Ao.Stock.SQL
 {
-    public abstract class SQLStockIntangible : IStockIntangible,IEngineCodeProvider
+    public abstract class SQLStockIntangible : IStockIntangible, IEngineCodeProvider
     {
         public const string ConnectionStringKey = "ConnectionString";
         public const string IntangibleProviderKey = "IntangibleProvider";
@@ -36,7 +35,7 @@ namespace Ao.Stock.SQL
             }
             if (context.TryGetValue(SQLContextKey, out var ctxObj) && ctxObj is IIntangibleContext ctx)
             {
-                if (context.TryGetValue(IntangibleProviderKey, out var providerObj)&& providerObj is IIntangibleProvider provider)
+                if (context.TryGetValue(IntangibleProviderKey, out var providerObj) && providerObj is IIntangibleProvider provider)
                 {
                     return new ConnectionStringBox(ctx.MakeString(provider, GetIntangibleProviderJoinOptions()), null);
                 }
@@ -84,7 +83,7 @@ namespace Ao.Stock.SQL
                 Config(ref builder, context);
                 return (T)(object)new DbContext(builder.Options);
             }
-            if (typeof(T) == typeof(IDbConnection)|| typeof(T) == typeof(DbConnection))
+            if (typeof(T) == typeof(IDbConnection) || typeof(T) == typeof(DbConnection))
             {
                 var connBox = GetConnectionStringBox(context);
                 return (T)(object)CreateDbConnection(connBox, context);
@@ -101,7 +100,7 @@ namespace Ao.Stock.SQL
                     })
                     .Build();
             }
-            if (typeof(T)==typeof(IArchitectureQuerying)|| typeof(T) == typeof(SQLArchitectureQuerying))
+            if (typeof(T) == typeof(IArchitectureQuerying) || typeof(T) == typeof(SQLArchitectureQuerying))
             {
                 var connBox = GetConnectionStringBox(context);
                 return (T)(object)CreateSQLArchitectureQuerying(connBox, context);

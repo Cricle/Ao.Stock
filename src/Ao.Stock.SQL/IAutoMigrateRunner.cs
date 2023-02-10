@@ -11,6 +11,6 @@
     }
     public interface IAutoMigrateRunner
     {
-        void Migrate(AutoMigrateOptions options=default);
+        void Migrate(AutoMigrateOptions options = default);
     }
 }

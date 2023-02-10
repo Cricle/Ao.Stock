@@ -2,7 +2,7 @@
 
 namespace Ao.Stock.Kata.Copying
 {
-    public abstract class SQLDatabaseInfo: ISQLDatabaseInfo
+    public abstract class SQLDatabaseInfo : ISQLDatabaseInfo
     {
         protected SQLDatabaseInfo(string database, IIntangibleContext context, IStockIntangible stockIntangible, Compiler compiler)
         {
@@ -17,7 +17,7 @@ namespace Ao.Stock.Kata.Copying
         public IIntangibleContext Context { get; }
 
         public IStockIntangible StockIntangible { get; }
-        
+
         public Compiler Compiler { get; }
 
         public abstract string CreateQuerySql(string tableName);

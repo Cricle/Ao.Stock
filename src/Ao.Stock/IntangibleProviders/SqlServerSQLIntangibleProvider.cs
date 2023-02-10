@@ -26,13 +26,13 @@ namespace Ao.Stock.IntangibleProviders
                     result = UserNameKey;
                     break;
                 case "Password":
-                    result =PasswordKey ;
+                    result = PasswordKey;
                     break;
                 case "Initial Catalog":
                     result = DatabaseKey;
                     break;
                 case "Integrated Security":
-                    result = IntegratedSecurityKey ;
+                    result = IntegratedSecurityKey;
                     break;
                 case "Connect Timeout":
                     result = ConnectTimeoutKey;

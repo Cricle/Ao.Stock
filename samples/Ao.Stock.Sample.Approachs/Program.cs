@@ -20,18 +20,18 @@ namespace Ao.Stock.Sample.Approachs
                 Project = x => SqliteAutoMigrateRunner.RemoveRangeTypeChanges(x).Where(y => y is not StockRenameTypeComparisonAction).ToList()
             };
             runner.Migrate(new AutoMigrateOptions(true));
-            
+
             var ctx = SQLIntangibleContextHelper.Sqlite(connStr);
-            using (var conn=runner.StockIntangible.Get<DbConnection>(ctx))
+            using (var conn = runner.StockIntangible.Get<DbConnection>(ctx))
             {
                 conn.Open();
-                using (var op=new BulkOperation(conn))
+                using (var op = new BulkOperation(conn))
                 {
                     op.Log = x => Console.WriteLine(x);
                     op.DestinationTableName = table;
                     op.ColumnInputNames = new List<string> { "Name", "qwer" };
                     op.ColumnOutputNames = new List<string> { "qwer" };
-                    op.ColumnPrimaryKeyNames= new List<string> { "Name" };
+                    op.ColumnPrimaryKeyNames = new List<string> { "Name" };
                     op.BatchSize = 5;
                     op.AutoMapOutputDirection = false;
                     var ds = new Dictionary<string, object>[5];
@@ -39,7 +39,7 @@ namespace Ao.Stock.Sample.Approachs
                     {
                         ds[i] = new Dictionary<string, object>
                         {
-                            ["Name"] = "aaa"+i,
+                            ["Name"] = "aaa" + i,
                             ["qwer"] = "fff" + i
                         };
                     }
@@ -51,8 +51,8 @@ namespace Ao.Stock.Sample.Approachs
                     //});
                 }
             }
-            
+
         }
     }
-    record class Student1([property: Key] long Id, [property: SqlIndex][property: MaxLength(54)] string Name,string qwer);
+    record class Student1([property: Key] long Id, [property: SqlIndex][property: MaxLength(54)] string Name, string qwer);
 }

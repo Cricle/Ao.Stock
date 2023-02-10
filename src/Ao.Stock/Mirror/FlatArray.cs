@@ -86,7 +86,7 @@ namespace Ao.Stock.Mirror
             {
                 List = list;
                 this.separate = separate;
-                this.actualCount = actualSize;
+                actualCount = actualSize;
                 Reset();
             }
 

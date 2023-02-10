@@ -17,7 +17,7 @@
 
         public bool Equals(RenameInput? other)
         {
-            if (other ==null)
+            if (other == null)
             {
                 return false;
             }

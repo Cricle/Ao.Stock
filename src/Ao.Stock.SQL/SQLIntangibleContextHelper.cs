@@ -145,7 +145,7 @@ namespace Ao.Stock.SQL
         }
 
 
-        public static IntangibleContext Set(string connectionString,IIntangibleProvider provider)
+        public static IntangibleContext Set(string connectionString, IIntangibleProvider provider)
         {
             var ctx = new IntangibleContext();
             Set(ctx, connectionString, provider);
@@ -153,8 +153,8 @@ namespace Ao.Stock.SQL
         }
         public static IntangibleContext Set(IntangibleContext input, IIntangibleProvider provider)
         {
-            var ctx= new IntangibleContext();
-            Set(ctx, input,provider);
+            var ctx = new IntangibleContext();
+            Set(ctx, input, provider);
             return ctx;
         }
         public static void Set(IntangibleContext context, IntangibleContext input, IIntangibleProvider provider)

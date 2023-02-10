@@ -16,10 +16,10 @@ var runner = new MySqlAutoMigrateRunner(mysql, mt1)
 runner.Migrate();
 var subQuery = new SqlKata.Query().From("student")
     .WhereLike("Name", "%aaa%").Limit(123);
-var sql = ExplainGenerator.MySql(CompilerFetcher.Mysql.Compile(new SqlKata.Query().From(subQuery,"a").Where("Id",">","123")).ToString());
-using (var dbc=runner.StockIntangible.Get<DbConnection>(new IntangibleContext { [MySqlStockIntangible.ConnectionStringKey]=mysql}))
+var sql = ExplainGenerator.MySql(CompilerFetcher.Mysql.Compile(new SqlKata.Query().From(subQuery, "a").Where("Id", ">", "123")).ToString());
+using (var dbc = runner.StockIntangible.Get<DbConnection>(new IntangibleContext { [MySqlStockIntangible.ConnectionStringKey] = mysql }))
 {
-	var set = ExplainResultSet<MySqlExplainResult>.FromDbConnection(dbc,sql);
+    var set = ExplainResultSet<MySqlExplainResult>.FromDbConnection(dbc, sql);
     Console.WriteLine(set);
 }
 

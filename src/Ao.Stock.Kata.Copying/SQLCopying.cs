@@ -82,9 +82,9 @@ namespace Ao.Stock.Kata.Copying
                 }
                 token.ThrowIfCancellationRequested();
                 var tables = await GetTablesAsync();
-                if (CleanTable&&!SynchronousStructure)
+                if (CleanTable && !SynchronousStructure)
                 {
-                    await ClearTablesAsync(connDest,Destination,tables);
+                    await ClearTablesAsync(connDest, Destination, tables);
                 }
                 await CopyAsync(connSource, connDest, tables, token);
             }
@@ -107,7 +107,7 @@ namespace Ao.Stock.Kata.Copying
             return Enumerable.Empty<string>();
         }
 
-        protected virtual async Task ClearTablesAsync(DbConnection connection,ISQLDatabaseInfo info,IEnumerable<string> tables)
+        protected virtual async Task ClearTablesAsync(DbConnection connection, ISQLDatabaseInfo info, IEnumerable<string> tables)
         {
             foreach (var item in tables)
             {
@@ -118,7 +118,7 @@ namespace Ao.Stock.Kata.Copying
             }
         }
 
-        protected virtual async Task CopyAsync(DbConnection sourceConn, DbConnection destConn,IEnumerable<string> tables,CancellationToken token)
+        protected virtual async Task CopyAsync(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> tables, CancellationToken token)
         {
             foreach (var item in tables)
             {
