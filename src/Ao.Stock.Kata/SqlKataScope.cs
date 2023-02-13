@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Dynamic;
 
 namespace Ao.Stock.Kata
 {
     public readonly struct SqlKataScope : IDisposable
     {
-        public SqlKataScope(Compiler compiler, DbConnection connection,bool toRawSql)
+        public SqlKataScope(Compiler compiler, DbConnection connection, bool toRawSql)
         {
             Compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
@@ -25,10 +24,28 @@ namespace Ao.Stock.Kata
 
         public bool ToRawSql { get; }
 
+        public string CompileToSql(Query query)
+        {
+            return Compile(query).ToString();
+        }
+        public string CompileToSql(IEnumerable<Query> queries)
+        {
+            return Compile(queries).ToString();
+        }
+        public SqlResult Compile(Query query)
+        {
+            return Compiler.Compile(query);
+        }
+
+        public SqlResult Compile(IEnumerable<Query> queries)
+        {
+            return Compiler.Compile(queries);
+        }
+
         public Task<int> ExecuteReadCountAsync(Query query,
             CancellationToken token = default)
         {
-            var result = Compiler.Compile(query);
+            var result = Compile(query);
             if (ToRawSql)
             {
                 return Connection.ExecuteReadCountAsync(result.ToString(), null, token);
@@ -38,7 +55,7 @@ namespace Ao.Stock.Kata
         public Task<List<IDictionary<string, object>>> ExecuteReaderAsync(Query query,
              CancellationToken token = default)
         {
-            var result = Compiler.Compile(query);
+            var result = Compile(query);
             if (ToRawSql)
             {
                 return Connection.ExecuteReaderAsync(result.ToString(), null, token);
@@ -49,7 +66,7 @@ namespace Ao.Stock.Kata
             IAsyncConverter<DbDataReader, TOutput> converter,
             CancellationToken token = default)
         {
-            var result = Compiler.Compile(query);
+            var result = Compile(query);
             if (ToRawSql)
             {
                 return Connection.ExecuteReaderAsync(result.ToString(), converter, null, token);
@@ -58,7 +75,7 @@ namespace Ao.Stock.Kata
         }
         public Task<int> ExecuteNoQueryAsync(IEnumerable<Query> queries, CancellationToken token = default)
         {
-            var result = Compiler.Compile(queries);
+            var result = Compile(queries);
             if (ToRawSql)
             {
                 return Connection.ExecuteNoQueryAsync(result.ToString(), null, token);
@@ -67,7 +84,7 @@ namespace Ao.Stock.Kata
         }
         public Task<int> ExecuteNoQueryAsync(Query query, CancellationToken token = default)
         {
-            var result = Compiler.Compile(query);
+            var result = Compile(query);
             if (ToRawSql)
             {
                 return Connection.ExecuteNoQueryAsync(result.ToString(), null, token);

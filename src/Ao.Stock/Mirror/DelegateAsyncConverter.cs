@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
 {
-    public class DelegateAsyncConverter<TOutput> : IAsyncConverter<DbDataReader, List<TOutput>>
+    public readonly struct DelegateAsyncConverter<TOutput> : IAsyncConverter<DbDataReader, List<TOutput>>
     {
         public DelegateAsyncConverter(Func<DbDataReader, CancellationToken, TOutput> converter)
         {
@@ -15,24 +15,19 @@ namespace Ao.Stock.Mirror
 
         public Func<DbDataReader,CancellationToken, TOutput> Converter { get; }
 
-        public Task<List<TOutput>> ConvertAsync(DbDataReader input, CancellationToken token = default)
+        public async Task<List<TOutput>> ConvertAsync(DbDataReader input, CancellationToken token = default)
         {
             var hasToken = token != default;
             var res = new List<TOutput>();
-            while (input.Read())
+            while (await input.ReadAsync())
             {
                 if (hasToken)
                 {
                     token.ThrowIfCancellationRequested();
                 }
-                var obj = new Dictionary<string, object>();
-                for (int i = 0; i < input.FieldCount; i++)
-                {
-                    obj[input.GetName(i)] = input.GetValue(i);
-                }
                 res.Add(Converter(input, token));
             }
-            return Task.FromResult(res);
+            return res;
         }
     }
 }

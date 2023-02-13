@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,6 +54,7 @@ namespace Ao.Stock.Mirror
                 }
             }
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Task EnsureConnectionOpenAsync(DbConnection connection, CancellationToken token = default)
         {
             if (connection.State != ConnectionState.Open)
@@ -61,6 +63,7 @@ namespace Ao.Stock.Mirror
             }
             return Task.CompletedTask;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void FillCommand(DbCommand comm, string sql, IEnumerable<KeyValuePair<string, object>>? args = null)
         {
             comm.CommandText = sql;
