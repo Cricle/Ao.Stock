@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
+    <ProjectReference Include="..\..\src\Ao.Stock.LinkPool\Ao.Stock.LinkPool.csproj" />
     <ProjectReference Include="..\..\src\Ao.Stock.SQL.MSSQL\Ao.Stock.SQL.MSSQL.csproj" />
     <ProjectReference Include="..\..\src\Ao.Stock\Ao.Stock.csproj" />
   </ItemGroup>
