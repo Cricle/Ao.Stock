@@ -12,27 +12,21 @@ var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;c
 const string tableName = "student";
 var mt1 = StockHelper.FromType<Student1>(tableName);
 var runner = new MySqlAutoMigrateRunner(mysql, mt1);
-//runner.Migrate();
+runner.Migrate();
 using (var dbc = runner.StockIntangible.GetDbContext(mysql))
 using (var scope = CompilerFetcher.Mysql.CreateScope(dbc))
 {
-    var c = new DelegateAsyncConverter<Student1>((reader) => new Student1(reader.GetInt64(0), reader.GetString(1)));
-    for (int i = 0; i < 20; i++)
+    var sw = Stopwatch.GetTimestamp();
+    var any = await scope.ExecuteNoQueryAsync(new Query(tableName).AsDelete());
+    await scope.ExecuteNoQueryAsync(new Query(tableName).AsInsert(new string[] { "Id", "Name" },
+        Enumerable.Range(0, 10).Select(x => new object[] { x, x + "aaa" })));
+    var datas = await scope.ExecuteReaderAsync(new Query(tableName).Select("Id", "Name"),
+        new DelegateAsyncConverter<Student1>((reader) => new Student1(reader.GetInt64(0), reader.GetString(1))));
+    Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()));
+    foreach (var item in datas)
     {
-        var sw = Stopwatch.GetTimestamp();
-        if (i == 0)
-        {
-            var any = await scope.ExecuteNoQueryAsync(new Query(tableName).AsDelete());
-            await scope.ExecuteNoQueryAsync(new Query(tableName).AsInsert(new string[] { "Id", "Name" },
-                Enumerable.Range(0, 10).Select(x => new object[] { x, x + "aaa" })));
-        }
-        var datas = await scope.ExecuteReaderAsync(new Query(tableName).Select("Id", "Name"), c);
-        Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp() - sw));
+        Console.WriteLine(item);
     }
-    //foreach (var item in datas)
-    //{
-    //    Console.WriteLine(item);
-    //}
 }
 
 record class Student1([property: Key] long Id, [property: SqlIndex][property: MaxLength(20)] string Name);
