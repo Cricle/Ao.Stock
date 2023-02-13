@@ -80,14 +80,6 @@ namespace Ao.Stock.SQL
         }
         protected virtual void Columns(StockTypePropertiesComparisonAction action)
         {
-            if (action.RightProperies != null)
-            {
-                foreach (var item in action.RightProperies)
-                {
-                    Delete.Column(item.Name)
-                        .FromTable(action.Left.Name);
-                }
-            }
             if (action.LeftProperies != null)
             {
                 foreach (var item in action.LeftProperies)
@@ -107,6 +99,14 @@ namespace Ao.Stock.SQL
                     {
                         next.PrimaryKey();
                     }
+                }
+            }
+            if (action.RightProperies != null)
+            {
+                foreach (var item in action.RightProperies)
+                {
+                    Delete.Column(item.Name)
+                        .FromTable(action.Left.Name);
                 }
             }
         }

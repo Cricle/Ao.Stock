@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,25 +11,77 @@ namespace Ao.Stock.Mirror
 {
     public static class SQLExecuteExtensions
     {
-        public static async Task<int> ExecuteNoQueryAsync(this DbConnection connection, string sql, IEnumerable<KeyValuePair<string, object>>? args = null, CancellationToken token = default)
+        public static async Task<int> ExecuteReadCountAsync(this DbConnection connection,
+            string sql,
+            IEnumerable<KeyValuePair<string, object>>? args = null,
+            CancellationToken token = default)
+        {
+            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
+            using (var comm = connection.CreateCommand())
+            {
+                FillCommand(comm, sql, args);
+                comm.Prepare();
+                using (var reader = await comm.ExecuteReaderAsync(token).ConfigureAwait(false))
+                {
+                    reader.Read();
+                    return reader.GetInt32(0);
+                }
+            }
+        }
+        public static Task<List<IDictionary<string, object>>> ExecuteReaderAsync(this DbConnection connection,
+            string sql,
+            IEnumerable<KeyValuePair<string, object>>? args = null,
+            CancellationToken token = default)
+        {
+            return ExecuteReaderAsync(connection, sql, DictionaryReaderAsyncConverter.Instance, args, token);
+        }
+        public static async Task<TOutput> ExecuteReaderAsync<TOutput>(this DbConnection connection,
+            string sql, 
+            IAsyncConverter<DbDataReader,TOutput> converter,
+            IEnumerable<KeyValuePair<string, object>>? args = null, 
+            CancellationToken token = default)
+        {
+            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
+            using (var comm = connection.CreateCommand())
+            {
+                FillCommand(comm, sql, args);
+                comm.Prepare();
+                using (var reader = await comm.ExecuteReaderAsync(token).ConfigureAwait(false))
+                {
+                    var output = await converter.ConvertAsync(reader, token);
+                    return output;
+                }
+            }
+        }
+        private static Task EnsureConnectionOpenAsync(DbConnection connection, CancellationToken token = default)
         {
             if (connection.State != ConnectionState.Open)
             {
-                await connection.OpenAsync(token).ConfigureAwait(false);
+                return connection.OpenAsync(token);
             }
+            return Task.CompletedTask;
+        }
+        private static void FillCommand(DbCommand comm, string sql, IEnumerable<KeyValuePair<string, object>>? args = null)
+        {
+            comm.CommandText = sql;
+            if (args != null && args.Any())
+            {
+                foreach (var arg in args)
+                {
+                    var par = comm.CreateParameter();
+                    par.Value = arg;
+                    par.DbType = GetDbType(arg.Value);
+                    comm.Parameters.Add(par);
+                }
+            }
+        }
+        public static async Task<int> ExecuteNoQueryAsync(this DbConnection connection, string sql, IEnumerable<KeyValuePair<string, object>>? args = null, CancellationToken token = default)
+        {
+            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
             using (var comm = connection.CreateCommand())
             {
-                comm.CommandText = sql;
-                if (args != null && args.Any())
-                {
-                    foreach (var arg in args)
-                    {
-                        var par = comm.CreateParameter();
-                        par.Value = arg;
-                        par.DbType = GetDbType(arg.Value);
-                        comm.Parameters.Add(par);
-                    }
-                }
+                FillCommand(comm, sql, args);
+                comm.Prepare();
                 return await comm.ExecuteNonQueryAsync(token).ConfigureAwait(false);
             }
         }

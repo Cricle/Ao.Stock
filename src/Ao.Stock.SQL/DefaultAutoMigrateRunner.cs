@@ -4,6 +4,9 @@ namespace Ao.Stock.SQL
 {
     public class DefaultAutoMigrateRunner : IAutoMigrateRunner
     {
+        public static readonly Func<IReadOnlyList<IStockComparisonAction>, IReadOnlyList<IStockComparisonAction>> NoRenameProject=
+            x => x.Where(y => y is not StockRenameTypeComparisonAction).ToList();
+
         public DefaultAutoMigrateRunner(string connectionString, IStockType newStockType, IStockIntangible stockIntangible)
             : this(connectionString, newStockType, newStockType.Name ?? throw new ArgumentNullException("newStockType.Name"), stockIntangible)
         {

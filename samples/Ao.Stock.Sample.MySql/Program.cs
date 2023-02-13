@@ -1,26 +1,28 @@
 ﻿using Ao.Stock;
-using Ao.Stock.Comparering;
-using Ao.Stock.Explains;
+using Ao.Stock.Mirror;
 using Ao.Stock.Kata;
+using Ao.Stock.SQL;
 using Ao.Stock.SQL.Announcation;
 using Ao.Stock.SQL.MySql;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
+using Query = SqlKata.Query;
 
 var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
-var mt1 = StockHelper.FromType<Student1>("student");
-var runner = new MySqlAutoMigrateRunner(mysql, mt1)
-{
-    Project = x => x.Where(y => y is not StockRenameTypeComparisonAction).ToList()
-};
+const string tableName = "student";
+var mt1 = StockHelper.FromType<Student1>(tableName);
+var runner = new MySqlAutoMigrateRunner(mysql, mt1);
 runner.Migrate();
-var subQuery = new SqlKata.Query().From("student")
-    .WhereLike("Name", "%aaa%").Limit(123);
-var sql = ExplainGenerator.MySql(CompilerFetcher.Mysql.Compile(new SqlKata.Query().From(subQuery, "a").Where("Id", ">", "123")).ToString());
-using (var dbc = runner.StockIntangible.Get<DbConnection>(new IntangibleContext { [MySqlStockIntangible.ConnectionStringKey] = mysql }))
+using (var dbc = runner.StockIntangible.GetDbContext(mysql))
+using (var scope = CompilerFetcher.Mysql.CreateScope(dbc))
 {
-    var set = ExplainResultSet<MySqlExplainResult>.FromDbConnection(dbc, sql);
-    Console.WriteLine(set);
+    var any = await scope.ExecuteNoQueryAsync(new Query(tableName).AsDelete());
+    await scope.ExecuteNoQueryAsync(new Query(tableName).AsInsert(new string[] { "Id", "Name" },
+        Enumerable.Range(0, 10).Select(x => new object[] { x, x + "aaa" })));
+    var datas = await scope.ExecuteReaderAsync(new Query(tableName).Select("Id","Name"));
+    foreach (var item in datas)
+    {
+        Console.WriteLine(string.Join(", ",item.Select(x=>$"{x.Key}={x.Value}")));
+    }
 }
 
 record class Student1([property: Key] long Id, [property: SqlIndex][property: MaxLength(20)] string Name);

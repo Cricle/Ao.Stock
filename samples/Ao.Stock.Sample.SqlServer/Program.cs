@@ -12,10 +12,7 @@ using System.Diagnostics;
 
 var connStr = $"Data Source=127.0.0.1,1433;Initial Catalog=student;User Id=sa;Password=355343; ";
 var mt1 = StockHelper.FromType<Student1>("student");
-var runner = new SqlServerAutoMigrateRunner(connStr, mt1)
-{
-    Project = x => x.Where(y => y is not StockRenameTypeComparisonAction).ToList()
-};
+var runner = new SqlServerAutoMigrateRunner(connStr, mt1);
 runner.Migrate();
 var subQuery = new SqlKata.Query().From("student")
     .WhereLike("Name", "%aaa%").Limit(123);

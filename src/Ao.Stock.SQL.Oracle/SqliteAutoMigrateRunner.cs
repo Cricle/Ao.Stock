@@ -5,10 +5,14 @@
         public OracleAutoMigrateRunner(string connectionString, IStockType newStockType, string tableName)
             : base(connectionString, newStockType, tableName, OracleStockIntangible.Default)
         {
+            Project = NoRenameProject;
+
         }
         public OracleAutoMigrateRunner(string connectionString, IStockType newStockType)
             : base(connectionString, newStockType, OracleStockIntangible.Default)
         {
+            Project = NoRenameProject;
+
         }
     }
 }
