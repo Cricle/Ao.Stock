@@ -35,7 +35,7 @@ namespace Ao.Stock.Kata
             }
             return Connection.ExecuteReadCountAsync(result.Sql, result.NamedBindings, token);
         }
-        public Task<List<IDictionary<string,object>>> ExecuteReaderAsync(Query query,
+        public Task<List<IDictionary<string, object>>> ExecuteReaderAsync(Query query,
              CancellationToken token = default)
         {
             var result = Compiler.Compile(query);
@@ -44,6 +44,17 @@ namespace Ao.Stock.Kata
                 return Connection.ExecuteReaderAsync(result.ToString(), null, token);
             }
             return Connection.ExecuteReaderAsync(result.Sql, result.NamedBindings, token);
+        }
+        public Task<TOutput> ExecuteReaderAsync<TOutput>(Query query,
+            IAsyncConverter<DbDataReader, TOutput> converter,
+            CancellationToken token = default)
+        {
+            var result = Compiler.Compile(query);
+            if (ToRawSql)
+            {
+                return Connection.ExecuteReaderAsync(result.ToString(), converter, null, token);
+            }
+            return Connection.ExecuteReaderAsync(result.Sql, converter, result.NamedBindings, token);
         }
         public Task<int> ExecuteNoQueryAsync(IEnumerable<Query> queries, CancellationToken token = default)
         {

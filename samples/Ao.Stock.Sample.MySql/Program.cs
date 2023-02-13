@@ -18,10 +18,12 @@ using (var scope = CompilerFetcher.Mysql.CreateScope(dbc))
     var any = await scope.ExecuteNoQueryAsync(new Query(tableName).AsDelete());
     await scope.ExecuteNoQueryAsync(new Query(tableName).AsInsert(new string[] { "Id", "Name" },
         Enumerable.Range(0, 10).Select(x => new object[] { x, x + "aaa" })));
-    var datas = await scope.ExecuteReaderAsync(new Query(tableName).Select("Id","Name"));
+    var datas = await scope.ExecuteReaderAsync(new Query(tableName).Select("Id", "Name"),
+        new DelegateAsyncConverter<Student1>((reader, tk) => new Student1(reader.GetInt64(0), reader.GetString(1))));
     foreach (var item in datas)
     {
-        Console.WriteLine(string.Join(", ",item.Select(x=>$"{x.Key}={x.Value}")));
+        Console.WriteLine(item);
+        //Console.WriteLine(string.Join(", ",item.Select(x=>$"{x.Key}={x.Value}")));
     }
 }
 
