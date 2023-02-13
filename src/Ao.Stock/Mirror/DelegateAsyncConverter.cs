@@ -8,12 +8,12 @@ namespace Ao.Stock.Mirror
 {
     public readonly struct DelegateAsyncConverter<TOutput> : IAsyncConverter<DbDataReader, List<TOutput>>
     {
-        public DelegateAsyncConverter(Func<DbDataReader, CancellationToken, TOutput> converter)
+        public DelegateAsyncConverter(Func<DbDataReader, TOutput> converter)
         {
             Converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
 
-        public Func<DbDataReader,CancellationToken, TOutput> Converter { get; }
+        public Func<DbDataReader, TOutput> Converter { get; }
 
         public async Task<List<TOutput>> ConvertAsync(DbDataReader input, CancellationToken token = default)
         {
@@ -25,7 +25,7 @@ namespace Ao.Stock.Mirror
                 {
                     token.ThrowIfCancellationRequested();
                 }
-                res.Add(Converter(input, token));
+                res.Add(Converter(input));
             }
             return res;
         }
