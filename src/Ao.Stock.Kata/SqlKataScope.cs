@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Ao.Stock.Kata
 {
-    public readonly struct SqlKataScope : IDisposable
+    public readonly struct SqlKataScope : ISqlKataScope, IDisposable
     {
         public SqlKataScope(Compiler compiler, DbConnection connection, bool toRawSql)
         {

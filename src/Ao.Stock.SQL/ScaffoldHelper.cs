@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
@@ -30,6 +32,7 @@ namespace Ao.Stock.SQL
             var scaffoldingModelFactory = provider!.GetRequiredService<IScaffoldingModelFactory>();
             return scaffoldingModelFactory.Create(model, ModelReverseEngineerOptions ?? new ModelReverseEngineerOptions());
         }
+
         public DatabaseModel? GetDatabaseModel()
         {
             if (provider == null)
@@ -37,6 +40,23 @@ namespace Ao.Stock.SQL
                 provider = CreateProvider();
             }
             return GetDatabaseModel(provider);
+        }
+        public string GenerateCreateScript(IStockIntangible stock, string connStr)
+        {
+            return GenerateCreateScript(stock, stock.CreateContext(connStr));
+        }
+        public string GenerateCreateScript(IStockIntangible stock, IIntangibleContext context)
+        {
+            var model = Scaffold();
+            var optionBuilder = new DbContextOptionsBuilder()
+                .UseModel(model);
+            stock.Config(ref optionBuilder, context);
+            var options = optionBuilder.Options;
+            options.GetExtension<CoreOptionsExtension>().WithServiceProviderCachingEnabled(false);
+            using (var dbc = new DbContext(options))
+            {
+                return dbc.Database.GenerateCreateScript();
+            }
         }
         public DatabaseModel? GetDatabaseModel(IServiceProvider provider)
         {
