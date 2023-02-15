@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
     <ProjectReference Include="..\..\src\Ao.Stock.SQL.MySql\Ao.Stock.SQL.MySql.csproj" />
+    <ProjectReference Include="..\..\src\Ao.Stock.SQLKata\Ao.Stock.SQLKata.csproj" />
   </ItemGroup>
 
 

@@ -23,7 +23,7 @@ namespace Ao.Stock.Benchmarks.Runners
             ORM().GetAwaiter().GetResult();
             Dapper().GetAwaiter().GetResult();
         }
-        [Benchmark(Baseline = true,OperationsPerInvoke =10)]
+        [Benchmark(Baseline = true)]
         public async Task HandCode()
         {
             var posts = new List<Post>();

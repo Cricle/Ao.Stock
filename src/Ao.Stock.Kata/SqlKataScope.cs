@@ -74,6 +74,16 @@ namespace Ao.Stock.Kata
             }
             return Connection.ExecuteReaderAsync(result.Sql, converter, result.NamedBindings, token);
         }
+        public Task<List<TOutput>> ExecuteReaderAsync<TOutput>(Query query,
+            CancellationToken token = default)
+        {
+            var result = Compile(query);
+            if (ToRawSql)
+            {
+                return Connection.ExecuteReaderAsync<TOutput>(result.ToString(), null, token);
+            }
+            return Connection.ExecuteReaderAsync<TOutput>(result.Sql, result.NamedBindings, token);
+        }
         public Task<int> ExecuteNoQueryAsync(IEnumerable<Query> queries, CancellationToken token = default)
         {
             var result = Compile(queries);
