@@ -30,12 +30,12 @@ namespace Ao.Stock.SQLKata
 
         public ObjectPool<DbConnection> DbConnectionPool { get; }
 
-        public EntityContext CreateContext(string tableName,bool toRowSql = false)
+        public EntityContext CreateContext(string tableName,bool toRowSql = true)
         {
             var dbc = DbConnectionPool.Get();
             return new EntityContext(this, Compiler.CreateScope(dbc, toRowSql), tableName);
         }
-        public EntityContext<T> CreateContext<T>(string tableName, bool toRowSql = false)
+        public EntityContext<T> CreateContext<T>(string tableName, bool toRowSql = true)
         {
             var dbc = DbConnectionPool.Get();
             return new EntityContext<T>(this, Compiler.CreateScope(dbc, toRowSql), tableName);

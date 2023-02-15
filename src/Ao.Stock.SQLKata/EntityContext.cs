@@ -24,36 +24,52 @@ namespace Ao.Stock.SQLKata
 
         public string TableName { get; }
 
-        public async Task<List<IDictionary<string, object>>> GetAsync(Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<List<IDictionary<string, object>>> GetAsync(Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName).AsDelete();
             query = func?.Invoke(query) ?? query;
-            return await Scope.ExecuteReaderAsync(query, token);
+            return Scope.ExecuteReaderAsync(query, token);
         }
-        public async Task<T> GetAsync<T>(IAsyncConverter<IDataReader,T> converter,Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<T> GetAsync<T>(IAsyncConverter<IDataReader,T> converter,Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName).AsDelete();
             query = func?.Invoke(query) ?? query;
-            return await Scope.ExecuteReaderAsync(query, converter, token);
+            return Scope.ExecuteReaderAsync(query, converter, token);
         }
-        public async Task<int> DeleteAsync(Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<int> DeleteAsync(Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName).AsDelete();
             query = func?.Invoke(query) ?? query;
-            return await Scope.ExecuteNoQueryAsync(query, token);
+            return Scope.ExecuteNoQueryAsync(query, token);
+        }
+        public Task<int> ExecuteAsync(string sql,IEnumerable<KeyValuePair<string,object>> args=null, CancellationToken token = default)
+        {
+            return Scope.Connection.ExecuteNoQueryAsync(sql, args, token);
+        }
+        public Task<List<IDictionary<string,object>>> QueryAsync(string sql, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
+        {
+            return QueryAsync(sql, DictionaryReaderAsyncConverter.Instance, args, token);
+        }
+        public Task<List<T>> QueryAsync<T>(string sql, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
+        {
+            return QueryAsync(sql, ORMAsyncConverter<T>.Default, args, token);
+        }
+        public Task<T> QueryAsync<T>(string sql,IAsyncConverter<IDataReader, T> converter, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
+        {
+            return Scope.Connection.ExecuteReaderAsync(sql, converter, args, token);
         }
 
-        public async Task<int> InsertAsync(IEnumerable<string> keys, IEnumerable<IEnumerable<object>> values, Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<int> InsertAsync(IEnumerable<string> keys, IEnumerable<IEnumerable<object>> values, Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName).AsInsert(keys, values);
             query = func?.Invoke(query) ?? query;
-            return await Scope.ExecuteNoQueryAsync(query, token);
+            return Scope.ExecuteNoQueryAsync(query, token);
         }
-        public async Task<int> UpdateAsync(IEnumerable<string> keys, IEnumerable<object> values, Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<int> UpdateAsync(IEnumerable<string> keys, IEnumerable<object> values, Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName).AsUpdate(keys, values);
             query = func?.Invoke(query) ?? query;
-            return await Scope.ExecuteNoQueryAsync(query, token);
+            return Scope.ExecuteNoQueryAsync(query, token);
         }
         public void Dispose()
         {
