@@ -26,13 +26,13 @@ namespace Ao.Stock.SQLKata
 
         public Task<List<IDictionary<string, object>>> GetAsync(Func<Query, Query> func = null, CancellationToken token = default)
         {
-            var query = new Query(TableName).AsDelete();
+            var query = new Query(TableName);
             query = func?.Invoke(query) ?? query;
             return Scope.ExecuteReaderAsync(query, token);
         }
         public Task<T> GetAsync<T>(IAsyncConverter<IDataReader,T> converter,Func<Query, Query> func = null, CancellationToken token = default)
         {
-            var query = new Query(TableName).AsDelete();
+            var query = new Query(TableName);
             query = func?.Invoke(query) ?? query;
             return Scope.ExecuteReaderAsync(query, converter, token);
         }

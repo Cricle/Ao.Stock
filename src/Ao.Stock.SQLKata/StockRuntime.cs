@@ -8,6 +8,14 @@ namespace Ao.Stock.SQLKata
     public class StockRuntime
     {
         public StockRuntime(Compiler compiler,
+            IIntangibleContext intangibleContext,
+            IStockIntangible stock)
+        {
+            Compiler = compiler;
+            IntangibleContextFactory = new ConstIntangibleContextFactory(intangibleContext);
+            DbConnectionPool = stock.CreateDbConnectionPool(intangibleContext);
+        }
+        public StockRuntime(Compiler compiler,
             IIntangibleContextFactory intangibleContextFactory,
             IStockIntangible stock)
         {
