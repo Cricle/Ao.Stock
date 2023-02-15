@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
 {
-    public class DictionaryReaderAsyncConverter : IAsyncConverter<DbDataReader, List<IDictionary<string, object>>>
+    public class DictionaryReaderAsyncConverter : IAsyncConverter<IDataReader, List<IDictionary<string, object>>>
     {
         private DictionaryReaderAsyncConverter() { }
 
         public static readonly DictionaryReaderAsyncConverter Instance = new DictionaryReaderAsyncConverter();
 
-        public Task<List<IDictionary<string, object>>> ConvertAsync(DbDataReader input, CancellationToken token = default)
+        public Task<List<IDictionary<string, object>>> ConvertAsync(IDataReader input, CancellationToken token = default)
         {
             var hasToken = token != default;
             var res = new List<IDictionary<string, object>>();

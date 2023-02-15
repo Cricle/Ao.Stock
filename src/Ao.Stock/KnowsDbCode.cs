@@ -8,7 +8,7 @@ namespace Ao.Stock
         public const string MariaDB = "mariadb";
         public const string SqlServer = "sqlserver";
         public const string Sqlite = "sqlite";
-        public const string PostgrSql = "postgrsql";
+        public const string PostgreSql = "postgresql";
         public const string Oracle = "oracle";
 
         public static bool IsMysql(string type)
@@ -27,9 +27,9 @@ namespace Ao.Stock
         {
             return NoCastEquals(type, Sqlite);
         }
-        public static bool IsPostgrSql(string type)
+        public static bool IsPostgreSql(string type)
         {
-            return NoCastEquals(type, PostgrSql);
+            return NoCastEquals(type, PostgreSql);
         }
         public static bool IsOracle(string type)
         {

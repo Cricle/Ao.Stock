@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data;
 
 namespace Ao.Stock.Kata
 {
@@ -63,7 +64,7 @@ namespace Ao.Stock.Kata
             return Connection.ExecuteReaderAsync(result.Sql, result.NamedBindings, token);
         }
         public Task<TOutput> ExecuteReaderAsync<TOutput>(Query query,
-            IAsyncConverter<DbDataReader, TOutput> converter,
+            IAsyncConverter<IDataReader, TOutput> converter,
             CancellationToken token = default)
         {
             var result = Compile(query);

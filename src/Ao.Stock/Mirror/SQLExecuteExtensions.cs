@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -17,16 +16,11 @@ namespace Ao.Stock.Mirror
             IEnumerable<KeyValuePair<string, object>>? args = null,
             CancellationToken token = default)
         {
-            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
-            using (var comm = connection.CreateCommand())
+            using (var command = CreateCommand(connection, sql, args))
+            using (var reader = await command.ExecuteReaderAsync(token))
             {
-                FillCommand(comm, sql, args);
-                comm.Prepare();
-                using (var reader = await comm.ExecuteReaderAsync(token).ConfigureAwait(false))
-                {
-                    reader.Read();
-                    return reader.GetInt32(0);
-                }
+                reader.Read();
+                return reader.GetInt32(0);
             }
         }
         public static Task<List<IDictionary<string, object>>> ExecuteReaderAsync(this DbConnection connection,
@@ -36,33 +30,55 @@ namespace Ao.Stock.Mirror
         {
             return ExecuteReaderAsync(connection, sql, DictionaryReaderAsyncConverter.Instance, args, token);
         }
-        public static async Task<TOutput> ExecuteReaderAsync<TOutput>(this DbConnection connection,
-            string sql, 
-            IAsyncConverter<DbDataReader,TOutput> converter,
-            IEnumerable<KeyValuePair<string, object>>? args = null, 
+        public static Task<List<T>> ExecuteReaderAsync<T>(this DbConnection connection,
+            string sql,
+            IEnumerable<KeyValuePair<string, object>>? args = null,
             CancellationToken token = default)
         {
-            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
-            using (var comm = connection.CreateCommand())
+            return ExecuteReaderAsync(connection, sql, ORMAsyncConverter<T>.Default, args, token);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DbCommand CreateCommand(this DbConnection connection,
+            string sql,
+            IEnumerable<KeyValuePair<string, object>>? args = null)
+        {
+            EnsureConnectionOpen(connection);
+            var comm = connection.CreateCommand();
+            FillCommand(comm, sql, args);
+            comm.Prepare();
+            return comm;
+        }
+        public static async Task<TOutput> ExecuteReaderAsync<TOutput>(this DbConnection connection,
+            string sql,
+            IAsyncConverter<IDataReader, TOutput> converter,
+            IEnumerable<KeyValuePair<string, object>>? args = null,
+            CancellationToken token = default)
+        {
+            using (var command = CreateCommand(connection, sql, args))
+            using (var reader = await command.ExecuteReaderAsync(token))
             {
-                FillCommand(comm, sql, args);
-                comm.Prepare();
-                using (var reader = await comm.ExecuteReaderAsync(token).ConfigureAwait(false))
-                {
-                    var output = await converter.ConvertAsync(reader, token);
-                    return output;
-                }
+                return await converter.ConvertAsync(reader, token);
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task EnsureConnectionOpenAsync(DbConnection connection, CancellationToken token = default)
+        private static void EnsureConnectionOpen(DbConnection connection)
         {
             if (connection.State != ConnectionState.Open)
             {
-                return connection.OpenAsync(token);
+                connection.Open();
             }
-            return Task.CompletedTask;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DbParameter CreateParamter(this DbCommand comm, string name, object value)
+        {
+            var par = comm.CreateParameter();
+            par.ParameterName = name;
+            par.Value = value;
+            par.DbType = GetDbType(value);
+            return par;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void FillCommand(DbCommand comm, string sql, IEnumerable<KeyValuePair<string, object>>? args = null)
         {
@@ -71,24 +87,18 @@ namespace Ao.Stock.Mirror
             {
                 foreach (var arg in args)
                 {
-                    var par = comm.CreateParameter();
-                    par.Value = arg;
-                    par.DbType = GetDbType(arg.Value);
-                    comm.Parameters.Add(par);
+                    comm.Parameters.Add(CreateParamter(comm, arg.Key, arg.Value));
                 }
             }
         }
         public static async Task<int> ExecuteNoQueryAsync(this DbConnection connection, string sql, IEnumerable<KeyValuePair<string, object>>? args = null, CancellationToken token = default)
         {
-            await EnsureConnectionOpenAsync(connection, token).ConfigureAwait(false);
-            using (var comm = connection.CreateCommand())
+            using (var command = CreateCommand(connection, sql, args))
             {
-                FillCommand(comm, sql, args);
-                comm.Prepare();
-                return await comm.ExecuteNonQueryAsync(token).ConfigureAwait(false);
+                return await command.ExecuteNonQueryAsync(token).ConfigureAwait(false);
             }
         }
-        private static DbType GetDbType(object? item)
+        public static DbType GetDbType(object? item)
         {
             var typeCode = Convert.GetTypeCode(item);
             switch (typeCode)

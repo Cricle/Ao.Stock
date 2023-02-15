@@ -20,7 +20,7 @@ namespace Ao.Stock.SQL.PostgreSql
         {
         }
 
-        public override string EngineCode => KnowsDbCode.PostgrSql;
+        public override string EngineCode => KnowsDbCode.PostgreSql;
 
         protected override void ConfigDbOptionBuilder(ConnectionStringBox box, DbContextOptionsBuilder builder, IIntangibleContext? context)
         {

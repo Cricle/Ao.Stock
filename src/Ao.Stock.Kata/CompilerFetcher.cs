@@ -34,7 +34,7 @@ namespace Ao.Stock.Kata
             {
                 return Oracle;
             }
-            if (KnowsDbCode.IsPostgrSql(dbType))
+            if (KnowsDbCode.IsPostgreSql(dbType))
             {
                 return PostgresSql;
             }

@@ -22,7 +22,7 @@ namespace Ao.Stock
         }
         public static bool CurrentIsPostgrSql(this IStockEnvironment enviromnent)
         {
-            return CheckDbCode(enviromnent, KnowsDbCode.PostgrSql);
+            return CheckDbCode(enviromnent, KnowsDbCode.PostgreSql);
         }
         public static bool CurrentIsOracle(this IStockEnvironment enviromnent)
         {

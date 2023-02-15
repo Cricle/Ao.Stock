@@ -15,11 +15,11 @@ namespace Ao.Stock.Mirror
 
         public Func<DbDataReader, TOutput> Converter { get; }
 
-        public async Task<List<TOutput>> ConvertAsync(DbDataReader input, CancellationToken token = default)
+        public Task<List<TOutput>> ConvertAsync(DbDataReader input, CancellationToken token = default)
         {
             var hasToken = token != default;
             var res = new List<TOutput>();
-            while (await input.ReadAsync())
+            while (input.Read())
             {
                 if (hasToken)
                 {
@@ -27,7 +27,7 @@ namespace Ao.Stock.Mirror
                 }
                 res.Add(Converter(input));
             }
-            return res;
+            return Task.FromResult(res);
         }
     }
 }
