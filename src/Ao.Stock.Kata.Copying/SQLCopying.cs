@@ -1,8 +1,7 @@
 ﻿using Ao.Stock.Kata.Mirror;
 using Ao.Stock.Mirror;
-using Ao.Stock.SQL;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using DatabaseSchemaReader;
+using DatabaseSchemaReader.Compare;
 using SqlKata;
 using System.Data;
 using System.Data.Common;
@@ -31,33 +30,21 @@ namespace Ao.Stock.Kata.Copying
 
         public int BatchSize { get; set; } = 100;
 
-        protected virtual void ConfigBuilder(DbContextOptionsBuilder builder)
-        {
-
-        }
-        protected virtual Task ConfigDbAsync(DbContext context, CancellationToken token = default)
-        {
-            return Task.CompletedTask;
-        }
         public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
-            using (var sourceMig = Source.StockIntangible.Get<AutoMigrationHelper>(Source.Context))
+            using (var sourceConn=Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
-                var sourceModel = sourceMig.ScaffoldHelper.Scaffold();
-                var destDbOptionsDest = new DbContextOptionsBuilder();
-                Destination.StockIntangible.Config(ref destDbOptionsDest, Destination.Context);
-                destDbOptionsDest.UseModel(sourceModel);
-                ConfigBuilder(destDbOptionsDest);
-                var options = destDbOptionsDest.Options;
-                options.GetExtension<CoreOptionsExtension>().WithServiceProviderCachingEnabled(false);
-                using (var dbDesk = new DbContext(options))
+                var allSource = new DatabaseReader(sourceConn).ReadAll();
+                using (var destConn=Destination.StockIntangible.Get<DbConnection>(Destination.Context))
                 {
-                    if (SynchronousStructureWithDelete)
+                    var destReader = new DatabaseReader(sourceConn);
+                    var destAll = destReader.ReadAll();
+                    var mig = new CompareSchemas(destAll, allSource);
+                    var script = mig.Execute();
+                    using (var comm= destConn.CreateCommand(script))
                     {
-                        await dbDesk.Database.EnsureDeletedAsync(token);
+                        await comm.ExecuteNonQueryAsync();
                     }
-                    await dbDesk.Database.EnsureCreatedAsync(token);
-                    await ConfigDbAsync(dbDesk, token);
                 }
             }
         }

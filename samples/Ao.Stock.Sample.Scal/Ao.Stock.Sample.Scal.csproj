@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ao.Stock.Kata.Copying\Ao.Stock.Kata.Copying.csproj" />
-    <ProjectReference Include="..\..\src\Ao.Stock.SQL.MySql\Ao.Stock.SQL.MySql.csproj" />
   </ItemGroup>
 
 </Project>
