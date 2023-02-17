@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Ao.Stock
@@ -31,6 +32,14 @@ namespace Ao.Stock
 
         protected IntangibleContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+        }
+        public IntangibleContext Clone()
+        {
+            return new IntangibleContext(this);
+        }
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
     }
 

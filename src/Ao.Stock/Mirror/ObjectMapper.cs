@@ -36,7 +36,7 @@ namespace Ao.Stock.Mirror
                     return browser == null || browser.Browsable;
                 })
                 .ToArray();
-            var instance = Expression.New(typeof(T));
+            var instance = Expression.New(typeof(T).GetConstructor(Type.EmptyTypes));
             var var = Expression.Variable(typeof(T));
             var entry = Expression.Assign(var, instance);
             var assigns = new List<Expression>(mappers.Length + 2) { entry };
