@@ -32,16 +32,16 @@ namespace Ao.Stock.Kata.Copying
 
         public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
-            using (var sourceConn=Source.StockIntangible.Get<DbConnection>(Source.Context))
+            using (var sourceConn = Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
                 var allSource = new DatabaseReader(sourceConn).ReadAll();
-                using (var destConn=Destination.StockIntangible.Get<DbConnection>(Destination.Context))
+                using (var destConn = Destination.StockIntangible.Get<DbConnection>(Destination.Context))
                 {
                     var destReader = new DatabaseReader(sourceConn);
                     var destAll = destReader.ReadAll();
                     var mig = new CompareSchemas(destAll, allSource);
                     var script = mig.Execute();
-                    using (var comm= destConn.CreateCommand(script))
+                    using (var comm = destConn.CreateCommand(script))
                     {
                         await comm.ExecuteNonQueryAsync();
                     }
@@ -76,22 +76,13 @@ namespace Ao.Stock.Kata.Copying
                 await CopyAsync(connSource, connDest, tables, token);
             }
         }
-        protected virtual async Task<IEnumerable<string>> GetTablesAsync()
+        protected virtual Task<IEnumerable<string>> GetTablesAsync()
         {
-            using (var queryingSource = Source.StockIntangible.Get<IArchitectureQuerying>(Source.Context))
+            using (var sourceConn = Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
-                var sourcesTables = await queryingSource.GetTablesAsync(Source.Database, Source.Context);
-                if (sourcesTables != null)
-                {
-                    var sourceTableQuerying = sourcesTables.AsQueryable();
-                    if (TableSelector != null)
-                    {
-                        sourceTableQuerying = sourceTableQuerying.Where(x => TableSelector.IsAccept(Source, x));
-                    }
-                    return sourceTableQuerying;
-                }
+                var allSource = new DatabaseReader(sourceConn).TableList();
+                return Task.FromResult<IEnumerable<string>>(allSource.Select(x => x.Name).ToList());
             }
-            return Enumerable.Empty<string>();
         }
 
         protected virtual async Task ClearTablesAsync(DbConnection connection, ISQLDatabaseInfo info, IEnumerable<string> tables)

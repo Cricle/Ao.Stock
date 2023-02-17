@@ -1,11 +1,11 @@
 ﻿using Ao.Stock.Kata;
+using Ao.Stock.Mirror;
+using SqlKata;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using SqlKata;
-using Ao.Stock.Mirror;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ao.Stock.SQLKata
 {
@@ -30,7 +30,7 @@ namespace Ao.Stock.SQLKata
             query = func?.Invoke(query) ?? query;
             return Scope.ExecuteReaderAsync(query, token);
         }
-        public Task<T> GetAsync<T>(IAsyncConverter<IDataReader,T> converter,Func<Query, Query> func = null, CancellationToken token = default)
+        public Task<T> GetAsync<T>(IAsyncConverter<IDataReader, T> converter, Func<Query, Query> func = null, CancellationToken token = default)
         {
             var query = new Query(TableName);
             query = func?.Invoke(query) ?? query;
@@ -42,11 +42,11 @@ namespace Ao.Stock.SQLKata
             query = func?.Invoke(query) ?? query;
             return Scope.ExecuteNoQueryAsync(query, token);
         }
-        public Task<int> ExecuteAsync(string sql,IEnumerable<KeyValuePair<string,object>> args=null, CancellationToken token = default)
+        public Task<int> ExecuteAsync(string sql, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
         {
             return Scope.Connection.ExecuteNoQueryAsync(sql, args, token);
         }
-        public Task<List<IDictionary<string,object>>> QueryAsync(string sql, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
+        public Task<List<IDictionary<string, object>>> QueryAsync(string sql, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
         {
             return QueryAsync(sql, DictionaryReaderAsyncConverter.Instance, args, token);
         }
@@ -54,7 +54,7 @@ namespace Ao.Stock.SQLKata
         {
             return QueryAsync(sql, ORMAsyncConverter<T>.Default, args, token);
         }
-        public Task<T> QueryAsync<T>(string sql,IAsyncConverter<IDataReader, T> converter, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
+        public Task<T> QueryAsync<T>(string sql, IAsyncConverter<IDataReader, T> converter, IEnumerable<KeyValuePair<string, object>> args = null, CancellationToken token = default)
         {
             return Scope.Connection.ExecuteReaderAsync(sql, converter, args, token);
         }

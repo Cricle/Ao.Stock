@@ -1,5 +1,4 @@
-﻿using Ao.Stock.Benchmarks.Runners;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
 
 namespace Ao.Stock.Benchmarks
 {

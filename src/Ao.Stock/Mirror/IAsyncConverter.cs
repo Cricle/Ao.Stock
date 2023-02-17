@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
 {
-    public interface IAsyncConverter<TInput,TOutput>
+    public interface IAsyncConverter<TInput, TOutput>
     {
-        Task<TOutput> ConvertAsync(TInput input,CancellationToken token=default);
+        Task<TOutput> ConvertAsync(TInput input, CancellationToken token = default);
     }
 }

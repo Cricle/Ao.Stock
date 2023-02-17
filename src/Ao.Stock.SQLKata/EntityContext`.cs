@@ -1,15 +1,15 @@
 ﻿using Ao.Stock.Kata;
+using Ao.Stock.Mirror;
+using SqlKata;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using SqlKata;
-using System.Linq.Expressions;
-using System.Linq;
-using System.Reflection;
-using Ao.Stock.Mirror;
-using System.Data;
 using System.ComponentModel;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ao.Stock.SQLKata
 {

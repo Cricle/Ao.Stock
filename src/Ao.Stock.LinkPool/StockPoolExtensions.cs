@@ -10,21 +10,21 @@ namespace Ao.Stock
         {
             return new DbConnectionPool(stock, context);
         }
-        public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock,IIntangibleContext context,IPooledObjectPolicy<DbConnection> policy)
+        public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock, IIntangibleContext context, IPooledObjectPolicy<DbConnection> policy)
         {
-            return new DbConnectionPool(policy,stock, context);
+            return new DbConnectionPool(policy, stock, context);
         }
-        public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock, IIntangibleContext context,ObjectPoolProvider provider)
+        public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock, IIntangibleContext context, ObjectPoolProvider provider)
         {
             return new DbConnectionPool(provider, stock, context);
         }
         public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock, IIntangibleContext context, int maximumRetained)
         {
-            return new DbConnectionPool(new DefaultObjectPoolProvider { MaximumRetained= maximumRetained }, stock, context);
+            return new DbConnectionPool(new DefaultObjectPoolProvider { MaximumRetained = maximumRetained }, stock, context);
         }
         public static DbConnectionPool CreateDbConnectionPool(this IStockIntangible stock, IIntangibleContext context, IPooledObjectPolicy<DbConnection> policy, ObjectPoolProvider provider)
         {
-            return new DbConnectionPool(provider,policy, stock, context);
+            return new DbConnectionPool(provider, policy, stock, context);
         }
     }
 }

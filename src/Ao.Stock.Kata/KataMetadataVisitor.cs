@@ -4,7 +4,6 @@ using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Dynamic;
 
 namespace Ao.Stock.Kata
 {

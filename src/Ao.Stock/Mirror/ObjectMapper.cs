@@ -21,7 +21,7 @@ namespace Ao.Stock.Mirror
                 BindingFlags.Public | BindingFlags.Static,
                 null,
                 new Type[] { typeof(object), typeof(TypeCode) },
-                null)??
+                null) ??
                 throw new NotSupportedException("Convert.ChangeType not found");
             dataReadMethod = typeof(IDataRecord).GetProperties().First(x => x.GetIndexParameters().Length != 0 && x.GetIndexParameters()[0].ParameterType == typeof(string));
             creator = BuildCreator();
@@ -59,7 +59,7 @@ namespace Ao.Stock.Mirror
         {
             return creator(reader);
         }
-        private static readonly MethodInfo OrMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.GetOrdinal), new Type[] { typeof(string) })??
+        private static readonly MethodInfo OrMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.GetOrdinal), new Type[] { typeof(string) }) ??
             throw new NotSupportedException("IDataRecord.GetOrdinal not found");
         private static readonly MethodInfo isDbNullMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.IsDBNull), new Type[] { typeof(int) }) ??
             throw new NotSupportedException("IDataRecord.IsDBNull not found");

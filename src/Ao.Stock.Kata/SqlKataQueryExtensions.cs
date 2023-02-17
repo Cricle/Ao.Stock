@@ -2,16 +2,16 @@
 using SqlKata;
 using SqlKata.Compilers;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Data;
+using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ao.Stock.Kata
 {
     public static class SqlKataQueryExtensions
     {
-        public static SqlKataScope CreateScope(this Compiler compiler,DbConnection connection,bool toRawSql=true)
+        public static SqlKataScope CreateScope(this Compiler compiler, DbConnection connection, bool toRawSql = true)
         {
             return new SqlKataScope(compiler, connection, toRawSql);
         }

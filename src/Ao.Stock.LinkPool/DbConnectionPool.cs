@@ -11,17 +11,17 @@ namespace Ao.Stock.LinkPool
         {
         }
 
-        public DbConnectionPool(IPooledObjectPolicy<DbConnection> policy, IStockIntangible stockIntangible, IIntangibleContext context) 
+        public DbConnectionPool(IPooledObjectPolicy<DbConnection> policy, IStockIntangible stockIntangible, IIntangibleContext context)
             : base(policy, stockIntangible, context)
         {
         }
 
-        public DbConnectionPool(ObjectPoolProvider provider, IStockIntangible stockIntangible, IIntangibleContext context) 
+        public DbConnectionPool(ObjectPoolProvider provider, IStockIntangible stockIntangible, IIntangibleContext context)
             : base(provider, stockIntangible, context)
         {
         }
 
-        public DbConnectionPool(ObjectPoolProvider provider, IPooledObjectPolicy<DbConnection> policy, IStockIntangible stockIntangible, IIntangibleContext context) 
+        public DbConnectionPool(ObjectPoolProvider provider, IPooledObjectPolicy<DbConnection> policy, IStockIntangible stockIntangible, IIntangibleContext context)
             : base(provider, policy, stockIntangible, context)
         {
         }
@@ -44,7 +44,7 @@ namespace Ao.Stock.LinkPool
 
             public bool Return(DbConnection obj)
             {
-                if (obj.State!= ConnectionState.Open)
+                if (obj.State != ConnectionState.Open)
                 {
                     obj.Dispose();
                     return false;

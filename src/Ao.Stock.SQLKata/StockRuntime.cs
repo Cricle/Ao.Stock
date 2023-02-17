@@ -24,7 +24,7 @@ namespace Ao.Stock.SQLKata
             DbConnectionPool = stock.CreateDbConnectionPool(intangibleContextFactory.Create());
         }
         public StockRuntime(Compiler compiler,
-            IIntangibleContextFactory intangibleContextFactory, 
+            IIntangibleContextFactory intangibleContextFactory,
             ObjectPool<DbConnection> dbConnectionPool)
         {
             Compiler = compiler;
@@ -38,7 +38,7 @@ namespace Ao.Stock.SQLKata
 
         public ObjectPool<DbConnection> DbConnectionPool { get; }
 
-        public EntityContext CreateContext(string tableName,bool toRowSql = true)
+        public EntityContext CreateContext(string tableName, bool toRowSql = true)
         {
             var dbc = DbConnectionPool.Get();
             return new EntityContext(this, Compiler.CreateScope(dbc, toRowSql), tableName);
