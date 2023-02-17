@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.31" />
     <PackageReference Include="MySqlConnector" Version="2.2.5" />
+	  <PackageReference Include="DatabaseSchemaReader" Version="2.7.17" />
   </ItemGroup>
 
 

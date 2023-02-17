@@ -34,16 +34,16 @@ namespace Ao.Stock.Kata.Copying
         {
             using (var sourceConn = Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
-                var allSource = new DatabaseReader(sourceConn).ReadAll();
+                var allSource = new DatabaseReader(sourceConn).ReadAll(token);
                 using (var destConn = Destination.StockIntangible.Get<DbConnection>(Destination.Context))
                 {
                     var destReader = new DatabaseReader(sourceConn);
-                    var destAll = destReader.ReadAll();
+                    var destAll = destReader.ReadAll(token);
                     var mig = new CompareSchemas(destAll, allSource);
                     var script = mig.Execute();
                     using (var comm = destConn.CreateCommand(script))
                     {
-                        await comm.ExecuteNonQueryAsync();
+                        await comm.ExecuteNonQueryAsync(token);
                     }
                 }
             }
@@ -56,19 +56,19 @@ namespace Ao.Stock.Kata.Copying
             {
                 if (SynchronousStructure)
                 {
-                    await SynchronousStructureAsync();
+                    await SynchronousStructureAsync(token);
                 }
                 token.ThrowIfCancellationRequested();
                 if (connSource.State != ConnectionState.Open)
                 {
-                    await connSource.OpenAsync().ConfigureAwait(false);
+                    await connSource.OpenAsync(token).ConfigureAwait(false);
                 }
                 if (connDest.State != ConnectionState.Open)
                 {
-                    await connDest.OpenAsync().ConfigureAwait(false);
+                    await connDest.OpenAsync(token).ConfigureAwait(false);
                 }
                 token.ThrowIfCancellationRequested();
-                var tables = await GetTablesAsync();
+                var tables = await GetTablesAsync(token);
                 if (CleanTable && !SynchronousStructure)
                 {
                     await ClearTablesAsync(connDest, Destination, tables);
@@ -76,7 +76,7 @@ namespace Ao.Stock.Kata.Copying
                 await CopyAsync(connSource, connDest, tables, token);
             }
         }
-        protected virtual Task<IEnumerable<string>> GetTablesAsync()
+        protected virtual Task<IEnumerable<string>> GetTablesAsync(CancellationToken token=default)
         {
             using (var sourceConn = Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
