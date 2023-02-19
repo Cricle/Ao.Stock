@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.31" />
-    <PackageReference Include="MySqlConnector" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.3" />
 	  <PackageReference Include="DatabaseSchemaReader" Version="2.7.17" />
+	  <PackageReference Include="MySqlConnector" Version="2.2.5" />
   </ItemGroup>
 
 

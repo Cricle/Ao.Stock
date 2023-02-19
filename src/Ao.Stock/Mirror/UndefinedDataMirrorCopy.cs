@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
@@ -9,23 +10,27 @@ namespace Ao.Stock.Mirror
         public const int DefaultSize = 400;
 
         private int batchIndex;
-        protected UndefinedDataMirrorCopy(IRowDataReader dataReader)
-            : this(dataReader, DefaultSize)
-        {
 
+        protected UndefinedDataMirrorCopy(IDataReader dataReader, IQueryTranslateResult? queryTranslateResult)
+            : this(dataReader, queryTranslateResult,DefaultSize)
+        {
         }
-        protected UndefinedDataMirrorCopy(IRowDataReader dataReader, int batchSize)
+        protected UndefinedDataMirrorCopy(IDataReader dataReader, IQueryTranslateResult? queryTranslateResult, int batchSize)
         {
             if (batchSize <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(batchSize), "batchSize must > 0");
             }
+            QueryTranslateResult = queryTranslateResult;
             DataReader = dataReader;
             BatchSize = batchSize;
         }
+
+        public IQueryTranslateResult? QueryTranslateResult { get; }
+
         public int BatchSize { get; }
 
-        public IRowDataReader DataReader { get; }
+        public IDataReader DataReader { get; }
 
         public bool StoreWriteResult { get; set; }
 
@@ -41,7 +46,7 @@ namespace Ao.Stock.Mirror
             FlatArray<object?>? flatArray = null;
             try
             {
-                while (DataReader.MoveNext())
+                while (DataReader.Read())
                 {
                     if (flatArray == null)
                     {

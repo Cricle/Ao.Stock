@@ -1,9 +1,12 @@
-﻿using Ao.Stock.Mirror;
+﻿using Ao.Stock.Kata;
+using Ao.Stock.Mirror;
+using Ao.Stock.Querying;
 using DatabaseSchemaReader;
-using DatabaseSchemaReader.Compare;
 using DatabaseSchemaReader.DataSchema;
 using DatabaseSchemaReader.SqlGen;
 using MySqlConnector;
+using SqlKata;
+using SqlKata.Compilers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Ao.Stock.Sample.Kata
@@ -12,24 +15,25 @@ namespace Ao.Stock.Sample.Kata
     {
         static async Task Main(string[] args)
         {
-            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
-            using (var conn=new MySqlConnection(mysql))
+            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=355343;database=sakila;characterset=utf8mb4;";
+            using (var conn = new MySqlConnection(mysql))
             {
-                var reader=new DatabaseReader(conn);
-                reader.Owner = "xassa";
-                var sch=reader.ReadAll();
-                reader.Owner = "sakila";
-                var sh2 = reader.ReadAll();
-                var fc = new DdlGeneratorFactory(SqlType.MySql);
-                var stus = await conn.ExecuteReaderAsync<Student>("SELECT * FROM `student`");
-                foreach (var item in stus)
+                var q = new Query("student");
+                var query = new KataMetadataVisitor(new MySqlCompiler(),q , SqlMethodTranslatorHelpers<Compiler>.Mysql());
+                var sql = query.VisitAndCompile(new MultipleQueryMetadata
                 {
-                    Console.WriteLine(item);
-                }
+                    new SelectMetadata(new IQueryMetadata[]
+                    {
+                        new AliasMetadata(new MethodMetadata(KnowsMethods.StrLen,new ValueMetadata("Name",true)),"namelen"),
+                        new ValueMetadata("Id",true),
+                    })
+                }, q);
+                Console.WriteLine(sql.ToString());
+                var res =await conn.ExecuteReaderAsync(sql.ToString());
             }
         }
     }
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public class Student
     {
         public string Name { get; set; }

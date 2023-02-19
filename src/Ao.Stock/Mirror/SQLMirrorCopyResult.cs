@@ -1,9 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace Ao.Stock.Kata.Mirror
+namespace Ao.Stock.Mirror
 {
-    public class SQLMirrorCopyResult
+    public readonly struct SQLMirrorCopyResult
     {
+        private static readonly IReadOnlyDictionary<string, object> Empty = new Dictionary<string, object>(0);
+        public SQLMirrorCopyResult(int affectRows, string sql)
+        {
+            AffectRows = affectRows;
+            Sql = sql;
+            Bindings = Empty;
+        }
         public SQLMirrorCopyResult(int affectRows, string sql, IReadOnlyDictionary<string, object> bindings)
         {
             AffectRows = affectRows;

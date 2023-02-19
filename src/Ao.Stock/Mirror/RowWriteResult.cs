@@ -6,16 +6,16 @@ namespace Ao.Stock.Mirror
     {
         public static readonly RowWriteResult<TKey> Empty = new RowWriteResult<TKey>();
 
-        public RowWriteResult(IEnumerable<TKey> keys, IEnumerable<IQueryTranslateResult> translateResults, int affectRows)
+        public RowWriteResult(IEnumerable<TKey>? keys, IEnumerable<IQueryTranslateResult>? translateResults, int affectRows)
         {
             Keys = keys;
             TranslateResults = translateResults;
             AffectRows = affectRows;
         }
 
-        public IEnumerable<TKey> Keys { get; }
+        public IEnumerable<TKey>? Keys { get; }
 
-        public IEnumerable<IQueryTranslateResult> TranslateResults { get; }
+        public IEnumerable<IQueryTranslateResult>? TranslateResults { get; }
 
         public int AffectRows { get; }
     }

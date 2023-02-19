@@ -1,5 +1,4 @@
-﻿using Ao.Stock.Kata.Mirror;
-using Ao.Stock.Mirror;
+﻿using Ao.Stock.Mirror;
 using DatabaseSchemaReader;
 using DatabaseSchemaReader.Compare;
 using SqlKata;
@@ -76,7 +75,7 @@ namespace Ao.Stock.Kata.Copying
                 await CopyAsync(connSource, connDest, tables, token);
             }
         }
-        protected virtual Task<IEnumerable<string>> GetTablesAsync(CancellationToken token=default)
+        protected virtual Task<IEnumerable<string>> GetTablesAsync(CancellationToken token = default)
         {
             using (var sourceConn = Source.StockIntangible.Get<DbConnection>(Source.Context))
             {
@@ -106,8 +105,12 @@ namespace Ao.Stock.Kata.Copying
                     sourceCommand.CommandText = Source.CreateQuerySql(item);
                     using (var reader = sourceCommand.ExecuteReader())
                     {
-                        var cp = new SQLMirrorCopy(new DefaultRowDataReader(reader, new QueryTranslateResult(sourceCommand.CommandText)),
-                            new SQLMirrorTarget(destConn, new SQLTableInfo(Destination.Database, item)),
+                        var named = Destination.Database == null ? 
+                            Destination.Compiler.Wrap(Destination.Database) + "." + Destination.Compiler.Wrap(item) :
+                            Destination.Compiler.Wrap(item);
+                        var cp = new SQLMirrorCopy(reader,
+                            new QueryTranslateResult(sourceCommand.CommandText),
+                            new SQLMirrorTarget(destConn, named),
                             Destination.Compiler,
                             BatchSize);
                         await cp.CopyAsync(Source.Context);
