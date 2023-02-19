@@ -33,14 +33,14 @@ namespace Ao.Stock.Mirror
 
         public IReadOnlyList<string>? Names => names;
 
-        protected override Task OnFirstReadAsync(IIntangibleContext? context)
+        protected override Task OnFirstReadAsync()
         {
             names = new string[DataReader.FieldCount];
             for (int i = 0; i < names.Length; i++)
             {
                 names[i] = DataReader.GetName(i);
             }
-            return base.OnFirstReadAsync(context);
+            return base.OnFirstReadAsync();
         }
 
         protected virtual string GetInsertHeader()
@@ -55,13 +55,14 @@ namespace Ao.Stock.Mirror
                 return null;
             }
             var scriptBuilder = new StringBuilder(GetInsertHeader());
-            var latest = datas.Last();
+            var count = datas.Count();
             foreach (var item in datas)
             {
                 scriptBuilder.Append('(');
                 scriptBuilder.Append(string.Join(",", item.Select(x => MethodWrapper.WrapValue(x))));
                 scriptBuilder.Append(')');
-                if (item!=latest)
+                count--;
+                if (count>0)
                 {
                     scriptBuilder.Append(',');
                 }
@@ -94,7 +95,7 @@ namespace Ao.Stock.Mirror
         {
         }
 
-        protected override IEnumerable<IEnumerable<object?>> ConvertToInput(FlatArray<object?> arr, int? size, IIntangibleContext? context)
+        protected override IEnumerable<IEnumerable<object?>> ConvertToInput(FlatArray<object?> arr, int? size)
         {
             if (size == null)
             {

@@ -25,7 +25,7 @@ namespace Ao.Stock.Mirror
             return $"INSERT INTO {TargetNamed} {SourceSql}";
         }
 
-        public async Task<IList<SQLMirrorCopyResult>> CopyAsync(IIntangibleContext context)
+        public async Task<IList<SQLMirrorCopyResult>> CopyAsync()
         {
             var query = GetInsertQuery();
             var result = await Connection.ExecuteNoQueryAsync(query);

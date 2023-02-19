@@ -34,15 +34,15 @@ namespace Ao.Stock.Mirror
 
         public bool StoreWriteResult { get; set; }
 
-        protected virtual IList<TResult> CreateResultStore(IIntangibleContext? context)
+        protected virtual IList<TResult> CreateResultStore()
         {
             return Array.Empty<TResult>();
         }
-        public async Task<IList<TResult>> CopyAsync(IIntangibleContext? context)
+        public async Task<IList<TResult>> CopyAsync()
         {
             var storeWriteResult = StoreWriteResult;
-            var result = CreateResultStore(context);
-            await OnCopyingAsync(context);
+            var result = CreateResultStore();
+            await OnCopyingAsync();
             FlatArray<object?>? flatArray = null;
             try
             {
@@ -51,7 +51,7 @@ namespace Ao.Stock.Mirror
                     if (flatArray == null)
                     {
                         flatArray = new FlatArray<object?>(DataReader.FieldCount, BatchSize);
-                        await OnFirstReadAsync(context);
+                        await OnFirstReadAsync();
                     }
                     for (int i = 0; i < DataReader.FieldCount; i++)
                     {
@@ -61,7 +61,7 @@ namespace Ao.Stock.Mirror
                     batchIndex++;
                     if (flatArray.IsFull)
                     {
-                        var res = await WriteAsync(ConvertToInput(flatArray!, null, context), storeWriteResult);
+                        var res = await WriteAsync(ConvertToInput(flatArray!, null), storeWriteResult);
                         if (storeWriteResult)
                         {
                             result.Add(res);
@@ -72,13 +72,13 @@ namespace Ao.Stock.Mirror
                 }
                 if (batchIndex != 0 && flatArray != null)
                 {
-                    var res = await WriteAsync(ConvertToInput(flatArray, batchIndex, context), storeWriteResult);
+                    var res = await WriteAsync(ConvertToInput(flatArray, batchIndex), storeWriteResult);
                     if (storeWriteResult)
                     {
                         result.Add(res);
                     }
                 }
-                await OnCopyedAsync(context, result);
+                await OnCopyedAsync( result);
                 return result;
             }
             finally
@@ -94,20 +94,20 @@ namespace Ao.Stock.Mirror
             }
             return input;
         }
-        protected virtual Task OnFirstReadAsync(IIntangibleContext? context)
+        protected virtual Task OnFirstReadAsync()
         {
             return Task.CompletedTask;
         }
-        protected virtual Task OnCopyingAsync(IIntangibleContext? context)
+        protected virtual Task OnCopyingAsync()
         {
             return Task.CompletedTask;
         }
-        protected virtual Task OnCopyedAsync(IIntangibleContext? context, IList<TResult> results)
+        protected virtual Task OnCopyedAsync(IList<TResult> results)
         {
             return Task.CompletedTask;
         }
 
-        protected abstract TInput ConvertToInput(FlatArray<object?> arr, int? size, IIntangibleContext? context);
+        protected abstract TInput ConvertToInput(FlatArray<object?> arr, int? size);
 
         protected abstract Task<TResult> WriteAsync(TInput datas, bool storeWriteResult);
     }

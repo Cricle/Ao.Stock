@@ -1,4 +1,5 @@
 ﻿using Ao.Stock.Kata;
+using Ao.Stock.Kata.Copying;
 using Ao.Stock.Mirror;
 using Ao.Stock.Querying;
 using DatabaseSchemaReader;
@@ -16,20 +17,16 @@ namespace Ao.Stock.Sample.Kata
         static async Task Main(string[] args)
         {
             var mysql = $"server=127.0.0.1;port=3306;userid=root;password=355343;database=sakila;characterset=utf8mb4;";
+            var mysql1 = $"server=127.0.0.1;port=3306;userid=root;password=355343;database=sakila1;characterset=utf8mb4;";
             using (var conn = new MySqlConnection(mysql))
+            using (var conn1 = new MySqlConnection(mysql1))
             {
-                var q = new Query("student");
-                var query = new KataMetadataVisitor(new MySqlCompiler(),q , SqlMethodTranslatorHelpers<Compiler>.Mysql());
-                var sql = query.VisitAndCompile(new MultipleQueryMetadata
-                {
-                    new SelectMetadata(new IQueryMetadata[]
-                    {
-                        new AliasMetadata(new MethodMetadata(KnowsMethods.StrLen,new ValueMetadata("Name",true)),"namelen"),
-                        new ValueMetadata("Id",true),
-                    })
-                }, q);
-                Console.WriteLine(sql.ToString());
-                var res =await conn.ExecuteReaderAsync(sql.ToString());
+                var source = new DelegateSQLDatabaseInfo("sakila", conn, DefaultMethodWrapper.MySql);
+                var dest = new DelegateSQLDatabaseInfo("sakila1", conn1, DefaultMethodWrapper.MySql);
+                var copy = new SQLCognateCopying(source,dest);
+                copy.SynchronousStructure = true;
+                copy.WithDelete= true;
+                await copy.RunAsync();
             }
         }
     }

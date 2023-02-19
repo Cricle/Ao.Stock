@@ -1,14 +1,13 @@
 ﻿using Ao.Stock.Mirror;
 using System.Data.Common;
-using Ao.Stock.Querying;
 
 namespace Ao.Stock.Kata.Copying
 {
 
     public class SQLCognateCopying : SQLCopying
     {
-        public SQLCognateCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination, IMethodWrapper methodWrapper) 
-            : base(source, destination, methodWrapper)
+        public SQLCognateCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination) 
+            : base(source, destination)
         {
         }
 
@@ -26,7 +25,7 @@ namespace Ao.Stock.Kata.Copying
                 var cp = new SQLCognateMirrorCopy(destConn,
                     sql,
                     Destination.CreateFullName(item));
-                await cp.CopyAsync(Source.Context);
+                await cp.CopyAsync();
             }
         }
     }
