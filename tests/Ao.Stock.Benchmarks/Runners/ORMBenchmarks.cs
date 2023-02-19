@@ -16,7 +16,7 @@ namespace Ao.Stock.Benchmarks.Runners
         public void Init()
         {
             sql = "SELECT * FROM [Posts]";
-            connection = new SqlConnection("Data Source=.;Initial Catalog=test;Integrated Security=True");
+            connection = new SqlConnection("Data Source=.;Initial Catalog=sakila;Integrated Security=True");
             connection.Open();
 
             HandCode().GetAwaiter().GetResult();
