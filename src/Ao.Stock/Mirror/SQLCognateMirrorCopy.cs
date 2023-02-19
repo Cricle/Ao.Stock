@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ao.Stock.Mirror
 {
-    public class SQLCognateMirrorCopy<TContext> : IMirrorCopy<SQLMirrorCopyResult>
+    public class SQLCognateMirrorCopy : IMirrorCopy<SQLMirrorCopyResult>
     {
         public SQLCognateMirrorCopy(DbConnection connection, string sourceSql, string targetNamed)
         {

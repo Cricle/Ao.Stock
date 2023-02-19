@@ -1,6 +1,6 @@
-﻿using SqlKata.Compilers;
+﻿using Ao.Stock.Querying;
 
-namespace Ao.Stock.Kata.Copying
+namespace Ao.Stock.Mirror
 {
     public interface ISQLDatabaseInfo
     {
@@ -10,7 +10,9 @@ namespace Ao.Stock.Kata.Copying
 
         IStockIntangible StockIntangible { get; }
 
-        Compiler Compiler { get; }
+        IMethodWrapper MethodWrapper { get; }
+
+        string CreateFullName(string tableName);
 
         string CreateQuerySql(string tableName);
     }

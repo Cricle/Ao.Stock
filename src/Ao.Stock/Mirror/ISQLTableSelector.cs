@@ -1,4 +1,4 @@
-﻿namespace Ao.Stock.Kata.Copying
+﻿namespace Ao.Stock.Mirror
 {
     public interface ISQLTableSelector
     {

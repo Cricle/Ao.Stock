@@ -1,25 +1,34 @@
-﻿using Ao.Stock.Kata.Mirror;
-using Ao.Stock.Mirror;
+﻿using Ao.Stock.Mirror;
 using System.Data.Common;
+using Ao.Stock.Querying;
 
 namespace Ao.Stock.Kata.Copying
 {
+
     public class SQLCognateCopying : SQLCopying
     {
-        public SQLCognateCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination) : base(source, destination)
+        public SQLCognateCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination, IMethodWrapper methodWrapper) 
+            : base(source, destination, methodWrapper)
         {
         }
+
+        protected virtual string GenerateQuerySql(ISQLDatabaseInfo info,string tableName)
+        {
+            return $"SELECT * FROM {info.CreateFullName(tableName)}";
+        }
+
         protected override async Task CopyAsync(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> tables, CancellationToken token)
         {
             foreach (var item in tables)
             {
                 token.ThrowIfCancellationRequested();
-                var cp = new SQLCognateMirrorCopy(sourceConn,
-                    new SQLTableInfo(Source.Database, item),
-                    new SQLTableInfo(Destination.Database, item),
-                    Source.Compiler);
+                var sql= GenerateQuerySql(Source,item);
+                var cp = new SQLCognateMirrorCopy(destConn,
+                    sql,
+                    Destination.CreateFullName(item));
                 await cp.CopyAsync(Source.Context);
             }
         }
     }
+
 }

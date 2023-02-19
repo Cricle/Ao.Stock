@@ -1,18 +1,19 @@
 ﻿using Ao.Stock.Mirror;
-using DatabaseSchemaReader;
 using DatabaseSchemaReader.Compare;
-using SqlKata;
+using DatabaseSchemaReader;
 using System.Data;
 using System.Data.Common;
+using Ao.Stock.Querying;
 
 namespace Ao.Stock.Kata.Copying
 {
     public class SQLCopying
     {
-        public SQLCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination)
+        public SQLCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination, IMethodWrapper methodWrapper)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
             Destination = destination ?? throw new ArgumentNullException(nameof(destination));
+            MethodWrapper = methodWrapper ?? throw new ArgumentNullException(nameof(methodWrapper));
         }
 
         public ISQLDatabaseInfo Source { get; }
@@ -20,6 +21,8 @@ namespace Ao.Stock.Kata.Copying
         public ISQLDatabaseInfo Destination { get; }
 
         public ISQLTableSelector? TableSelector { get; set; }
+
+        public IMethodWrapper MethodWrapper { get; }
 
         public bool SynchronousStructure { get; set; } = true;
 
@@ -83,14 +86,15 @@ namespace Ao.Stock.Kata.Copying
                 return Task.FromResult<IEnumerable<string>>(allSource.Select(x => x.Name).ToList());
             }
         }
-
+        protected virtual string GenerateDeleteSql(ISQLDatabaseInfo info,string tableName)
+        {
+            return $"DELETE FROM {info.CreateFullName(tableName)}";
+        }
         protected virtual async Task ClearTablesAsync(DbConnection connection, ISQLDatabaseInfo info, IEnumerable<string> tables)
         {
             foreach (var item in tables)
             {
-                var query = new Query().FromRaw(SQLCognateMirrorCopy.GetFullName(new SQLTableInfo(info.Database, item), info.Compiler))
-                    .AsDelete();
-                var sql = info.Compiler.Compile(query).ToString();
+                var sql = GenerateDeleteSql(info, item);
                 await connection.ExecuteNoQueryAsync(sql);
             }
         }
@@ -105,13 +109,11 @@ namespace Ao.Stock.Kata.Copying
                     sourceCommand.CommandText = Source.CreateQuerySql(item);
                     using (var reader = sourceCommand.ExecuteReader())
                     {
-                        var named = Destination.Database == null ? 
-                            Destination.Compiler.Wrap(Destination.Database) + "." + Destination.Compiler.Wrap(item) :
-                            Destination.Compiler.Wrap(item);
+                        var named = Destination.CreateFullName(item);
                         var cp = new SQLMirrorCopy(reader,
                             new QueryTranslateResult(sourceCommand.CommandText),
                             new SQLMirrorTarget(destConn, named),
-                            Destination.Compiler,
+                            MethodWrapper,
                             BatchSize);
                         await cp.CopyAsync(Source.Context);
                     }
@@ -120,4 +122,5 @@ namespace Ao.Stock.Kata.Copying
 
         }
     }
+
 }
