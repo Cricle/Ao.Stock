@@ -21,8 +21,8 @@ namespace Ao.Stock.Sample.Kata
         }
         private static async Task GenericBackupScriptAsync()
         {
-            const string tb = "6ea51568666e4f138e52d020190e1239_runtime";
-            var mysql = $"server=192.168.1.100;port=3306;userid=root;password=syc123;database={tb};characterset=utf8mb4;";
+            const string tb = "sakila";
+            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database={tb};characterset=utf8mb4;";
             using (var conn = new MySqlConnection(mysql))
             {
                 using (var fi = File.Create("a.sql"))
