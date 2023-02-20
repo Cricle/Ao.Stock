@@ -8,7 +8,6 @@ using DatabaseSchemaReader.SqlGen;
 using MySqlConnector;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO.Compression;
 using System.Text;
 
 namespace Ao.Stock.Sample.Kata
@@ -17,7 +16,19 @@ namespace Ao.Stock.Sample.Kata
     {
         static Task Main(string[] args)
         {
-            return GenericBackupScriptAsync();
+            return ReadDataAsync();
+        }
+        private static async Task ReadDataAsync()
+        {
+            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
+            using (var conn = new MySqlConnection(mysql))
+            {
+                var res=await conn.ExecuteReaderAsync<Student>("SELECT * FROM `student` LIMIT 10");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(item);
+                }
+            }
         }
         private static async Task GenericBackupScriptAsync()
         {
@@ -29,10 +40,10 @@ namespace Ao.Stock.Sample.Kata
                 using (var sw = new StreamWriter(fi))
                 {
                     var swx = Stopwatch.GetTimestamp();
-                    var dbReader = new DatabaseReader(conn) { Owner = tb  };
+                    var dbReader = new DatabaseReader(conn) { Owner = tb };
                     dbReader.AllTables();
                     var ddlFactory = new DdlGeneratorFactory(SqlType.MySql);
-                    sw.WriteLine(SQLDatabaseCreateAdapter.MySql.GenericCreateIfNotExistsSql(tb));
+                    sw.WriteLine(SQLDatabaseCreateAdapter.MySql.GenericCreateDatabaseIfNotExistsSql(tb));
                     sw.WriteLine(ddlFactory.AllTablesGenerator(dbReader.DatabaseSchema).Write());
                     foreach (var item in dbReader.DatabaseSchema.Tables)
                     {
@@ -84,16 +95,15 @@ namespace Ao.Stock.Sample.Kata
         }
 
     }
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    public class Student
+    public record class Student
     {
-        public string Name { get; set; }
+        public string Name1 { get; set; }
 
         public long Id { get; set; }
 
         public override string ToString()
         {
-            return $"{Name}, {Id}";
+            return $"{Name1}, {Id}";
         }
     }
 }

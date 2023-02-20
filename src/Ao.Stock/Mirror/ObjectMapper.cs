@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+#if !NETSTANDARD2_0
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,7 +12,11 @@ using System.Runtime.CompilerServices;
 
 namespace Ao.Stock.Mirror
 {
+#if NETSTANDARD2_0
     public static class ObjectMapper<T>
+#else
+    public static class ObjectMapper<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors| DynamicallyAccessedMemberTypes.PublicProperties)] T>
+#endif
     {
         private static readonly Func<IDataReader, T> creator;
         private static readonly MethodInfo convertMethod;
@@ -36,7 +43,7 @@ namespace Ao.Stock.Mirror
                     return browser == null || browser.Browsable;
                 })
                 .ToArray();
-            var instance = Expression.New(typeof(T).GetConstructor(Type.EmptyTypes));
+            var instance = Expression.New(typeof(T));
             var var = Expression.Variable(typeof(T));
             var entry = Expression.Assign(var, instance);
             var assigns = new List<Expression>(mappers.Length + 2) { entry };

@@ -2,12 +2,16 @@
 {
     public interface ISQLDatabaseCreateAdapter
     {
-        string GenericCreateSql(string database);
+        string GenericCreateDatabaseSql(string database);
 
-        string GenericCreateIfNotExistsSql(string database);
+        string GenericCreateDatabaseIfNotExistsSql(string database);
 
-        string GenericDropSql(string database);
+        string GenericDropDatabaseSql(string database);
 
-        string GenericDropIfExistsSql(string database);
+        string GenericDropDatabaseIfExistsSql(string database);
+
+        string GenericDropTableSql(string database);
+
+        string GenericDropTableIfExistsSql(string database);
     }
 }
