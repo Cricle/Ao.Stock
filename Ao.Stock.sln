@@ -24,8 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2B3F1085
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Test", "tests\Ao.Stock.Test\Ao.Stock.Test.csproj", "{1313567B-B09A-42AE-A029-F7FE8525C18F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.LinkPool", "src\Ao.Stock.LinkPool\Ao.Stock.LinkPool.csproj", "{1D7C3DC2-F040-45C2-A320-E855954EEE11}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ao.Stock.Benchmarks", "tests\Ao.Stock.Benchmarks\Ao.Stock.Benchmarks.csproj", "{ED9D70E3-B66C-4381-94A1-27ED6DC3DE3D}"
 EndProject
 Global
@@ -58,10 +56,6 @@ Global
 		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1313567B-B09A-42AE-A029-F7FE8525C18F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D7C3DC2-F040-45C2-A320-E855954EEE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D7C3DC2-F040-45C2-A320-E855954EEE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D7C3DC2-F040-45C2-A320-E855954EEE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D7C3DC2-F040-45C2-A320-E855954EEE11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED9D70E3-B66C-4381-94A1-27ED6DC3DE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED9D70E3-B66C-4381-94A1-27ED6DC3DE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED9D70E3-B66C-4381-94A1-27ED6DC3DE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
