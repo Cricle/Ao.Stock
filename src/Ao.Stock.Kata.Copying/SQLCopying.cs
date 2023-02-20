@@ -2,6 +2,11 @@
 using DatabaseSchemaReader.Compare;
 using DatabaseSchemaReader;
 using DatabaseSchemaReader.DataSchema;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
+using System;
 
 namespace Ao.Stock.Kata.Copying
 {

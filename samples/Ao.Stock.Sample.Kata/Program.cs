@@ -7,7 +7,6 @@ using DatabaseSchemaReader.DataSchema;
 using DatabaseSchemaReader.SqlGen;
 using MySqlConnector;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Ao.Stock.Sample.Kata
@@ -93,7 +92,6 @@ namespace Ao.Stock.Sample.Kata
             }
 
         }
-
     }
     public record class Student
     {

@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace Ao.Stock.Warehouse
 {
-    public abstract class ReaderBackup<TOutput>
+    public interface IReaderBackup:IDisposable
+    {
+        Task<int> ConvertAsync(IDataReader input);
+    }
+    public abstract class ReaderBackup<TOutput>: IReaderBackup
     {
         public ReaderBackup(IMethodWrapper methodWrapper)
         {
