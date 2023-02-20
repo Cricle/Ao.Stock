@@ -54,11 +54,12 @@ namespace Ao.Stock.Warehouse
                 s.Append('(');
                 for (int i = 0; i < item.Length; i++)
                 {
-                    s.Append(MethodWrapper.WrapValue(item[i]));
-                    if (i != item.Length - 1)
+                    if (i!=0)
                     {
                         s.Append(',');
+
                     }
+                    s.Append(MethodWrapper.WrapValue(item[i]));
                 }
                 s.Append(')');
                 last--;

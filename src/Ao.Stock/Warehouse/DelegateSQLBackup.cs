@@ -20,6 +20,10 @@ namespace Ao.Stock.Warehouse
         {
             return WriteFunc(text);
         }
+        public static DelegateSQLBackup AsyncTextWriter(TextWriter textWriter, IMethodWrapper methodWrapper, string table, string? database = null)
+        {
+            return new DelegateSQLBackup(t => textWriter.WriteLineAsync(t), methodWrapper, table, database);
+        }
         public static DelegateSQLBackup TextWriter(TextWriter textWriter, IMethodWrapper methodWrapper, string table, string? database = null)
         {
             return new DelegateSQLBackup(t =>

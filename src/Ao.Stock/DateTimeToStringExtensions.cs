@@ -12,11 +12,41 @@ namespace Ao.Stock
             var hour = dt.Hour;
             var minute = dt.Minute;
             var second = dt.Second;
+            var yearStr = dt.Year.ToString();
+            var yearStart = 4 - yearStr.Length;
+            if (yearStart == 0)
+            {
 #if NETSTANDARD2_0
-            dt.Year.ToString().AsSpan().CopyTo(buffer);
+                dt.Year.ToString().AsSpan().CopyTo(buffer);
 #else
-            dt.Year.ToString().CopyTo(buffer);
+                dt.Year.ToString().CopyTo(buffer);
 #endif
+            }
+            else
+            {
+                switch (yearStart)
+                {
+                    case 1:
+                        buffer[0] = '0';
+                        break;
+                    case 2:
+                        buffer[0] = '0';
+                        buffer[1] = '0';
+                        break;
+                    case 3:
+                        buffer[0] = '0';
+                        buffer[1] = '0';
+                        buffer[2] = '0';
+                        break;
+                    default:
+                        break;
+                }
+#if NETSTANDARD2_0
+                dt.Year.ToString().AsSpan().CopyTo(buffer.Slice(yearStart));
+#else
+                dt.Year.ToString().CopyTo(buffer.Slice(yearStart));
+#endif
+            }
             buffer[4] = '-';
             if (month <= 9)
             {

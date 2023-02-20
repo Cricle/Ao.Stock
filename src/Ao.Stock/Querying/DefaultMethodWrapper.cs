@@ -35,11 +35,11 @@ namespace Ao.Stock.Querying
 
         public string WrapValue<T>(T input)
         {
-            if (input == null)
+            if (input == null||Equals(input,DBNull.Value))
             {
                 return "NULL";
             }
-            if (input is string)
+            else if (input is string)
             {
                 return ValueStart + input + ValueEnd;
             }
@@ -56,8 +56,18 @@ namespace Ao.Stock.Querying
             {
                 return "0x" + BitConverter.ToString(buffer).Replace("-", string.Empty);
             }
+            else if (input is Guid guid)
+            {
+                return ValueStart + guid + ValueEnd;
+            }
+            else if (input is bool b)
+            {
+                return b ? boolTrue : boolFalse;
+            }
             return input.ToString();
         }
+        private static readonly string boolTrue = bool.TrueString.ToLower();
+        private static readonly string boolFalse= bool.FalseString.ToLower();
     }
 
 }

@@ -21,28 +21,25 @@ namespace Ao.Stock.Sample.Kata
         }
         private static async Task GenericBackupScriptAsync()
         {
-            var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
+            const string tb = "6ea51568666e4f138e52d020190e1239_runtime";
+            var mysql = $"server=192.168.1.100;port=3306;userid=root;password=syc123;database={tb};characterset=utf8mb4;";
             using (var conn = new MySqlConnection(mysql))
             {
                 using (var fi = File.Create("a.sql"))
                 using (var sw = new StreamWriter(fi))
                 {
                     var swx = Stopwatch.GetTimestamp();
-                    var dbReader = new DatabaseReader(conn) { Owner = "sakila" };
+                    var dbReader = new DatabaseReader(conn) { Owner = tb  };
                     dbReader.AllTables();
-                    foreach (var item in dbReader.DatabaseSchema.Tables)
-                    {
-                        item.SchemaOwner = "sakila1";
-                    }
                     var ddlFactory = new DdlGeneratorFactory(SqlType.MySql);
-                    sw.WriteLine(SQLDatabaseCreateAdapter.MySql.GenericCreateIfNotExistsSql("sakila1"));
+                    sw.WriteLine(SQLDatabaseCreateAdapter.MySql.GenericCreateIfNotExistsSql(tb));
                     sw.WriteLine(ddlFactory.AllTablesGenerator(dbReader.DatabaseSchema).Write());
                     foreach (var item in dbReader.DatabaseSchema.Tables)
                     {
                         var wrapper = DefaultMethodWrapper.MySql;
-                        var b = DelegateSQLBackup.TextWriter(sw, DefaultMethodWrapper.MySql, item.Name, "sakila1");
-                        var tb = wrapper.Quto("sakila") + "." + wrapper.Quto(item.Name);
-                        using (var comm = conn.CreateCommand($"SELECT * FROM {tb}"))
+                        var b = DelegateSQLBackup.AsyncTextWriter(sw, DefaultMethodWrapper.MySql, item.Name, tb);
+                        var tbx = wrapper.Quto(tb) + "." + wrapper.Quto(item.Name);
+                        using (var comm = conn.CreateCommand($"SELECT * FROM {tbx}"))
                         using (var reader = comm.ExecuteReader())
                         {
                             await b.ConvertAsync(reader);
