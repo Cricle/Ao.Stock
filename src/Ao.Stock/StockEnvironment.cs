@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Ao.Stock
 {
+
     public class StockEnvironment : List<IStockIntangible>, IStockEnvironment
     {
         public StockEnvironment()

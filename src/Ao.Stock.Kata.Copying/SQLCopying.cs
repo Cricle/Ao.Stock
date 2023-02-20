@@ -1,6 +1,7 @@
 ﻿using Ao.Stock.Mirror;
 using DatabaseSchemaReader.Compare;
 using DatabaseSchemaReader;
+using DatabaseSchemaReader.DataSchema;
 
 namespace Ao.Stock.Kata.Copying
 {
@@ -13,6 +14,10 @@ namespace Ao.Stock.Kata.Copying
         public bool SynchronousStructure { get; set; } = true;
 
         public bool WithDelete { get; set; } = true;
+
+        public IEnumerable<string>? TableFilter { get; set; }
+
+        public SqlSyncTypes SyncType { get; set; } = SqlSyncTypes.Tables;
 
         protected override async Task OnRunningAsync(CancellationToken token = default)
         {
@@ -30,21 +35,60 @@ namespace Ao.Stock.Kata.Copying
                 }
             }
         }
+
         protected override Task<IEnumerable<string>> GetTablesAsync(CancellationToken token = default)
         {
-            var allSource = new DatabaseReader(Source.DbConnection) { Owner=Source.Database}.TableList();
-            return Task.FromResult<IEnumerable<string>>(allSource.Select(x => x.Name).ToList());
+            var allSource = new DatabaseReader(Source.DbConnection) 
+            { 
+                Owner=Source.Database,
+            }.TablesQuickView();
+            var query = allSource.Select(x => x.Name);
+            if (TableFilter!=null)
+            {
+                query = query.Where(x => TableFilter.Contains(x));
+            }
+            return Task.FromResult<IEnumerable<string>>(query.ToList());
         }
+        protected void ReadSync(DatabaseReader reader)
+        {
+            if ((SyncType& SqlSyncTypes.Tables)!=0)
+            {
+                reader.AllTables();
+            }
+            if ((SyncType & SqlSyncTypes.StoredProcedures) != 0)
+            {
+                reader.AllStoredProcedures();
+            }
+            if ((SyncType & SqlSyncTypes.Views) != 0)
+            {
+                reader.AllViews();
+            }
+            if ((SyncType & SqlSyncTypes.Users) != 0)
+            {
+                reader.AllUsers();
+            }
+            if ((SyncType & SqlSyncTypes.Schemas) != 0)
+            {
+                reader.AllSchemas();
+            }
+            DatabaseSchemaFixer.UpdateReferences(reader.DatabaseSchema);
+        }
+        
         public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
-            var allSource = new DatabaseReader(Source.DbConnection) { Owner= Source.Database }.ReadAll(token);
-            foreach (var item in allSource.Tables)
+            var sourceReader = new DatabaseReader(Source.DbConnection) { Owner = Source.Database };
+            var destReader = new DatabaseReader(Destination.DbConnection) { Owner = Destination.Database };
+            ReadSync(sourceReader);
+            ReadSync(destReader);
+            if (TableFilter != null)
+            {
+                sourceReader.DatabaseSchema.Tables.RemoveAll(x => !TableFilter.Contains(x.Name));
+            }
+            foreach (var item in sourceReader.DatabaseSchema.Tables)
             {
                 item.SchemaOwner = Destination.Database;
             }
-            var destReader = new DatabaseReader(Destination.DbConnection) { Owner = Destination.Database };
-            var destAll = destReader.ReadAll(token);
-            var mig = new CompareSchemas(destAll, allSource);
+            var mig = new CompareSchemas(destReader.DatabaseSchema, sourceReader.DatabaseSchema);
             var script = mig.Execute();
             if (string.IsNullOrEmpty(script))
             {
@@ -56,5 +100,14 @@ namespace Ao.Stock.Kata.Copying
             }
         }
     }
-
+    [Flags]
+    public enum SqlSyncTypes
+    {
+        Tables = 1,
+        StoredProcedures = Tables << 1,
+        Views = Tables << 2,
+        Users = Tables << 3,
+        Schemas = Tables << 4,
+        All = Tables | StoredProcedures | Views | Users | Schemas,
+    }
 }

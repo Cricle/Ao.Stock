@@ -37,16 +37,24 @@ namespace Ao.Stock.Querying
         {
             if (input == null)
             {
-                return "null";
+                return "NULL";
             }
             if (input is string)
             {
                 return ValueStart + input + ValueEnd;
             }
             else if (input is DateTime || input is DateTime?)
-            {                
+            {
                 var dt = Unsafe.As<T, DateTime>(ref input);
-                return ValueStart + dt.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ValueEnd;
+                if (dt.Date == dt)
+                {
+                    return ValueStart + dt.ToString("yyyy-MM-dd") + ValueEnd;
+                }
+                return ValueStart + DateTimeToStringExtensions.ToFullString(dt) + ValueEnd;
+            }
+            if (input is byte[] buffer)
+            {
+                return "0x" + BitConverter.ToString(buffer).Replace("-", string.Empty);
             }
             return input.ToString();
         }
