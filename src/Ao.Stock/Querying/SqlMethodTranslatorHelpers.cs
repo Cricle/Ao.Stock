@@ -20,7 +20,7 @@
         }
         public static DefaultMethodTranslator<TContext> PostgrSql(IMethodWrapper? wrapper = null)
         {
-            return new DefaultMethodTranslator<TContext>(SqlMethodProvider.PostgrSql(), wrapper ?? DefaultMethodWrapper.Postgres);
+            return new DefaultMethodTranslator<TContext>(SqlMethodProvider.PostgrSql(), wrapper ?? DefaultMethodWrapper.PostgreSql);
         }
     }
 

@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace Ao.Stock
 {
-    public static class DateTimeToStringExtensions
+    public static class DateTimeToStringHelper
     {
-        public unsafe static void ToFullString(this DateTime dt, ref Span<char> buffer)
+        public unsafe static void ToFullString(DateTime dt, ref Span<char> buffer)
         {
             var month = dt.Month;
             var day = dt.Day;

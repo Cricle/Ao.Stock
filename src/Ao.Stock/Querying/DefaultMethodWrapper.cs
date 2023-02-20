@@ -10,7 +10,7 @@ namespace Ao.Stock.Querying
         public static readonly DefaultMethodWrapper MariaDB = MySql;
         public static readonly DefaultMethodWrapper Sqlite = new DefaultMethodWrapper("`", "`", "'", "'");
         public static readonly DefaultMethodWrapper Oracle = new DefaultMethodWrapper("\"", "\"", "'", "'");
-        public static readonly DefaultMethodWrapper Postgres = new DefaultMethodWrapper("\"", "\"", "'", "'");
+        public static readonly DefaultMethodWrapper PostgreSql = new DefaultMethodWrapper("\"", "\"", "'", "'");
 
         public DefaultMethodWrapper(string qutoStart, string qutoEnd, string valueStart, string valueEnd)
         {
@@ -28,12 +28,12 @@ namespace Ao.Stock.Querying
 
         public string ValueEnd { get; }
 
-        public virtual string Quto<T>(T input)
+        public string Quto<T>(T input)
         {
             return QutoStart + input + QutoEnd;
         }
 
-        public virtual string WrapValue<T>(T input)
+        public string WrapValue<T>(T input)
         {
             if (input == null)
             {
@@ -50,9 +50,9 @@ namespace Ao.Stock.Querying
                 {
                     return ValueStart + dt.ToString("yyyy-MM-dd") + ValueEnd;
                 }
-                return ValueStart + DateTimeToStringExtensions.ToFullString(dt) + ValueEnd;
+                return ValueStart + DateTimeToStringHelper.ToFullString(dt) + ValueEnd;
             }
-            if (input is byte[] buffer)
+            else if (input is byte[] buffer)
             {
                 return "0x" + BitConverter.ToString(buffer).Replace("-", string.Empty);
             }

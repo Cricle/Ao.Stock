@@ -1,5 +1,6 @@
 ﻿using Ao.Stock.Querying;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,15 @@ namespace Ao.Stock.Warehouse
         {
             return WriteFunc(text);
         }
-        public static DelegateSQLBackup StringBuilder(StringBuilder stringBuilder,IMethodWrapper methodWrapper, string table, string? database = null)
+        public static DelegateSQLBackup TextWriter(TextWriter textWriter, IMethodWrapper methodWrapper, string table, string? database = null)
+        {
+            return new DelegateSQLBackup(t =>
+            {
+                textWriter.WriteLine(t);
+                return Task.CompletedTask;
+            }, methodWrapper, table, database);
+        }
+        public static DelegateSQLBackup StringBuilder(StringBuilder stringBuilder, IMethodWrapper methodWrapper, string table, string? database = null)
         {
             return new DelegateSQLBackup(t =>
             {

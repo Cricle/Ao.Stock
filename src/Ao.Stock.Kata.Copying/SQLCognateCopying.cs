@@ -3,7 +3,6 @@ using System.Data.Common;
 
 namespace Ao.Stock.Kata.Copying
 {
-
     public class SQLCognateCopying : SQLCopying
     {
         public SQLCognateCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination) 
