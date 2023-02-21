@@ -2,8 +2,8 @@
 {
     public interface IStockIntangible
     {
-        T Get<T>(IIntangibleContext? context);
+        TReturn Get<TReturn,TContext>(TContext input);
 
-        void Config<T>(ref T input, IIntangibleContext? context);
+        void Config<TInput,TContext>(ref TInput input, TContext context);
     }
 }

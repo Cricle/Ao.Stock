@@ -1,142 +1,118 @@
-﻿using Ao.Stock.Kata.Mirror;
-using Ao.Stock.Mirror;
-using Ao.Stock.SQL;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using SqlKata;
-using System.Data;
-using System.Data.Common;
+﻿using Ao.Stock.Mirror;
+using DatabaseSchemaReader.Compare;
+using DatabaseSchemaReader;
+using DatabaseSchemaReader.DataSchema;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
+using System;
 
 namespace Ao.Stock.Kata.Copying
 {
-    public class SQLCopying
+    public class SQLCopying: SQLCopyingBase
     {
-        public SQLCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination)
+        public SQLCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination) : base(source, destination)
         {
-            Source = source ?? throw new ArgumentNullException(nameof(source));
-            Destination = destination ?? throw new ArgumentNullException(nameof(destination));
         }
-
-        public ISQLDatabaseInfo Source { get; }
-
-        public ISQLDatabaseInfo Destination { get; }
-
-        public ISQLTableSelector? TableSelector { get; set; }
 
         public bool SynchronousStructure { get; set; } = true;
 
-        public bool SynchronousStructureWithDelete { get; set; } = true;
+        public bool WithDelete { get; set; } = true;
 
-        public bool CleanTable { get; set; }
+        public IEnumerable<string>? TableFilter { get; set; }
 
-        public int BatchSize { get; set; } = 100;
+        public SqlSyncTypes SyncType { get; set; } = SqlSyncTypes.Tables;
 
-        protected virtual void ConfigBuilder(DbContextOptionsBuilder builder)
+        protected override async Task OnRunningAsync(CancellationToken token = default)
         {
+            if (SynchronousStructure)
+            {
+                await SynchronousStructureAsync(token);
+            }
+            if (WithDelete)
+            {
+                var tables = await GetTablesAsync(token);
+                foreach (var table in tables) 
+                {
+                    var sql = GenerateDeleteSql(Destination, table);
+                    await Destination.DbConnection.ExecuteNoQueryAsync(sql, token: token);
+                }
+            }
+        }
 
-        }
-        protected virtual Task ConfigDbAsync(DbContext context, CancellationToken token = default)
+        protected override Task<IEnumerable<string>> GetTablesAsync(CancellationToken token = default)
         {
-            return Task.CompletedTask;
+            var allSource = new DatabaseReader(Source.DbConnection) 
+            { 
+                Owner=Source.Database,
+            }.TablesQuickView();
+            var query = allSource.Select(x => x.Name);
+            if (TableFilter!=null)
+            {
+                query = query.Where(x => TableFilter.Contains(x));
+            }
+            return Task.FromResult<IEnumerable<string>>(query.ToList());
         }
+        protected void ReadSync(DatabaseReader reader)
+        {
+            if ((SyncType& SqlSyncTypes.Tables)!=0)
+            {
+                reader.AllTables();
+            }
+            if ((SyncType & SqlSyncTypes.StoredProcedures) != 0)
+            {
+                reader.AllStoredProcedures();
+            }
+            if ((SyncType & SqlSyncTypes.Views) != 0)
+            {
+                reader.AllViews();
+            }
+            if ((SyncType & SqlSyncTypes.Users) != 0)
+            {
+                reader.AllUsers();
+            }
+            if ((SyncType & SqlSyncTypes.Schemas) != 0)
+            {
+                reader.AllSchemas();
+            }
+            DatabaseSchemaFixer.UpdateReferences(reader.DatabaseSchema);
+        }
+        
         public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
-            using (var sourceMig = Source.StockIntangible.Get<AutoMigrationHelper>(Source.Context))
+            var sourceReader = new DatabaseReader(Source.DbConnection) { Owner = Source.Database };
+            var destReader = new DatabaseReader(Destination.DbConnection) { Owner = Destination.Database };
+            ReadSync(sourceReader);
+            ReadSync(destReader);
+            if (TableFilter != null)
             {
-                var sourceModel = sourceMig.ScaffoldHelper.Scaffold();
-                var destDbOptionsDest = new DbContextOptionsBuilder();
-                Destination.StockIntangible.Config(ref destDbOptionsDest, Destination.Context);
-                destDbOptionsDest.UseModel(sourceModel);
-                ConfigBuilder(destDbOptionsDest);
-                var options = destDbOptionsDest.Options;
-                options.GetExtension<CoreOptionsExtension>().WithServiceProviderCachingEnabled(false);
-                using (var dbDesk = new DbContext(options))
-                {
-                    if (SynchronousStructureWithDelete)
-                    {
-                        await dbDesk.Database.EnsureDeletedAsync(token);
-                    }
-                    await dbDesk.Database.EnsureCreatedAsync(token);
-                    await ConfigDbAsync(dbDesk, token);
-                }
+                sourceReader.DatabaseSchema.Tables.RemoveAll(x => !TableFilter.Contains(x.Name));
+            }
+            foreach (var item in sourceReader.DatabaseSchema.Tables)
+            {
+                item.SchemaOwner = Destination.Database;
+            }
+            var mig = new CompareSchemas(destReader.DatabaseSchema, sourceReader.DatabaseSchema);
+            var script = mig.Execute();
+            if (string.IsNullOrEmpty(script))
+            {
+                return;
+            }
+            using (var comm = Destination.DbConnection.CreateCommand(script))
+            {
+                await comm.ExecuteNonQueryAsync(token);
             }
         }
-
-        public async Task RunAsync(CancellationToken token = default)
-        {
-            using (var connSource = Source.StockIntangible.Get<DbConnection>(Source.Context))
-            using (var connDest = Destination.StockIntangible.Get<DbConnection>(Destination.Context))
-            {
-                if (SynchronousStructure)
-                {
-                    await SynchronousStructureAsync();
-                }
-                token.ThrowIfCancellationRequested();
-                if (connSource.State != ConnectionState.Open)
-                {
-                    await connSource.OpenAsync().ConfigureAwait(false);
-                }
-                if (connDest.State != ConnectionState.Open)
-                {
-                    await connDest.OpenAsync().ConfigureAwait(false);
-                }
-                token.ThrowIfCancellationRequested();
-                var tables = await GetTablesAsync();
-                if (CleanTable && !SynchronousStructure)
-                {
-                    await ClearTablesAsync(connDest, Destination, tables);
-                }
-                await CopyAsync(connSource, connDest, tables, token);
-            }
-        }
-        protected virtual async Task<IEnumerable<string>> GetTablesAsync()
-        {
-            using (var queryingSource = Source.StockIntangible.Get<IArchitectureQuerying>(Source.Context))
-            {
-                var sourcesTables = await queryingSource.GetTablesAsync(Source.Database, Source.Context);
-                if (sourcesTables != null)
-                {
-                    var sourceTableQuerying = sourcesTables.AsQueryable();
-                    if (TableSelector != null)
-                    {
-                        sourceTableQuerying = sourceTableQuerying.Where(x => TableSelector.IsAccept(Source, x));
-                    }
-                    return sourceTableQuerying;
-                }
-            }
-            return Enumerable.Empty<string>();
-        }
-
-        protected virtual async Task ClearTablesAsync(DbConnection connection, ISQLDatabaseInfo info, IEnumerable<string> tables)
-        {
-            foreach (var item in tables)
-            {
-                var query = new Query().FromRaw(SQLCognateMirrorCopy.GetFullName(new SQLTableInfo(info.Database, item), info.Compiler))
-                    .AsDelete();
-                var sql = info.Compiler.Compile(query).ToString();
-                await connection.ExecuteNoQueryAsync(sql);
-            }
-        }
-
-        protected virtual async Task CopyAsync(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> tables, CancellationToken token)
-        {
-            foreach (var item in tables)
-            {
-                token.ThrowIfCancellationRequested();
-                using (var sourceCommand = sourceConn.CreateCommand())
-                {
-                    sourceCommand.CommandText = Source.CreateQuerySql(item);
-                    using (var reader = sourceCommand.ExecuteReader())
-                    {
-                        var cp = new SQLMirrorCopy(new DefaultRowDataReader(reader, new QueryTranslateResult(sourceCommand.CommandText)),
-                            new SQLMirrorTarget(destConn, new SQLTableInfo(Destination.Database, item)),
-                            Destination.Compiler,
-                            BatchSize);
-                        await cp.CopyAsync(Source.Context);
-                    }
-                }
-            }
-
-        }
+    }
+    [Flags]
+    public enum SqlSyncTypes
+    {
+        Tables = 1,
+        StoredProcedures = Tables << 1,
+        Views = Tables << 2,
+        Users = Tables << 3,
+        Schemas = Tables << 4,
+        All = Tables | StoredProcedures | Views | Users | Schemas,
     }
 }

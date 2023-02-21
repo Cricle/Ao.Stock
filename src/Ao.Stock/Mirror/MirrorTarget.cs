@@ -5,15 +5,15 @@ namespace Ao.Stock.Mirror
 {
     public readonly struct SQLMirrorTarget : IDisposable
     {
-        public SQLMirrorTarget(DbConnection connection, SQLTableInfo tableInfo)
+        public SQLMirrorTarget(DbConnection connection, string named)
         {
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            TableInfo = tableInfo;
+            Named = named ?? throw new ArgumentNullException(nameof(named));
         }
 
         public DbConnection Connection { get; }
 
-        public SQLTableInfo TableInfo { get; }
+        public string Named { get; }
 
         public void Dispose()
         {

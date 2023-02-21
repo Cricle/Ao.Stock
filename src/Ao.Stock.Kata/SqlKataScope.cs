@@ -3,10 +3,10 @@ using SqlKata;
 using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Data;
+using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ao.Stock.Kata
 {

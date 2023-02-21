@@ -4,7 +4,6 @@ using SqlKata.Compilers;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Dynamic;
 
 namespace Ao.Stock.Kata
 {
@@ -12,27 +11,27 @@ namespace Ao.Stock.Kata
     {
         public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.Mysql, root,
+            return new KataMetadataVisitor(new MySqlCompiler(), root,
                 translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql());
         }
         public static KataMetadataVisitor MariaDB(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.Mysql, root,
+            return new KataMetadataVisitor(new MySqlCompiler(), root,
                 translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql());
         }
         public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.Sqlite, root,
+            return new KataMetadataVisitor(new SqliteCompiler(), root,
                 translator ?? SqlMethodTranslatorHelpers<Compiler>.Sqlite());
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.SqlServer, root,
+            return new KataMetadataVisitor(new SqlServerCompiler(), root,
                 translator ?? SqlMethodTranslatorHelpers<Compiler>.SqlServer());
         }
         public static KataMetadataVisitor PostgrSql(Query root, MethodTranslator<Compiler> translator = null)
         {
-            return new KataMetadataVisitor(CompilerFetcher.PostgresSql, root,
+            return new KataMetadataVisitor(new PostgresCompiler(), root,
                 translator ?? SqlMethodTranslatorHelpers<Compiler>.PostgrSql());
         }
 

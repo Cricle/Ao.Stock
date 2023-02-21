@@ -1,15 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../eng/pkg.props" />
+	<Import Project="../../eng/pkg.props" />
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
-    <ProjectReference Include="..\Ao.Stock.SQL\Ao.Stock.SQL.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DatabaseSchemaReader" Version="2.7.17" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
+	</ItemGroup>
 
 </Project>

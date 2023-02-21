@@ -5,6 +5,6 @@ namespace Ao.Stock.Mirror
 {
     public interface IMirrorCopy<TResult>
     {
-        Task<IList<TResult>> CopyAsync(IIntangibleContext context);
+        Task<IList<TResult>> CopyAsync();
     }
 }

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../eng/pkg.props"/>
+  <Import Project="../../eng/pkg.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

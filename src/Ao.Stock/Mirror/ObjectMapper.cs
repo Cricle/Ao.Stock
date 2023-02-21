@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+#if !NETSTANDARD2_0
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,7 +12,11 @@ using System.Runtime.CompilerServices;
 
 namespace Ao.Stock.Mirror
 {
+#if NETSTANDARD2_0
     public static class ObjectMapper<T>
+#else
+    public static class ObjectMapper<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors| DynamicallyAccessedMemberTypes.PublicProperties)] T>
+#endif
     {
         private static readonly Func<IDataReader, T> creator;
         private static readonly MethodInfo convertMethod;
@@ -21,7 +28,7 @@ namespace Ao.Stock.Mirror
                 BindingFlags.Public | BindingFlags.Static,
                 null,
                 new Type[] { typeof(object), typeof(TypeCode) },
-                null)??
+                null) ??
                 throw new NotSupportedException("Convert.ChangeType not found");
             dataReadMethod = typeof(IDataRecord).GetProperties().First(x => x.GetIndexParameters().Length != 0 && x.GetIndexParameters()[0].ParameterType == typeof(string));
             creator = BuildCreator();
@@ -59,7 +66,7 @@ namespace Ao.Stock.Mirror
         {
             return creator(reader);
         }
-        private static readonly MethodInfo OrMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.GetOrdinal), new Type[] { typeof(string) })??
+        private static readonly MethodInfo OrMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.GetOrdinal), new Type[] { typeof(string) }) ??
             throw new NotSupportedException("IDataRecord.GetOrdinal not found");
         private static readonly MethodInfo isDbNullMethod = typeof(IDataRecord).GetMethod(nameof(IDataRecord.IsDBNull), new Type[] { typeof(int) }) ??
             throw new NotSupportedException("IDataRecord.IsDBNull not found");
