@@ -62,7 +62,7 @@ namespace Ao.Stock.Mirror
             foreach (var item in tables)
             {
                 var sql = GenerateDeleteSql(info, item);
-                await info.DbConnection.ExecuteNoQueryAsync(sql);
+                await info.DbConnection.ExecuteNonQueryAsync(sql);
             }
         }
 

@@ -27,6 +27,8 @@ namespace Ao.Stock.Warehouse
         private readonly string tableWraper;
         private string? namePairs;
 
+        public string? NamePairs => namePairs;
+
         public string TableWraper => tableWraper;
 
         public string Table { get; }

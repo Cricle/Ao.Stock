@@ -24,9 +24,10 @@ namespace Ao.Stock.Kata.Copying
             {
                 token.ThrowIfCancellationRequested();
                 var sql= GenerateQuerySql(Source,item);
-                var cp = new SQLCognateMirrorCopy(destConn,
-                    sql,
-                    Destination.CreateFullName(item));
+                var cp = new SQLCognateMirrorCopy(destConn, sql,Destination.CreateFullName(item))
+                {
+                    CommandTimeout=CommandTimeout
+                };
                 await cp.CopyAsync();
             }
         }

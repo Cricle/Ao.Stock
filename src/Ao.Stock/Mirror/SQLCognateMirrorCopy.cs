@@ -20,6 +20,8 @@ namespace Ao.Stock.Mirror
 
         public string TargetNamed { get; }
 
+        public int CommandTimeout { get; set; } = 60 * 5;
+
         protected virtual string GetInsertQuery()
         {
             return $"INSERT INTO {TargetNamed} {SourceSql}";
@@ -28,7 +30,7 @@ namespace Ao.Stock.Mirror
         public async Task<IList<SQLMirrorCopyResult>> CopyAsync()
         {
             var query = GetInsertQuery();
-            var result = await Connection.ExecuteNoQueryAsync(query);
+            var result = await Connection.ExecuteNonQueryAsync(query,timeout:CommandTimeout);
             return new[]
             {
                 new SQLMirrorCopyResult(result,query)

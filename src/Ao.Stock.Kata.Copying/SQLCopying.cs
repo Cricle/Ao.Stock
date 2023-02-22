@@ -10,7 +10,7 @@ using System;
 
 namespace Ao.Stock.Kata.Copying
 {
-    public class SQLCopying: SQLCopyingBase
+    public class SQLCopying : SQLCopyingBase
     {
         public SQLCopying(ISQLDatabaseInfo source, ISQLDatabaseInfo destination) : base(source, destination)
         {
@@ -24,6 +24,8 @@ namespace Ao.Stock.Kata.Copying
 
         public SqlSyncTypes SyncType { get; set; } = SqlSyncTypes.Tables;
 
+        public int CommandTimeout { get; set; } = 60 * 5;
+
         protected override async Task OnRunningAsync(CancellationToken token = default)
         {
             if (SynchronousStructure)
@@ -33,22 +35,22 @@ namespace Ao.Stock.Kata.Copying
             if (WithDelete)
             {
                 var tables = await GetTablesAsync(token);
-                foreach (var table in tables) 
+                foreach (var table in tables)
                 {
                     var sql = GenerateDeleteSql(Destination, table);
-                    await Destination.DbConnection.ExecuteNoQueryAsync(sql, token: token);
+                    await Destination.DbConnection.ExecuteNonQueryAsync(sql, token: token, timeout: CommandTimeout);
                 }
             }
         }
 
         protected override Task<IEnumerable<string>> GetTablesAsync(CancellationToken token = default)
         {
-            var allSource = new DatabaseReader(Source.DbConnection) 
-            { 
-                Owner=Source.Database,
+            var allSource = new DatabaseReader(Source.DbConnection)
+            {
+                Owner = Source.Database,
             }.TablesQuickView();
             var query = allSource.Select(x => x.Name);
-            if (TableFilter!=null)
+            if (TableFilter != null)
             {
                 query = query.Where(x => TableFilter.Contains(x));
             }
@@ -56,7 +58,7 @@ namespace Ao.Stock.Kata.Copying
         }
         protected void ReadSync(DatabaseReader reader)
         {
-            if ((SyncType& SqlSyncTypes.Tables)!=0)
+            if ((SyncType & SqlSyncTypes.Tables) != 0)
             {
                 reader.AllTables();
             }
@@ -78,7 +80,7 @@ namespace Ao.Stock.Kata.Copying
             }
             DatabaseSchemaFixer.UpdateReferences(reader.DatabaseSchema);
         }
-        
+
         public virtual async Task SynchronousStructureAsync(CancellationToken token = default)
         {
             var sourceReader = new DatabaseReader(Source.DbConnection) { Owner = Source.Database };
@@ -99,10 +101,7 @@ namespace Ao.Stock.Kata.Copying
             {
                 return;
             }
-            using (var comm = Destination.DbConnection.CreateCommand(script))
-            {
-                await comm.ExecuteNonQueryAsync(token);
-            }
+            await Destination.DbConnection.ExecuteNonQueryAsync(script, token: token, timeout: CommandTimeout);
         }
     }
     [Flags]

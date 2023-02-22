@@ -77,7 +77,7 @@ namespace Ao.Stock.Mirror
             {
                 return RowWriteResult<string>.Empty;
             }
-            var affect = await Target.Connection.ExecuteNoQueryAsync(script);
+            var affect = await Target.Connection.ExecuteNonQueryAsync(script);
             return new RowWriteResult<string>(
                 names,
                 new IQueryTranslateResult[] { new QueryTranslateResult(script) },

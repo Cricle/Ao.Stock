@@ -12,11 +12,12 @@ namespace Ao.Stock.Kata
 {
     public readonly struct SqlKataScope : ISqlKataScope, IDisposable
     {
-        public SqlKataScope(Compiler compiler, DbConnection connection, bool toRawSql)
+        public SqlKataScope(Compiler compiler, DbConnection connection, bool toRawSql,int? timeout)
         {
             Compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
             ToRawSql = toRawSql;
+            CommandTimeout = timeout;
         }
 
         public Compiler Compiler { get; }
@@ -24,6 +25,8 @@ namespace Ao.Stock.Kata
         public DbConnection Connection { get; }
 
         public bool ToRawSql { get; }
+
+        public int? CommandTimeout { get; }
 
         public string CompileToSql(Query query)
         {
@@ -49,9 +52,9 @@ namespace Ao.Stock.Kata
             var result = Compile(query);
             if (ToRawSql)
             {
-                return Connection.ExecuteReadCountAsync(result.ToString(), null, token);
+                return Connection.ExecuteReadCountAsync(result.ToString(), null,CommandTimeout, token);
             }
-            return Connection.ExecuteReadCountAsync(result.Sql, result.NamedBindings, token);
+            return Connection.ExecuteReadCountAsync(result.Sql, result.NamedBindings, CommandTimeout, token);
         }
         public Task<List<IDictionary<string, object>>> ExecuteReaderAsync(Query query,
              CancellationToken token = default)
@@ -59,9 +62,9 @@ namespace Ao.Stock.Kata
             var result = Compile(query);
             if (ToRawSql)
             {
-                return Connection.ExecuteReaderAsync(result.ToString(), null, token);
+                return Connection.ExecuteReaderAsync(result.ToString(), null, CommandTimeout, token);
             }
-            return Connection.ExecuteReaderAsync(result.Sql, result.NamedBindings, token);
+            return Connection.ExecuteReaderAsync(result.Sql, result.NamedBindings, CommandTimeout, token);
         }
         public Task<TOutput> ExecuteReaderAsync<TOutput>(Query query,
             IAsyncConverter<IDataReader, TOutput> converter,
@@ -70,9 +73,9 @@ namespace Ao.Stock.Kata
             var result = Compile(query);
             if (ToRawSql)
             {
-                return Connection.ExecuteReaderAsync(result.ToString(), converter, null, token);
+                return Connection.ExecuteReaderAsync(result.ToString(), converter, null, CommandTimeout, token);
             }
-            return Connection.ExecuteReaderAsync(result.Sql, converter, result.NamedBindings, token);
+            return Connection.ExecuteReaderAsync(result.Sql, converter, result.NamedBindings, CommandTimeout, token);
         }
         public Task<List<TOutput>> ExecuteReaderAsync<TOutput>(Query query,
             CancellationToken token = default)
@@ -80,27 +83,27 @@ namespace Ao.Stock.Kata
             var result = Compile(query);
             if (ToRawSql)
             {
-                return Connection.ExecuteReaderAsync<TOutput>(result.ToString(), null, token);
+                return Connection.ExecuteReaderAsync<TOutput>(result.ToString(), null, CommandTimeout, token);
             }
-            return Connection.ExecuteReaderAsync<TOutput>(result.Sql, result.NamedBindings, token);
+            return Connection.ExecuteReaderAsync<TOutput>(result.Sql, result.NamedBindings, CommandTimeout, token);
         }
         public Task<int> ExecuteNoQueryAsync(IEnumerable<Query> queries, CancellationToken token = default)
         {
             var result = Compile(queries);
             if (ToRawSql)
             {
-                return Connection.ExecuteNoQueryAsync(result.ToString(), null, token);
+                return Connection.ExecuteNonQueryAsync(result.ToString(), null, token:token);
             }
-            return Connection.ExecuteNoQueryAsync(result.Sql, result.NamedBindings, token);
+            return Connection.ExecuteNonQueryAsync(result.Sql, result.NamedBindings, token: token);
         }
         public Task<int> ExecuteNoQueryAsync(Query query, CancellationToken token = default)
         {
             var result = Compile(query);
             if (ToRawSql)
             {
-                return Connection.ExecuteNoQueryAsync(result.ToString(), null, token);
+                return Connection.ExecuteNonQueryAsync(result.ToString(), null, token: token);
             }
-            return Connection.ExecuteNoQueryAsync(result.Sql, result.NamedBindings, token);
+            return Connection.ExecuteNonQueryAsync(result.Sql, result.NamedBindings, token: token);
         }
 
         public void Dispose()
