@@ -33,9 +33,9 @@ namespace Ao.Stock.Querying
             return QutoStart + input + QutoEnd;
         }
 
-        public string WrapValue<T>(T input)
+        public string? WrapValue<T>(T input)
         {
-            if (input == null||Equals(input,DBNull.Value))
+            if (input == null || Equals(input, DBNull.Value))
             {
                 return "NULL";
             }
@@ -67,7 +67,7 @@ namespace Ao.Stock.Querying
             return input.ToString();
         }
         private static readonly string boolTrue = bool.TrueString.ToLower();
-        private static readonly string boolFalse= bool.FalseString.ToLower();
+        private static readonly string boolFalse = bool.FalseString.ToLower();
     }
 
 }

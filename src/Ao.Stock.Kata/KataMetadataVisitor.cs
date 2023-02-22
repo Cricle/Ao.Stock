@@ -1,7 +1,6 @@
 ﻿using Ao.Stock.Querying;
 using SqlKata;
 using SqlKata.Compilers;
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -12,34 +11,35 @@ namespace Ao.Stock.Kata
         public static KataMetadataVisitor Mysql(Query root, MethodTranslator<Compiler> translator = null)
         {
             return new KataMetadataVisitor(new MySqlCompiler(), root,
-                translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql());
+                translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql(), DefaultMethodWrapper.MySql);
         }
         public static KataMetadataVisitor MariaDB(Query root, MethodTranslator<Compiler> translator = null)
         {
             return new KataMetadataVisitor(new MySqlCompiler(), root,
-                translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql());
+                translator ?? SqlMethodTranslatorHelpers<Compiler>.Mysql(), DefaultMethodWrapper.MySql);
         }
         public static KataMetadataVisitor Sqlite(Query root, MethodTranslator<Compiler> translator = null)
         {
             return new KataMetadataVisitor(new SqliteCompiler(), root,
-                translator ?? SqlMethodTranslatorHelpers<Compiler>.Sqlite());
+                translator ?? SqlMethodTranslatorHelpers<Compiler>.Sqlite(), DefaultMethodWrapper.Sqlite);
         }
         public static KataMetadataVisitor SqlServer(Query root, MethodTranslator<Compiler> translator = null)
         {
             return new KataMetadataVisitor(new SqlServerCompiler(), root,
-                translator ?? SqlMethodTranslatorHelpers<Compiler>.SqlServer());
+                translator ?? SqlMethodTranslatorHelpers<Compiler>.SqlServer(), DefaultMethodWrapper.SqlServer);
         }
         public static KataMetadataVisitor PostgrSql(Query root, MethodTranslator<Compiler> translator = null)
         {
             return new KataMetadataVisitor(new PostgresCompiler(), root,
-                translator ?? SqlMethodTranslatorHelpers<Compiler>.PostgrSql());
+                translator ?? SqlMethodTranslatorHelpers<Compiler>.PostgrSql(),DefaultMethodWrapper.PostgreSql);
         }
 
-        public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator)
+        public KataMetadataVisitor(Compiler compiler, Query root, MethodTranslator<Compiler> translator, IMethodWrapper methodWrapper)
         {
             Compiler = compiler;
             Root = root;
             Translator = translator;
+            MethodWrapper = methodWrapper;
         }
 
         public Compiler Compiler { get; }
@@ -47,6 +47,8 @@ namespace Ao.Stock.Kata
         public Query Root { get; }
 
         public MethodTranslator<Compiler> Translator { get; }
+
+        public IMethodWrapper MethodWrapper { get; }
 
         public override DefaultQueryContext CreateContext(IQueryMetadata metadata)
         {
@@ -90,37 +92,22 @@ namespace Ao.Stock.Kata
         {
             var ctx = CreateContext(value.Target);
             Visit(value.Target, ctx);
-            context.Expression += $"{ctx.Expression} as {Compiler.Wrap(value.Alias)}";
+            context.Expression += $"{ctx.Expression} as {MethodWrapper.Quto(value.Alias)}";
         }
         public override void VisitValue(ValueMetadata value, DefaultQueryContext context)
         {
             if (context.MustQuto || value.Quto)
             {
-                context.Expression += Compiler.Wrap(value.Value?.ToString());
+                context.Expression += MethodWrapper.Quto(value.Value?.ToString());
             }
             else
             {
-                if (value.Value is DateTime || value.Value is string)
-                {
-                    context.Expression += "'" + ValueToString(value.Value) + "'";
-                }
-                else
-                {
-                    context.Expression += ValueToString(value.Value);
-                }
+                context.Expression += ValueToString(value.Value);
             }
         }
         protected virtual string ValueToString(object value)
         {
-            if (value == null)
-            {
-                return "null";
-            }
-            if (value is DateTime || value is DateTime?)
-            {
-                return ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
-            }
-            return value.ToString();
+            return MethodWrapper.WrapValue(value);
         }
         public override void VisitSkip(SkipMetadata value, DefaultQueryContext context)
         {

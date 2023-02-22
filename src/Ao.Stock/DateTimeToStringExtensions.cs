@@ -5,13 +5,56 @@ namespace Ao.Stock
 {
     public static class DateTimeToStringHelper
     {
-        public unsafe static void ToFullString(DateTime dt, ref Span<char> buffer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToFullString(DateTime dt, ref Span<char> buffer)
         {
-            var month = dt.Month;
-            var day = dt.Day;
+            ToFullString(dt, ref buffer, '-', ':');
+        }
+        public unsafe static void ToTimeString(DateTime dt, ref Span<char> buffer, char mergeTime)
+        {
             var hour = dt.Hour;
             var minute = dt.Minute;
             var second = dt.Second;
+            if (hour <= 9)
+            {
+                buffer[0] = '0';
+                buffer[1] = (char)('0' + hour);
+            }
+            else
+            {
+                var q = hour / 10;
+                buffer[0] = (char)('0' + q);
+                buffer[1] = (char)('0' + hour - (q * 10));
+            }
+            buffer[2] = mergeTime;
+            if (minute <= 9)
+            {
+                buffer[3] = '0';
+                buffer[4] = (char)('0' + minute);
+            }
+            else
+            {
+                var q = minute / 10;
+                buffer[3] = (char)('0' + q);
+                buffer[4] = (char)('0' + minute - (q * 10));
+            }
+            buffer[5] = mergeTime;
+            if (second <= 9)
+            {
+                buffer[6] = '0';
+                buffer[7] = (char)('0' + second);
+            }
+            else
+            {
+                var q = second / 10;
+                buffer[6] = (char)('0' + q);
+                buffer[7] = (char)('0' + second - (q * 10));
+            }
+        }
+        public unsafe static void ToDateString(DateTime dt, ref Span<char> buffer, char mergeDate)
+        {
+            var month = dt.Month;
+            var day = dt.Day;
             var yearStr = dt.Year.ToString();
             var yearStart = 4 - yearStr.Length;
             if (yearStart == 0)
@@ -22,6 +65,7 @@ namespace Ao.Stock
                 dt.Year.ToString().CopyTo(buffer);
 #endif
             }
+
             else
             {
                 switch (yearStart)
@@ -47,7 +91,7 @@ namespace Ao.Stock
                 dt.Year.ToString().CopyTo(buffer.Slice(yearStart));
 #endif
             }
-            buffer[4] = '-';
+            buffer[4] = mergeDate;
             if (month <= 9)
             {
                 buffer[5] = '0';
@@ -59,7 +103,7 @@ namespace Ao.Stock
                 buffer[5] = (char)('0' + q);
                 buffer[6] = (char)('0' + month - (q * 10));
             }
-            buffer[7] = '-';
+            buffer[7] = mergeDate;
             if (day <= 9)
             {
                 buffer[8] = '0';
@@ -71,51 +115,55 @@ namespace Ao.Stock
                 buffer[8] = (char)('0' + q);
                 buffer[9] = (char)('0' + day - (q * 10));
             }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static void ToFullString(DateTime dt, ref Span<char> buffer,char mergeDate,char mergeTime)
+        {
+            ToDateString(dt, ref buffer, mergeDate);
             buffer[10] = ' ';
-            if (hour <= 9)
-            {
-                buffer[11] = '0';
-                buffer[12] = (char)('0' + hour);
-            }
-            else
-            {
-                var q = hour / 10;
-                buffer[11] = (char)('0' + q);
-                buffer[12] = (char)('0' + hour - (q * 10));
-            }
-            buffer[13] = ':';
-            if (minute <= 9)
-            {
-                buffer[14] = '0';
-                buffer[15] = (char)('0' + minute);
-            }
-            else
-            {
-                var q = minute / 10;
-                buffer[14] = (char)('0' + q);
-                buffer[15] = (char)('0' + minute - (q * 10));
-            }
-            buffer[16] = ':';
-            if (second <= 9)
-            {
-                buffer[17] = '0';
-                buffer[18] = (char)('0' + second);
-            }
-            else
-            {
-                var q = second / 10;
-                buffer[17] = (char)('0' + q);
-                buffer[18] = (char)('0' + second - (q * 10));
-            }
+            var tsp = buffer.Slice(11);
+            ToTimeString(dt, ref tsp, mergeTime);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static string ToFullString(DateTime dt)
+        public unsafe static string ToFullString(DateTime dt,char mergeDate, char mergeTime)
         {
             Span<char> buffer = stackalloc char[19];
-            ToFullString(dt, ref buffer);
+            ToFullString(dt, ref buffer,mergeDate,mergeTime);
             return buffer.ToString();
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static string ToTimeString(DateTime dt, char mergeTime)
+        {
+            Span<char> buffer = stackalloc char[8];
+            ToTimeString(dt, ref buffer, mergeTime);
+            return buffer.ToString();
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static string ToDateString(DateTime dt, char mergeDate)
+        {
+            Span<char> buffer = stackalloc char[10];
+            ToDateString(dt, ref buffer, mergeDate);
+            return buffer.ToString();
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static string ToFullString(DateTime dt)
+        {
+            return ToFullString(dt, '-', ':');
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static string ToTimeString(DateTime dt)
+        {
+            Span<char> buffer = stackalloc char[8];
+            ToTimeString(dt, ref buffer, ':');
+            return buffer.ToString();
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe static string ToDateString(DateTime dt)
+        {
+            Span<char> buffer = stackalloc char[10];
+            ToDateString(dt, ref buffer, '-');
+            return buffer.ToString();
+        }
     }
 }
