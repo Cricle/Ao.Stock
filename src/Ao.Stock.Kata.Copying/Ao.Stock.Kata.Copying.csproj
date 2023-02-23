@@ -8,11 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DatabaseSchemaReader" Version="2.7.17" />
+
+		<PackageReference Include="Ao.Stock.Kata" Version="1.1.0-preview.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Ao.Stock.Kata\Ao.Stock.Kata.csproj" />
+	  <ProjectReference Include="..\..\dbschemareader\dbschemareader\DatabaseSchemaReader\DatabaseSchemaReader.csproj" />
 	</ItemGroup>
 
 </Project>
