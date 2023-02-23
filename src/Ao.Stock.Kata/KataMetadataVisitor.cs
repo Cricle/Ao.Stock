@@ -81,7 +81,19 @@ namespace Ao.Stock.Kata
         }
         protected override void OnVisitBinary(BinaryMetadata value, DefaultQueryContext context, DefaultQueryContext leftContext, DefaultQueryContext rightContext)
         {
-            var tk = value.ExpressionType == ExpressionType.Equal ? "=" : value.GetToken();
+            var tk = value.GetToken();
+            if (value.ExpressionType== ExpressionType.Equal)
+            {
+                tk = "=";
+            }
+            else if (value .ExpressionType== ExpressionType.OrElse)
+            {
+                tk = "OR";
+            }
+            else if (value .ExpressionType== ExpressionType.AndAlso)
+            {
+                tk = "AND";
+            }
             context.Expression += leftContext.Expression + tk + rightContext.Expression;
         }
         protected override void OnVisitSelect(SelectMetadata value, DefaultQueryContext context, List<string> selects)
