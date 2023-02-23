@@ -45,7 +45,7 @@ namespace Ao.Stock.Querying
             }
             else if (input is DateTime || input is DateTime?)
             {
-                var dt = Unsafe.As<T, DateTime>(ref input);
+                var dt = (DateTime)(object)input;
                 if (dt.Date == dt)
                 {
                     return ValueStart + dt.ToString("yyyy-MM-dd") + ValueEnd;
