@@ -10,7 +10,10 @@ namespace Ao.Stock.Querying
             : this(new[] { target })
         {
         }
-
+        public SelectMetadata(params IQueryMetadata[] target)
+        {
+            Target = target ?? throw new ArgumentNullException(nameof(target));
+        }
         public SelectMetadata(IList<IQueryMetadata> target)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));

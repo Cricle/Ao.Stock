@@ -8,7 +8,10 @@ namespace Ao.Stock.Querying
         public FilterMetadata()
         {
         }
-
+        public FilterMetadata(params IQueryMetadata[] collection) 
+            : base(collection)
+        {
+        }
         public FilterMetadata(IEnumerable<IQueryMetadata> collection) : base(collection)
         {
         }

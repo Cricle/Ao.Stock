@@ -81,18 +81,18 @@ namespace Ao.Stock.Kata
         }
         protected override void OnVisitBinary(BinaryMetadata value, DefaultQueryContext context, DefaultQueryContext leftContext, DefaultQueryContext rightContext)
         {
-            var tk = value.GetToken();
+            var tk = " "+value.GetToken()+" ";
             if (value.ExpressionType== ExpressionType.Equal)
             {
-                tk = "=";
+                tk = " = ";
             }
             else if (value .ExpressionType== ExpressionType.OrElse)
             {
-                tk = "OR";
+                tk = " OR ";
             }
             else if (value .ExpressionType== ExpressionType.AndAlso)
             {
-                tk = "AND";
+                tk = " AND ";
             }
             context.Expression += leftContext.Expression + tk + rightContext.Expression;
         }
@@ -104,7 +104,7 @@ namespace Ao.Stock.Kata
         {
             var ctx = CreateContext(value.Target);
             Visit(value.Target, ctx);
-            context.Expression += $"{ctx.Expression} as {MethodWrapper.Quto(value.Alias)}";
+            context.Expression += $"{ctx.Expression} AS {MethodWrapper.Quto(value.Alias)}";
         }
         public override void VisitValue(ValueMetadata value, DefaultQueryContext context)
         {

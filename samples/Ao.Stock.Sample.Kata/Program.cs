@@ -1,4 +1,5 @@
-﻿using Ao.Stock.Kata.Copying;
+﻿using Ao.Stock.Kata;
+using Ao.Stock.Kata.Copying;
 using Ao.Stock.Mirror;
 using Ao.Stock.Querying;
 using Ao.Stock.Warehouse;
@@ -6,7 +7,10 @@ using DatabaseSchemaReader;
 using DatabaseSchemaReader.DataSchema;
 using DatabaseSchemaReader.SqlGen;
 using MySqlConnector;
+using SqlKata;
+using SqlKata.Compilers;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Ao.Stock.Sample.Kata
@@ -15,14 +19,14 @@ namespace Ao.Stock.Sample.Kata
     {
         static Task Main(string[] args)
         {
-            return ReadDataAsync();
+            return BuildQueryAsync();
         }
         private static async Task ReadDataAsync()
         {
             var mysql = $"server=127.0.0.1;port=3306;userid=root;password=;database=sakila;characterset=utf8mb4;";
             using (var conn = new MySqlConnection(mysql))
             {
-                var res=await conn.ExecuteReaderAsync<Student>("SELECT * FROM `student` LIMIT 10");
+                var res = await conn.ExecuteReaderAsync<Student>("SELECT * FROM `student` LIMIT 10");
                 foreach (var item in res)
                 {
                     Console.WriteLine(item);
@@ -90,7 +94,33 @@ namespace Ao.Stock.Sample.Kata
                 await copy.RunAsync();
                 Console.WriteLine(Stopwatch.GetElapsedTime(sw));
             }
-
+        }
+        private static Task BuildQueryAsync()
+        {
+            var whereInValues = Enumerable.Range(0, 10).Select(x => new ValueMetadata(x));
+            var whereIn = new[] { new ValueMetadata("address_id", true) }.Concat(whereInValues).ToArray();
+            var m = new MultipleQueryMetadata
+            {
+                new SelectMetadata(
+                    new ValueMetadata("name",true),
+                    new ValueMetadata("store_id",true),
+                    new AliasMetadata(
+                        new MethodMetadata(KnowsMethods.Abs,
+                            new MethodMetadata(KnowsMethods.Power,
+                                new ValueMetadata("store_id",true),
+                                new ValueMetadata(2))),"store_id_tmp")),
+                new FilterMetadata(
+                    new BinaryMetadata(
+                        new MethodMetadata(KnowsMethods.Like,new ValueMetadata("name",true),new ValueMetadata("%hell%")),
+                        ExpressionType.OrElse,
+                        new MethodMetadata(KnowsMethods.In,whereIn))),
+                new LimitMetadata(10)
+            };
+            var query = new Query().From("store1");
+            var visitor = KataMetadataVisitor.Mysql(query);
+            var res = visitor.VisitAndCompile(m, query);
+            Console.WriteLine(res);
+            return Task.CompletedTask;
         }
     }
     public record class Student
