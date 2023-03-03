@@ -48,7 +48,7 @@ namespace Ao.Stock.Mirror
             return $"INSERT INTO {Target.Named} VALUES ";
         }
 
-        protected virtual string? CompileInsertScript(IEnumerable<IEnumerable<object>> datas)
+        protected virtual string? CompileInsertScript(IEnumerable<IEnumerable<object?>> datas)
         {
             if (!datas.Any())
             {
@@ -70,7 +70,7 @@ namespace Ao.Stock.Mirror
             return scriptBuilder.ToString();
         }
 
-        protected override async Task<RowWriteResult<string>> WriteAsync(IEnumerable<IEnumerable<object>> datas, bool storeWriteResult)
+        protected override async Task<RowWriteResult<string>> WriteAsync(IEnumerable<IEnumerable<object?>> datas, bool storeWriteResult)
         {
             var script = CompileInsertScript(datas);
             if (script==null)

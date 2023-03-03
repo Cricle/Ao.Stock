@@ -55,7 +55,7 @@ namespace Ao.Stock.Mirror
 
         protected virtual string GenerateDeleteSql(ISQLDatabaseInfo info, string tableName)
         {
-            return $"DELETE FROM {info.CreateFullName(tableName)}";
+            return $"DELETE FROM {info.MethodWrapper.Quto(tableName)}";
         }
         protected virtual async Task ClearTablesAsync(ISQLDatabaseInfo info, IEnumerable<string> tables)
         {
@@ -76,7 +76,7 @@ namespace Ao.Stock.Mirror
                     sourceCommand.CommandText = Source.CreateQuerySql(item);
                     using (var reader = sourceCommand.ExecuteReader())
                     {
-                        var named = Destination.CreateFullName(item);
+                        var named = Destination.MethodWrapper.Quto(item);
                         var cp = new SQLMirrorCopy(reader,
                             new QueryTranslateResult(sourceCommand.CommandText),
                             new SQLMirrorTarget(destConn, named),

@@ -15,7 +15,7 @@ namespace Ao.Stock.Kata.Copying
 
         protected virtual string GenerateQuerySql(ISQLDatabaseInfo info,string tableName)
         {
-            return $"SELECT * FROM {info.CreateFullName(tableName)}";
+            return $"SELECT * FROM {info.MethodWrapper.Quto(tableName)}";
         }
 
         protected override async Task CopyAsync(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> tables, CancellationToken token)

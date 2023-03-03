@@ -19,7 +19,7 @@ namespace Ao.Stock.Sample.Kata
     {
         static Task Main(string[] args)
         {
-            return BuildQueryAsync();
+            return RunSyncAsync();
         }
         private static async Task ReadDataAsync()
         {
@@ -85,9 +85,11 @@ namespace Ao.Stock.Sample.Kata
             using (var conn = new MySqlConnection(mysql))
             using (var conn1 = new MySqlConnection(mysql1))
             {
+                conn.Open();
+                conn1.Open();
                 var source = new DelegateSQLDatabaseInfo("sakila", conn, DefaultMethodWrapper.MySql);
                 var dest = new DelegateSQLDatabaseInfo("sakila1", conn1, DefaultMethodWrapper.MySql);
-                var copy = new SQLCognateCopying(source, dest) { TableFilter = new string[] { "store", "student" } };
+                var copy = new SQLCopying(source, dest) { TableFilter = new string[] { "store", "student" } };
                 copy.SynchronousStructure = true;
                 copy.WithDelete = true;
                 var sw = Stopwatch.GetTimestamp();
