@@ -62,12 +62,10 @@ namespace Ao.Stock.Querying
             }
             else if (input is bool b)
             {
-                return b ? boolTrue : boolFalse;
+                return b ? "1" : "0";
             }
             return input.ToString();
         }
-        private static readonly string boolTrue = bool.TrueString.ToLower();
-        private static readonly string boolFalse = bool.FalseString.ToLower();
     }
 
 }
