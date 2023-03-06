@@ -54,12 +54,23 @@ namespace Ao.Stock.Querying
             {
                 VisitSort(sort, context);
             }
+            else if (query is RawMetadata raw)
+            {
+                VisitRaw(raw, context);
+            }
             else if (query is IEnumerable<IQueryMetadata> querys)
             {
                 foreach (var item in querys)
                 {
                     Visit(item, context);
                 }
+            }
+        }
+        public virtual void VisitRaw(RawMetadata value, TContext context)
+        {
+            foreach (var item in value.GetChildren())
+            {
+                Visit(item, context);
             }
         }
         public virtual void VisitSort(SortMetadata value, TContext context)

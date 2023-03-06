@@ -19,7 +19,7 @@ namespace Ao.Stock.Sample.Kata
     {
         static Task Main(string[] args)
         {
-            return RunSyncAsync();
+            return BuildQueryAsync();
         }
         private static async Task ReadDataAsync()
         {
@@ -104,6 +104,7 @@ namespace Ao.Stock.Sample.Kata
             var m = new MultipleQueryMetadata
             {
                 new SelectMetadata(
+                    new RawMetadata("a.bbbbb"),
                     new ValueMetadata("name",true),
                     new ValueMetadata("store_id",true),
                     new AliasMetadata(

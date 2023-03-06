@@ -55,6 +55,11 @@ namespace Ao.Stock.Kata
             return new DefaultQueryContext();
         }
 
+        public override void VisitRaw(RawMetadata value, DefaultQueryContext context)
+        {
+            context.Expression = value.Raw;
+        }
+
         protected override void OnVisitSort(SortMetadata value, DefaultQueryContext context)
         {
             Root.OrderByRaw(context.Expression + (value.SortMode == SortMode.Desc ? " DESC" : ""));
