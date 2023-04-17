@@ -14,6 +14,7 @@ namespace Ao.Stock.Querying
             nameof(AllPlaceholder),
             nameof(RangeSkip1),
             nameof(AllOrAlso),
+            nameof(AllPlugsAlso)
         };
 
         static KnowsMethods()
@@ -44,8 +45,8 @@ namespace Ao.Stock.Querying
             [StrIndexOf] = "LOCATE({1},{2})",
             [StrLowercase] = "LOWER({1})",
             [StrUppercase] = "UPPER({1}",
-            [StrLeft] = "LEFT({1})",
-            [StrRight] = "RIGHT({1}",
+            [StrLeft] = "LEFT({1},{2})",
+            [StrRight] = "RIGHT({1},{2})",
             [StrTrim] = "TRIM({1})",
             [StrConcat] = $"CONCAT({AllPlaceholder})",
             [StrCmp] = "STRCMP({1},{2})",
@@ -75,6 +76,7 @@ namespace Ao.Stock.Querying
 
         public const string AllPlaceholder = "{**}";
         public const string AllOrAlso = "{*||*}";
+        public const string AllPlugsAlso = "{*+*}";
 
         public const string RangeSkip1 = "{1-~}";
 

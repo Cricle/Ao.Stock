@@ -34,17 +34,20 @@ namespace Ao.Stock.Querying
         public static Dictionary<string, string> SqlServer()
         {
             var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.StrConcat] = KnowsMethods.AllPlugsAlso;
             funcs[KnowsMethods.StrLen] = "LEN({1})";
             funcs[KnowsMethods.StrIndexOf] = "CHARINDEX({1},{2})";
             funcs[KnowsMethods.StrSub] = "SUBSTRING({1},{2},{3})";
             funcs[KnowsMethods.DateFormat] = "FORMAT({1},{2})";
             funcs[KnowsMethods.Weak] = "DATEPART(WEEK,{1})";
             funcs[KnowsMethods.Quarter] = "DATEPART(QUARTER,{1})";
+            funcs[KnowsMethods.Now] = "GETDATE()";
             return funcs;
         }
         public static Dictionary<string,string> PostgrSql()
         {
             var funcs = KnowsMethods.Functions;
+            funcs[KnowsMethods.StrConcat] = KnowsMethods.AllOrAlso;
             funcs[KnowsMethods.Year] = "to_char({1},'yyyy')";
             funcs[KnowsMethods.Month] = "to_char({1},'MM')";
             funcs[KnowsMethods.Day] = "to_char({1},'dd')";
