@@ -3,12 +3,21 @@ using System.Runtime.CompilerServices;
 
 namespace Ao.Stock
 {
-    public static class DateTimeToStringHelper
+   public static class DateTimeToStringHelper
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToFullString(DateTime dt, ref Span<char> buffer)
         {
             ToFullString(dt, ref buffer, '-', ':');
+        }
+        public unsafe static void ToYearTimeString(DateTime dt, ref Span<char> buffer)
+        {
+            var yearStr = dt.Year.ToString();
+    #if NETSTANDARD2_0
+                dt.Year.ToString().AsSpan().CopyTo(buffer);
+    #else
+            dt.Year.ToString().CopyTo(buffer);
+    #endif
         }
         public unsafe static void ToTimeString(DateTime dt, ref Span<char> buffer, char mergeTime)
         {
@@ -55,41 +64,11 @@ namespace Ao.Stock
         {
             var month = dt.Month;
             var day = dt.Day;
-            var yearStr = dt.Year.ToString();
-            var yearStart = 4 - yearStr.Length;
-            if (yearStart == 0)
+            var year = dt.Year;
+            for (int i = 0; i < 4; i++)
             {
-#if NETSTANDARD2_0
-                dt.Year.ToString().AsSpan().CopyTo(buffer);
-#else
-                dt.Year.ToString().CopyTo(buffer);
-#endif
-            }
-
-            else
-            {
-                switch (yearStart)
-                {
-                    case 1:
-                        buffer[0] = '0';
-                        break;
-                    case 2:
-                        buffer[0] = '0';
-                        buffer[1] = '0';
-                        break;
-                    case 3:
-                        buffer[0] = '0';
-                        buffer[1] = '0';
-                        buffer[2] = '0';
-                        break;
-                    default:
-                        break;
-                }
-#if NETSTANDARD2_0
-                dt.Year.ToString().AsSpan().CopyTo(buffer.Slice(yearStart));
-#else
-                dt.Year.ToString().CopyTo(buffer.Slice(yearStart));
-#endif
+                (year, int Remainder) = Math.DivRem(year, 10);
+                buffer[3 - i] = (char)('0' + Remainder);
             }
             buffer[4] = mergeDate;
             if (month <= 9)
@@ -117,7 +96,7 @@ namespace Ao.Stock
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static void ToFullString(DateTime dt, ref Span<char> buffer,char mergeDate,char mergeTime)
+        public unsafe static void ToFullString(DateTime dt, ref Span<char> buffer, char mergeDate, char mergeTime)
         {
             ToDateString(dt, ref buffer, mergeDate);
             buffer[10] = ' ';
@@ -126,10 +105,10 @@ namespace Ao.Stock
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static string ToFullString(DateTime dt,char mergeDate, char mergeTime)
+        public unsafe static string ToFullString(DateTime dt, char mergeDate, char mergeTime)
         {
             Span<char> buffer = stackalloc char[19];
-            ToFullString(dt, ref buffer,mergeDate,mergeTime);
+            ToFullString(dt, ref buffer, mergeDate, mergeTime);
             return buffer.ToString();
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
